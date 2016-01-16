@@ -8,8 +8,8 @@ tmp/
 local.properties
 .settings/
 .loadpath
-.class
-.jar
+*.class
+*.jar
 
 # Eclipse Core
 .project
@@ -43,3 +43,7 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+
+#build and dist
+build/
+dist/
