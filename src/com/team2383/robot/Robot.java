@@ -2,22 +2,46 @@
 package com.team2383.robot;
 
 import org.strongback.Strongback;
+import org.strongback.components.Motor;
+import org.strongback.hardware.Hardware;
+import org.strongback.drive.TankDrive;
+import org.strongback.components.ui.ContinuousRange;
+import org.strongback.components.ui.Gamepad;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 
+    private TankDrive drive;
+    private ContinuousRange leftSpeed;
+    private ContinuousRange rightSpeed;
+
     @Override
     public void robotInit() {
-    	// Set up Strongback using its configurator. This is entirely optional, but we're not using
+        // Set up Strongback using its configurator. This is entirely optional, but we're not using
         // events or data so it's better if we turn them off. All other defaults are fine.
         Strongback.configure().recordNoEvents().recordNoData().initialize();
+
+        Motor left = Motor.compose(Hardware.Motors.talonSRX(Config.LEFT_FRONT_MOTOR_PORT),
+                                   Hardware.Motors.talonSRX(Config.LEFT_REAR_MOTOR_PORT));
+
+        Motor right = Motor.compose(Hardware.Motors.talonSRX(Config.RIGHT_FRONT_MOTOR_PORT),
+                                   Hardware.Motors.talonSRX(Config.RIGHT_REAR_MOTOR_PORT));
+
+        drive = new TankDrive(left, right);
+        
+
+        Gamepad logitech0 = Hardware.HumanInterfaceDevices.logitechF310(Config.JOYSTICK_PORT);
+        leftSpeed = logitech0.getLeftY();
+        rightSpeed = logitech0.getRightY();
     }
 
     @Override
     public void teleopInit() {
         // Start Strongback functions ...
         Strongback.start();
+
+        drive.tank(leftSpeed.read(), rightSpeed.read());
     }
 
     @Override
