@@ -7,6 +7,7 @@ import org.strongback.hardware.Hardware;
 import org.strongback.drive.TankDrive;
 import org.strongback.components.ui.ContinuousRange;
 import org.strongback.components.ui.Gamepad;
+import org.strongback.components.ui.FlightStick;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -31,7 +32,8 @@ public class Robot extends IterativeRobot {
         drive = new TankDrive(left, right);
         
 
-        Gamepad logitech0 = Hardware.HumanInterfaceDevices.logitechF310(Config.JOYSTICK_PORT);
+        FlightStick leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
+	FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
         leftSpeed = logitech0.getLeftY();
         rightSpeed = logitech0.getRightY();
     }
