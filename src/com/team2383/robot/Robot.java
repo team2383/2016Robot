@@ -34,8 +34,8 @@ public class Robot extends IterativeRobot {
 
         FlightStick leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
 	FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
-        leftSpeed = logitech0.getLeftY();
-        rightSpeed = logitech0.getRightY();
+        leftSpeed = leftJoystick.getLeftY();
+        rightSpeed = rightJoystick.getRightY();
     }
 
     @Override
