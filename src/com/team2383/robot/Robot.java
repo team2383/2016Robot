@@ -8,14 +8,21 @@ import org.strongback.drive.TankDrive;
 import org.strongback.components.ui.ContinuousRange;
 import org.strongback.components.ui.Gamepad;
 import org.strongback.components.ui.FlightStick;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 
-    private TankDrive drive;
-    private ContinuousRange leftSpeed;
-    private ContinuousRange rightSpeed;
+    public static TankDrive drive;
+    public static ContinuousRange leftSpeed;
+    public static ContinuousRange rightSpeed;
+    final String defaultAuto = "Default Auto";
+    final String secondAuto = "Second Auto";
+    String autoSelected;
+    SendableChooser chooser;
 
     @Override
     public void robotInit() {
@@ -33,11 +40,33 @@ public class Robot extends IterativeRobot {
         
 
         FlightStick leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
-	FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
-        leftSpeed = leftJoystick.getLeftY();
-        rightSpeed = rightJoystick.getRightY();
+        FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
+        leftSpeed = leftJoystick.getYaw();
+        rightSpeed = rightJoystick.getYaw();
+        
+        chooser = new SendableChooser();
+        chooser.addDefault("Default Auto", defaultAuto);
+        chooser.addObject("Second Auto", secondAuto);
+        SmartDashboard.putData("Auto Choices", chooser);
+        
     }
 
+    public void autonomousInit(){
+    	autoSelected = (String) chooser.getSelected();
+    	System.out.println("Auto Selected: " + autoSelected);
+    }
+    
+    public void autonomousPeriodic(){
+    	switch(autoSelected){
+    	case secondAuto:
+    		//secondAuto command here
+    		break;
+    	case defaultAuto:
+    		// defaultAuto command here
+    		break; 
+    	}
+    }
+    
     @Override
     public void teleopInit() {
         // Start Strongback functions ...
