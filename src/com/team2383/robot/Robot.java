@@ -46,10 +46,10 @@ public class Robot extends IterativeRobot {
         Motor right = Motor.compose(Hardware.Motors.talonSRX(Config.RIGHT_FRONT_MOTOR_PORT),
                                    Hardware.Motors.talonSRX(Config.RIGHT_REAR_MOTOR_PORT));
         
-         leftSolenoidShifter= Solenoids.doubleSolenoid(Config.LEFT_FIRST_SHIFTER_PORT,
+        leftSolenoidShifter= Solenoids.doubleSolenoid(Config.LEFT_FIRST_SHIFTER_PORT,
         		 									  Config.LEFT_SECOND_SHIFTER_PORT,
         		 									  Solenoid.Direction.STOPPED);
-         rightSolenoidShifter= Solenoids.doubleSolenoid(Config.RIGHT_FIRST_SHIFTER_PORT,
+        rightSolenoidShifter= Solenoids.doubleSolenoid(Config.RIGHT_FIRST_SHIFTER_PORT,
         		 									  Config.RIGHT_SECOND_SHIFTER_PORT,
         		 									  Solenoid.Direction.STOPPED);
          isExtended = false;

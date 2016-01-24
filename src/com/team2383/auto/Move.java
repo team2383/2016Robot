@@ -5,9 +5,6 @@ import org.strongback.command.Command;
 import com.team2383.robot.Robot;
 
 
-/**
- *												
- */
 public class Move extends Command {
     double distance;
     double power;    
