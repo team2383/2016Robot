@@ -14,8 +14,10 @@ import org.strongback.hardware.Hardware.Solenoids;
 
 public class Climber extends Subsystem {
 
-	private static Solenoid leftClimber , rightClimber;
-	private static boolean isUp = false;
+	//might need to add motor functionality to move climber different angles like straight up
+	
+	public static Solenoid leftClimber , rightClimber;
+	public static boolean isUp = false;
 	public static Switch climbButton;
 	
 	public Climber() {

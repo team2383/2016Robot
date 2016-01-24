@@ -9,6 +9,8 @@ import org.strongback.components.Switch;
 import org.strongback.hardware.Hardware;
 import org.strongback.hardware.Hardware.Solenoids;
 
+import com.team2383.commands.ClimberDown;
+import com.team2383.commands.ClimberUp;
 import com.team2383.subsystems.Climber;
 
 import org.strongback.drive.TankDrive;
@@ -25,9 +27,11 @@ public class Robot extends IterativeRobot {
     public static TankDrive drive;
     private static FlightStick leftJoystick;
     private static FlightStick rightJoystick;
+    private static FlightStick operatorJoystick;
     private static ContinuousRange leftSpeed;
     private static ContinuousRange rightSpeed;
     private static Switch shifter;
+    public static Switch climberButton;
     private final String defaultAuto = "Default Auto";
     private final String secondAuto = "Second Auto";
     String autoSelected;
@@ -63,8 +67,10 @@ public class Robot extends IterativeRobot {
 
         leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
         rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
+        operatorJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.OPERATOR_JOYSTICK_PORT);
         leftSpeed = leftJoystick.getYaw();
         rightSpeed = rightJoystick.getYaw(); 
+        climberButton = operatorJoystick.getButton(3); // might have to update this
         
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
@@ -103,6 +109,18 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
     	shifterPeriodic();
+    	climberPeriodic();
+    	
+    }
+    
+    private void climberPeriodic(){
+    	if(climberButton.isTriggered()){
+    		if(Climber.leftClimber.isStopped() && Climber.isUp)
+    		new ClimberDown();
+    	}
+    	else if(Climber.leftClimber.isStopped() && !Climber.isUp){
+    		new ClimberUp();
+    	}
     }
     
     private void shifterPeriodic(){
@@ -128,6 +146,8 @@ public class Robot extends IterativeRobot {
     		rightSolenoidShifter.retract();
     		isExtended = false;
     }
+    
+    
     	
     
     

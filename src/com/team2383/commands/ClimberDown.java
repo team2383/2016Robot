@@ -4,18 +4,20 @@ import com.team2383.robot.*;
 import org.strongback.Strongback;
 import org.strongback.command.Command;
 
-public class ClimberUp extends Command {  
+public class ClimberDown extends Command {
+	double distance;
+    double power;    
     
-    public ClimberUp() {
-    		System.out.println("Climber --> Up");
-    		Robot.climber.up();
+    public ClimberDown() {
+    		System.out.println("Climber --> Down");
+    		Robot.climber.down();
     }
        
 
      @Override
     public boolean execute() {
     	 System.out.println("Climber --> Down");
-    	 Robot.climber.up();
+    	 Robot.climber.down();
 	return true;
     }
 }
