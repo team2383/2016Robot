@@ -8,6 +8,9 @@ import org.strongback.components.Solenoid;
 import org.strongback.components.Switch;
 import org.strongback.hardware.Hardware;
 import org.strongback.hardware.Hardware.Solenoids;
+
+import com.team2383.subsystems.Climber;
+
 import org.strongback.drive.TankDrive;
 import org.strongback.components.ui.ContinuousRange;
 import org.strongback.components.ui.FlightStick;
@@ -32,6 +35,7 @@ public class Robot extends IterativeRobot {
     private static Solenoid leftSolenoidShifter;
     private static Solenoid rightSolenoidShifter;
     private static boolean isExtended;
+    public static final Climber climber = new Climber();
 
 
     @Override
@@ -46,11 +50,11 @@ public class Robot extends IterativeRobot {
         Motor right = Motor.compose(Hardware.Motors.talonSRX(Config.RIGHT_FRONT_MOTOR_PORT),
                                    Hardware.Motors.talonSRX(Config.RIGHT_REAR_MOTOR_PORT));
         
-        leftSolenoidShifter= Solenoids.doubleSolenoid(Config.LEFT_FIRST_SHIFTER_PORT,
-        		 									  Config.LEFT_SECOND_SHIFTER_PORT,
+        leftSolenoidShifter= Solenoids.doubleSolenoid(Config.LEFT_EXTEND_SHIFTER_PORT,
+        		 									  Config.LEFT_RETRACT_SHIFTER_PORT,
         		 									  Solenoid.Direction.STOPPED);
-        rightSolenoidShifter= Solenoids.doubleSolenoid(Config.RIGHT_FIRST_SHIFTER_PORT,
-        		 									  Config.RIGHT_SECOND_SHIFTER_PORT,
+        rightSolenoidShifter= Solenoids.doubleSolenoid(Config.RIGHT_EXTEND_SHIFTER_PORT,
+        		 									  Config.RIGHT_RETRACT_SHIFTER_PORT,
         		 									  Solenoid.Direction.STOPPED);
         isExtended = false;
 
