@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
         rightSolenoidShifter= Solenoids.doubleSolenoid(Config.RIGHT_FIRST_SHIFTER_PORT,
         		 									  Config.RIGHT_SECOND_SHIFTER_PORT,
         		 									  Solenoid.Direction.STOPPED);
-         isExtended = false;
+        isExtended = false;
 
         drive = new TankDrive(left, right);
         
