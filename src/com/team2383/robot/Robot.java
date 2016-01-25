@@ -10,11 +10,9 @@ import org.strongback.components.Switch;
 import org.strongback.hardware.Hardware;
 import org.strongback.hardware.Hardware.Solenoids;
 
-import com.team2383.commands.ClimberDown;
-import com.team2383.commands.ClimberUp;
-import com.team2383.commands.ShifterExtend;
-import com.team2383.commands.ShifterRetract;
+import com.team2383.commands.*;
 import com.team2383.subsystems.Climber;
+import com.team2383.subsystems.Feeder;
 
 import org.strongback.drive.TankDrive;
 import org.strongback.components.ui.ContinuousRange;
@@ -34,7 +32,10 @@ public class Robot extends IterativeRobot {
     private static ContinuousRange leftSpeed;
     private static ContinuousRange rightSpeed;
     private static Switch shifter;
-    public static Switch climberButton;
+    public static Switch climberExtendButton;
+    public static Switch climberAdjustButton;
+    public static Switch feedButton;
+    public static Switch unfeedButton;
     private final String defaultAuto = "Default Auto";
     private final String secondAuto = "Second Auto";
     String autoSelected;
@@ -43,8 +44,13 @@ public class Robot extends IterativeRobot {
     public static Solenoid rightSolenoidShifter;
     public static boolean isExtended;
     public static final Climber climber = new Climber();
-    public static SwitchReactor climberReactor = Strongback.switchReactor();
+    public static final Feeder feeder = new Feeder();
+    //switch reactors
+    public static SwitchReactor climberExtend = Strongback.switchReactor();
     public static SwitchReactor shifterReactor = Strongback.switchReactor();
+    public static SwitchReactor climberAdjust = Strongback.switchReactor();
+    public static SwitchReactor feedReactor = Strongback.switchReactor();
+    public static SwitchReactor unfeedReactor = Strongback.switchReactor();
 
 
     @Override
@@ -78,7 +84,7 @@ public class Robot extends IterativeRobot {
         
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
-        chooser.addObject("Second Auto", secondAuto);
+        chooser.addObject("Second Auto", secondAuto);	
         SmartDashboard.putData("Auto Choices", chooser);
         
     }
@@ -108,26 +114,23 @@ public class Robot extends IterativeRobot {
         
         //joystick buttons
         shifter = rightJoystick.getButton(3);    
-        climberButton = operatorJoystick.getButton(3); // might have to update this
+        climberExtendButton = operatorJoystick.getButton(4); // might have to update this
+        climberAdjustButton = operatorJoystick.getButton(6); //moves the motor
+        feedButton = leftJoystick.getButton(5);
+        unfeedButton = leftJoystick.getButton(6);
     }
 
     @Override
     public void teleopPeriodic() {
-    	
-    	shifterPeriodic();
-    	climberPeriodic();
-    	
-    }
-    
-    private void climberPeriodic(){
-    	climberReactor.onTriggered(climberButton, ()->Strongback.submit(new ClimberUp()));
-    	climberReactor.onUntriggered(climberButton,()->Strongback.submit(new ClimberDown()));
-    }
-    
-    private void shifterPeriodic(){
-    	//checks shifter
+    	climberExtend.onTriggered(climberExtendButton, ()->Strongback.submit(new ClimberUp()));
+    	climberExtend.onUntriggered(climberExtendButton,()->Strongback.submit(new ClimberDown()));
     	shifterReactor.onTriggered(shifter, ()->Strongback.submit(new ShifterExtend()));
     	shifterReactor.onUntriggered(shifter, ()->Strongback.submit(new ShifterRetract()));
+    	feedReactor.onTriggered(feedButton, ()->Strongback.submit(new Feed()));
+    	feedReactor.onUntriggered(feedButton, ()->Strongback.submit(new StopFeed()));
+    	unfeedReactor.onTriggered(feedButton, ()->Strongback.submit(new Unfeed()));
+    	unfeedReactor.onUntriggered(feedButton, ()->Strongback.submit(new StopFeed()));
+    	//climberAdjust.onTriggered(climberAdjustButton, ()->Strongback.submit(new ClimberAdjust()));
     }
     
     
