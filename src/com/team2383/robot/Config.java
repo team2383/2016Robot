@@ -21,4 +21,5 @@ public class Config {
     public static int RIGHT_RETRACT_CLIMBER_PORT = 5;
     public static int LEFT_EXTEND_CLIMBER_PORT = 6;
     public static int LEFT_RETRACT_CLIMBER_PORT = 7;
+    public static int CLIMBER_MOTOR_PORT = 7;
 }

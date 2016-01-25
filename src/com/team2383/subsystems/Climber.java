@@ -34,7 +34,7 @@ public class Climber extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		new ClimberUp();
+		Robot.climberReactor.onTriggered(Robot.climberButton,()->Strongback.submit(new ClimberUp()));
 		
 	}
 	
