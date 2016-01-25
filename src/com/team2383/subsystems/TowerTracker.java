@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * 
- * @author Elijah Kaufman
+ * @author Elijah Kaufman 
  * @version 1.0
  * @description Uses opencv and network table 3.0 to detect the vision targets
  *
@@ -32,7 +32,7 @@ public class TowerTracker {
 	static{ 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		NetworkTable.setClientMode();
-		NetworkTable.setIPAddress("roborio-3019.local");
+		NetworkTable.setIPAddress("roborio-2383.local");
 	}
 //	constants for the color rbg values
 	public static final Scalar 

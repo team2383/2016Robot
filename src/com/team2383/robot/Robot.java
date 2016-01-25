@@ -2,6 +2,7 @@
 package com.team2383.robot;
 
 import org.strongback.Strongback;
+import org.strongback.SwitchReactor;
 import org.strongback.components.Motor;
 import org.strongback.components.Motor.Direction;
 import org.strongback.components.Solenoid;
@@ -11,6 +12,8 @@ import org.strongback.hardware.Hardware.Solenoids;
 
 import com.team2383.commands.ClimberDown;
 import com.team2383.commands.ClimberUp;
+import com.team2383.commands.ShifterExtend;
+import com.team2383.commands.ShifterRetract;
 import com.team2383.subsystems.Climber;
 
 import org.strongback.drive.TankDrive;
@@ -36,10 +39,12 @@ public class Robot extends IterativeRobot {
     private final String secondAuto = "Second Auto";
     String autoSelected;
     SendableChooser chooser;
-    private static Solenoid leftSolenoidShifter;
-    private static Solenoid rightSolenoidShifter;
-    private static boolean isExtended;
+    public static Solenoid leftSolenoidShifter;
+    public static Solenoid rightSolenoidShifter;
+    public static boolean isExtended;
     public static final Climber climber = new Climber();
+    public static SwitchReactor climberReactor = Strongback.switchReactor();
+    public static SwitchReactor shifterReactor = Strongback.switchReactor();
 
 
     @Override
@@ -70,7 +75,6 @@ public class Robot extends IterativeRobot {
         operatorJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.OPERATOR_JOYSTICK_PORT);
         leftSpeed = leftJoystick.getYaw();
         rightSpeed = rightJoystick.getYaw(); 
-        climberButton = operatorJoystick.getButton(3); // might have to update this
         
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
@@ -102,7 +106,9 @@ public class Robot extends IterativeRobot {
 
         drive.tank(leftSpeed.read(), rightSpeed.read());
         
+        //joystick buttons
         shifter = rightJoystick.getButton(3);    
+        climberButton = operatorJoystick.getButton(3); // might have to update this
     }
 
     @Override
@@ -114,54 +120,23 @@ public class Robot extends IterativeRobot {
     }
     
     private void climberPeriodic(){
-    	if(climberButton.isTriggered()){
-    		if(Climber.leftClimber.isStopped() && Climber.isUp)
-    		new ClimberDown();
-    	}
-    	else if(Climber.leftClimber.isStopped() && !Climber.isUp){
-    		new ClimberUp();
-    	}
+    	climberReactor.onTriggered(climberButton, ()->Strongback.submit(new ClimberUp()));
+    	climberReactor.onUntriggered(climberButton,()->Strongback.submit(new ClimberDown()));
     }
     
     private void shifterPeriodic(){
     	//checks shifter
-    	if(shifter.isTriggered()){
-        	if(leftSolenoidShifter.isStopped() && isExtended){
-        		shifterExtend();
-        	}
-        	else if(leftSolenoidShifter.isStopped() && !isExtended){
-        		shifterRetract();
-        	}
-    	}
-    }
-    
-    private void shifterExtend(){
-    		leftSolenoidShifter.extend();
-    		rightSolenoidShifter.extend();
-    		isExtended = true;
-    }
-    
-    private void shifterRetract(){
-    		leftSolenoidShifter.retract();
-    		rightSolenoidShifter.retract();
-    		isExtended = false;
+    	shifterReactor.onTriggered(shifter, ()->Strongback.submit(new ShifterExtend()));
+    	shifterReactor.onUntriggered(shifter, ()->Strongback.submit(new ShifterRetract()));
     }
     
     
-    	
-    
-    
-
     @Override
     public void disabledInit() {
         // Tell Strongback that the robot is disabled so it can flush and kill commands.
         Strongback.disable();
         
         //retract shifter
-        if(leftSolenoidShifter.isStopped() && !isExtended){
-    		shifterRetract();
+        Strongback.submit(new ShifterRetract());
         }
-        
-    }
-
 }
