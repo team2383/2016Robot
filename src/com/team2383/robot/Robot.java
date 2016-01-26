@@ -135,19 +135,9 @@ public class Robot extends IterativeRobot {
     @Override
     public void disabledInit() {
         // Tell Strongback that the robot is disabled so it can flush and kill commands.
-<<<<<<< HEAD
         Strongback.disable();   
     }
     
     @Override
-    public void disabledPeriodic() {
-    }
-
-=======
-        Strongback.disable();
-        
-        //retract shifter
-        Strongback.submit(new ShifterRetract());
-        }
->>>>>>> cd7411027aa5b2d9f7f2287f79873e4e4f4c11db
+    public void disabledPeriodic() {}
 }
