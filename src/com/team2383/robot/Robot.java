@@ -12,12 +12,9 @@ import org.strongback.components.ui.FlightStick;
 import org.strongback.drive.TankDrive;
 import org.strongback.hardware.Hardware;
 
-import com.team2383.components.Speedometer;
-
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -25,6 +22,9 @@ public class Robot extends IterativeRobot {
 
 	private final String defaultAuto = "Default Auto";
 	private final String secondAuto = "Second Auto";
+	private TankDrive drive;
+	private ContinuousRange leftSpeed, rightSpeed;
+
 	private String autoSelected;
 
 	private static SendableChooser chooser;
@@ -49,8 +49,8 @@ public class Robot extends IterativeRobot {
 		TalonSRX leftRear = Hardware.Motors.talonSRX(Config.LEFT_REAR_MOTOR_PORT);
 		TalonSRX rightFront = Hardware.Motors.talonSRX(Config.RIGHT_FRONT_MOTOR_PORT);
 
-		Motor left = Motor.compose(leftFront, leftRear);
-		Motor right = Motor.compose(rightFront, rightRear).invert();
+		Motor left = Motor.compose(leftFront, leftRear).invert();
+		Motor right = Motor.compose(rightFront, rightRear);
 
 		Motor feeder = Hardware.Motors.talon(Config.FEEDER_MOTOR_PORT);
 		Motor climberPivot = Hardware.Motors.talon(Config.CLIMBER_MOTOR_PORT);
@@ -60,22 +60,13 @@ public class Robot extends IterativeRobot {
 		Solenoid rightSolenoidShifter = Hardware.Solenoids.doubleSolenoid(Config.RIGHT_EXTEND_SHIFTER_PORT,
 				Config.RIGHT_RETRACT_SHIFTER_PORT, Solenoid.Direction.STOPPED);
 
-		Speedometer speedometer = Speedometer.create(speed -> {
-			// revolution/sec to in/sec
-			speed *= Config.WHEEL_CIRCUMFERENCE;
-
-			SmartDashboard.putNumber("s", speed / 12.0);
-			return speed;
-
-		} , leftFront_WPI::getPulseWidthVelocity, rightRear_WPI::getPulseWidthVelocity);
-
-		TankDrive drive = new TankDrive(left, right);
+		drive = new TankDrive(left, right);
 
 		FlightStick leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
 		FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
 		FlightStick operatorJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.OPERATOR_JOYSTICK_PORT);
-		ContinuousRange leftSpeed = leftJoystick.getPitch();
-		ContinuousRange rightSpeed = rightJoystick.getPitch();
+		leftSpeed = leftJoystick.getPitch();
+		rightSpeed = rightJoystick.getPitch();
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
@@ -120,9 +111,6 @@ public class Robot extends IterativeRobot {
 		reactor.whileTriggered(climberDown, () -> {
 			climberPivot.setSpeed(-1);
 		});
-
-		// drive
-		reactor.whileTriggered(Switch.alwaysTriggered(), () -> drive.tank(leftSpeed.read(), rightSpeed.read()));
 	}
 
 	@Override
@@ -151,7 +139,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		Timer.delay(0.005);
+		drive.tank(leftSpeed.read(), rightSpeed.read());
 	}
 
 	@Override
