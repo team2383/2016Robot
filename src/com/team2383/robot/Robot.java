@@ -1,14 +1,16 @@
 /* Created Fri Jan 15 15:05:28 EST 2016 */
 package com.team2383.robot;
 
+import java.util.concurrent.TimeUnit;
+
 import org.strongback.Strongback;
 import org.strongback.SwitchReactor;
 import org.strongback.components.Motor;
-import org.strongback.components.Solenoid;
 import org.strongback.components.Switch;
 import org.strongback.components.TalonSRX;
 import org.strongback.components.ui.ContinuousRange;
 import org.strongback.components.ui.FlightStick;
+import org.strongback.components.ui.Gamepad;
 import org.strongback.drive.TankDrive;
 import org.strongback.hardware.Hardware;
 
@@ -22,8 +24,6 @@ public class Robot extends IterativeRobot {
 
 	private final String defaultAuto = "Default Auto";
 	private final String secondAuto = "Second Auto";
-	private TankDrive drive;
-	private ContinuousRange leftSpeed, rightSpeed;
 
 	private String autoSelected;
 
@@ -35,7 +35,7 @@ public class Robot extends IterativeRobot {
 		// but we're not using
 		// events or data so it's better if we turn them off. All other defaults
 		// are fine.
-		Strongback.configure().recordNoEvents().recordNoData().initialize();
+		Strongback.configure().recordCommands().useExecutionPeriod(25, TimeUnit.MILLISECONDS).initialize();
 
 		CANTalon leftFront_WPI = new CANTalon(Config.LEFT_FRONT_MOTOR_PORT);
 		CANTalon rightRear_WPI = new CANTalon(Config.RIGHT_REAR_MOTOR_PORT);
@@ -49,24 +49,26 @@ public class Robot extends IterativeRobot {
 		TalonSRX leftRear = Hardware.Motors.talonSRX(Config.LEFT_REAR_MOTOR_PORT);
 		TalonSRX rightFront = Hardware.Motors.talonSRX(Config.RIGHT_FRONT_MOTOR_PORT);
 
-		Motor left = Motor.compose(leftFront, leftRear).invert();
-		Motor right = Motor.compose(rightFront, rightRear);
+		Motor left = Motor.compose(leftFront, leftRear);
+		Motor right = Motor.compose(rightFront, rightRear).invert();
 
-		Motor feeder = Hardware.Motors.talon(Config.FEEDER_MOTOR_PORT);
-		Motor climberPivot = Hardware.Motors.talon(Config.CLIMBER_MOTOR_PORT);
+		Motor climberPivot = Hardware.Motors.talonSRX(Config.CLIMBER_MOTOR_PORT);
+		Motor shooter = Hardware.Motors.talonSRX(Config.SHOOTER_MOTOR_PORT);
 
-		Solenoid leftSolenoidShifter = Hardware.Solenoids.doubleSolenoid(Config.LEFT_EXTEND_SHIFTER_PORT,
-				Config.LEFT_RETRACT_SHIFTER_PORT, Solenoid.Direction.STOPPED);
-		Solenoid rightSolenoidShifter = Hardware.Solenoids.doubleSolenoid(Config.RIGHT_EXTEND_SHIFTER_PORT,
-				Config.RIGHT_RETRACT_SHIFTER_PORT, Solenoid.Direction.STOPPED);
+		Motor hood = Hardware.Motors.victor(Config.HOOD_MOTOR_PORT).invert();
+		Motor feeder = Hardware.Motors.victor(Config.FEEDER_MOTOR_PORT);
 
-		drive = new TankDrive(left, right);
+		edu.wpi.first.wpilibj.Solenoid kicker = new edu.wpi.first.wpilibj.Solenoid(0);
 
 		FlightStick leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
 		FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
-		FlightStick operatorJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.OPERATOR_JOYSTICK_PORT);
-		leftSpeed = leftJoystick.getPitch();
-		rightSpeed = rightJoystick.getPitch();
+		Gamepad operatorJoystick = Hardware.HumanInterfaceDevices.logitechF310(Config.OPERATOR_JOYSTICK_PORT);
+
+		// Shifter shifter = new Shifter(leftShifter, rightShifter);
+		TankDrive drive = new TankDrive(left, right);
+
+		ContinuousRange leftSpeed = leftJoystick.getPitch();
+		ContinuousRange rightSpeed = rightJoystick.getPitch();
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
@@ -74,43 +76,68 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto Choices", chooser);
 
 		// joystick buttons
-		Switch shiftUp = rightJoystick.getButton(3);
-		Switch shiftDown = rightJoystick.getButton(4);
+		Switch shift = rightJoystick.getTrigger();
+
 		Switch feedIn = leftJoystick.getButton(5);
 		Switch feedOut = leftJoystick.getButton(6);
-		Switch climberUp = operatorJoystick.getButton(4);
-		Switch climberDown = operatorJoystick.getButton(5);
+
+		Switch hoodUp = operatorJoystick.getLeftStick();
+		Switch hoodDown = operatorJoystick.getRightStick();
+		Switch shoot = operatorJoystick.getLeftBumper();
+		Switch climberUp = operatorJoystick.getB();
+		Switch climberDown = operatorJoystick.getX();
+		Switch kickBall = operatorJoystick.getRightBumper();
 
 		// todo: add doubletap to strongback OI
 		Switch climberExtend = operatorJoystick.getButton(6);
 
 		SwitchReactor reactor = Strongback.switchReactor();
 
-		// shifter
-		reactor.onTriggered(shiftUp, () -> {
-			leftSolenoidShifter.extend();
-			rightSolenoidShifter.extend();
+		reactor.whileTriggered(Switch.alwaysTriggered(), () -> drive.tank(leftSpeed.read(), rightSpeed.read()));
+
+		// shooter
+		reactor.onTriggered(shoot, () -> {
+			shooter.setSpeed(1.0);
 		});
-		reactor.onTriggered(shiftDown, () -> {
-			leftSolenoidShifter.retract();
-			rightSolenoidShifter.retract();
+		reactor.onUntriggered(shoot, shooter::stop);
+		reactor.onTriggered(kickBall, () -> {
+			kicker.set(true);
+			feeder.setSpeed(1);
 		});
+		reactor.onUntriggered(kickBall, () -> {
+			kicker.set(false);
+			feeder.stop();
+		});
+
+		// hood
+		reactor.onTriggered(hoodUp, () -> {
+			hood.setSpeed(.4);
+		});
+		reactor.onTriggered(hoodDown, () -> {
+			hood.setSpeed(-.4);
+		});
+		reactor.onUntriggered(hoodUp, hood::stop);
+		reactor.onUntriggered(hoodDown, hood::stop);
 
 		// feeder
-		reactor.whileTriggered(feedIn, () -> {
-			feeder.setSpeed(0.5);
+		reactor.onTriggered(feedIn, () -> {
+			feeder.setSpeed(1);
 		});
-		reactor.whileTriggered(feedOut, () -> {
-			feeder.setSpeed(-0.5);
+		reactor.onTriggered(feedOut, () -> {
+			feeder.setSpeed(-1);
 		});
+		reactor.onUntriggered(feedIn, feeder::stop);
+		reactor.onUntriggered(feedOut, feeder::stop);
 
 		// climber
-		reactor.whileTriggered(climberUp, () -> {
+		reactor.onTriggered(climberUp, () -> {
 			climberPivot.setSpeed(1);
 		});
-		reactor.whileTriggered(climberDown, () -> {
+		reactor.onTriggered(climberDown, () -> {
 			climberPivot.setSpeed(-1);
 		});
+		reactor.onUntriggered(climberUp, climberPivot::stop);
+		reactor.onUntriggered(climberDown, climberPivot::stop);
 	}
 
 	@Override
@@ -138,18 +165,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
-	public void teleopPeriodic() {
-		drive.tank(leftSpeed.read(), rightSpeed.read());
-	}
-
-	@Override
 	public void disabledInit() {
 		// Tell Strongback that the robot is disabled so it can flush and kill
 		// commands.
 		Strongback.disable();
-	}
-
-	@Override
-	public void disabledPeriodic() {
 	}
 }
