@@ -1,8 +1,18 @@
 /* Created Fri Jan 15 15:05:28 EST 2016 */
 package com.team2383.robot;
 
+import org.strongback.components.Motor;
+import org.strongback.components.Solenoid;
+import org.strongback.components.Solenoid.Direction;
+import org.strongback.components.TalonSRX;
+import org.strongback.hardware.Hardware;
+
 public class Config {
 	/** Joysticks **/
+
+	public enum Joysticks {
+		LEFT, RIGHT, OPERATOR
+	}
 
 	static int LEFT_JOYSTICK_PORT = 0;
 	static int RIGHT_JOYSTICK_PORT = 1;
@@ -10,33 +20,70 @@ public class Config {
 
 	/** CAN IDs **/
 
-	static int LEFT_FRONT_MOTOR_PORT = 1;
-	static int LEFT_REAR_MOTOR_PORT = 2;
-	// static int LEFT_MOTOR_THIRD_PORT = 3;
-	static int RIGHT_FRONT_MOTOR_PORT = 4;
-	static int RIGHT_REAR_MOTOR_PORT = 5;
-	// static int RIGHT_MOTOR_THIRD_PORT = 6;
+	public enum TalonSRXs {
+		LEFT_FRONT, LEFT_REAR, LEFT_THIRD, RIGHT_FRONT, RIGHT_REAR, RIGHT_THIRD, CLIMBER, SHOOTER, FEEDER, HOOD;
 
-	public static int CLIMBER_MOTOR_PORT = 7;
-	public static int SHOOTER_MOTOR_PORT = 8;
+		public TalonSRX get() {
+			return Hardware.Motors.talonSRX(this.ordinal());
+		}
+	}
 
-	public static int FEEDER_MOTOR_PORT = 0;
-	public static int HOOD_MOTOR_PORT = 7;
+	public enum PWMMotors {
+		FEEDER, HOOD;
+
+		public Motor get() {
+			return Hardware.Motors.victor(this.ordinal());
+		}
+	}
 
 	/** Solenoids **/
 
-	// for shifter
-	static int RIGHT_EXTEND_SHIFTER_PORT = 0;
-	static int RIGHT_RETRACT_SHIFTER_PORT = 1;
+	public enum SingleSolenoids {
+		LEFT_CLIMBER(1), RIGHT_CLIMBER(2), KICKER(3);
 
-	static int LEFT_EXTEND_SHIFTER_PORT = 2;
-	static int LEFT_RETRACT_SHIFTER_PORT = 3;
+		private final int port;
+		private final Direction initialDirection;
 
-	// for climber
-	static int RIGHT_EXTEND_CLIMBER_PORT = 4;
-	static int RIGHT_RETRACT_CLIMBER_PORT = 5;
-	static int LEFT_EXTEND_CLIMBER_PORT = 6;
-	static int LEFT_RETRACT_CLIMBER_PORT = 7;
+		// extend is A, retract is B on vex manifold
+		SingleSolenoids(int port) {
+			this.port = port;
+			this.initialDirection = Direction.RETRACTING;
+		}
+
+		SingleSolenoids(int port, Direction initialDirection) {
+			this.port = port;
+			this.initialDirection = initialDirection;
+		}
+
+		public Solenoid get() {
+			return Hardware.Solenoids.singleSolenoid(this.port, this.initialDirection);
+		}
+	}
+
+	public enum DoubleSolenoids {
+		SHIFTER(0, 4);
+
+		private final int extend;
+		private final int retract;
+		private final Direction initialDirection;
+
+		// extend is A, retract is B on vex manifold
+		DoubleSolenoids(int extend, int retract) {
+			this.extend = extend;
+			this.retract = retract;
+			this.initialDirection = Direction.RETRACTING;
+		}
+
+		DoubleSolenoids(int extend, int retract, Direction initialDirection) {
+			this.extend = extend;
+			this.retract = retract;
+			this.initialDirection = initialDirection;
+		}
+
+		public Solenoid get() {
+			return Hardware.Solenoids.doubleSolenoid(this.extend, this.retract, this.initialDirection);
+		}
+	}
 
 	/** Constants **/
 

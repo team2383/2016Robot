@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.strongback.Strongback;
 import org.strongback.SwitchReactor;
 import org.strongback.components.Motor;
+import org.strongback.components.Solenoid;
 import org.strongback.components.Switch;
 import org.strongback.components.TalonSRX;
 import org.strongback.components.ui.ContinuousRange;
@@ -14,8 +15,6 @@ import org.strongback.components.ui.Gamepad;
 import org.strongback.drive.TankDrive;
 import org.strongback.hardware.Hardware;
 
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,26 +36,19 @@ public class Robot extends IterativeRobot {
 		// are fine.
 		Strongback.configure().recordCommands().useExecutionPeriod(25, TimeUnit.MILLISECONDS).initialize();
 
-		CANTalon leftFront_WPI = new CANTalon(Config.LEFT_FRONT_MOTOR_PORT);
-		CANTalon rightRear_WPI = new CANTalon(Config.RIGHT_REAR_MOTOR_PORT);
-
-		TalonSRX leftFront = Hardware.Motors.talonSRX(leftFront_WPI);
-		TalonSRX rightRear = Hardware.Motors.talonSRX(rightRear_WPI);
-
-		leftFront_WPI.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		rightRear_WPI.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-
-		TalonSRX leftRear = Hardware.Motors.talonSRX(Config.LEFT_REAR_MOTOR_PORT);
-		TalonSRX rightFront = Hardware.Motors.talonSRX(Config.RIGHT_FRONT_MOTOR_PORT);
+		TalonSRX leftFront = Config.TalonSRXs.LEFT_FRONT.get();
+		TalonSRX leftRear = Config.TalonSRXs.LEFT_REAR.get();
+		TalonSRX rightFront = Config.TalonSRXs.RIGHT_FRONT.get();
+		TalonSRX rightRear = Config.TalonSRXs.RIGHT_REAR.get();
 
 		Motor left = Motor.compose(leftFront, leftRear);
 		Motor right = Motor.compose(rightFront, rightRear).invert();
 
-		Motor climberPivot = Hardware.Motors.talonSRX(Config.CLIMBER_MOTOR_PORT);
-		Motor shooter = Hardware.Motors.talonSRX(Config.SHOOTER_MOTOR_PORT);
+		Motor climberPivot = Config.TalonSRXs.CLIMBER.get();
+		Motor shooter = Config.TalonSRXs.CLIMBER.get();
 
-		Motor hood = Hardware.Motors.victor(Config.HOOD_MOTOR_PORT).invert();
-		Motor feeder = Hardware.Motors.victor(Config.FEEDER_MOTOR_PORT);
+		Motor hood = Config.PWMMotors.HOOD.get();
+		Motor feeder = Config.PWMMotors.FEEDER.get();
 
 		edu.wpi.first.wpilibj.Solenoid kicker = new edu.wpi.first.wpilibj.Solenoid(0);
 
@@ -64,7 +56,10 @@ public class Robot extends IterativeRobot {
 		FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
 		Gamepad operatorJoystick = Hardware.HumanInterfaceDevices.logitechF310(Config.OPERATOR_JOYSTICK_PORT);
 
-		// Shifter shifter = new Shifter(leftShifter, rightShifter);
+		Solenoid shifter = Config.DoubleSolenoids.SHIFTER.get();
+		Solenoid leftClimber = Config.SingleSolenoids.LEFT_CLIMBER.get();
+		Solenoid rightClimber = Config.SingleSolenoids.RIGHT_CLIMBER.get();
+
 		TankDrive drive = new TankDrive(left, right);
 
 		ContinuousRange leftSpeed = leftJoystick.getPitch();
@@ -76,7 +71,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto Choices", chooser);
 
 		// joystick buttons
-		Switch shift = rightJoystick.getTrigger();
+		Switch shiftUp = rightJoystick.getTrigger();
+		Switch shiftDown = leftJoystick.getTrigger();
 
 		Switch feedIn = leftJoystick.getButton(5);
 		Switch feedOut = leftJoystick.getButton(6);
@@ -86,10 +82,9 @@ public class Robot extends IterativeRobot {
 		Switch shoot = operatorJoystick.getLeftBumper();
 		Switch climberUp = operatorJoystick.getB();
 		Switch climberDown = operatorJoystick.getX();
+		Switch climberRetract = operatorJoystick.getA();
+		Switch climberExtend = operatorJoystick.getY();
 		Switch kickBall = operatorJoystick.getRightBumper();
-
-		// todo: add doubletap to strongback OI
-		Switch climberExtend = operatorJoystick.getButton(6);
 
 		SwitchReactor reactor = Strongback.switchReactor();
 
@@ -107,6 +102,14 @@ public class Robot extends IterativeRobot {
 		reactor.onUntriggered(kickBall, () -> {
 			kicker.set(false);
 			feeder.stop();
+		});
+
+		// shifter
+		reactor.onTriggered(shiftUp, () -> {
+			shifter.retract();
+		});
+		reactor.onTriggered(shiftDown, () -> {
+			shifter.extend();
 		});
 
 		// hood
@@ -129,7 +132,7 @@ public class Robot extends IterativeRobot {
 		reactor.onUntriggered(feedIn, feeder::stop);
 		reactor.onUntriggered(feedOut, feeder::stop);
 
-		// climber
+		// climber pivot
 		reactor.onTriggered(climberUp, () -> {
 			climberPivot.setSpeed(1);
 		});
@@ -138,6 +141,16 @@ public class Robot extends IterativeRobot {
 		});
 		reactor.onUntriggered(climberUp, climberPivot::stop);
 		reactor.onUntriggered(climberDown, climberPivot::stop);
+
+		// climber
+		reactor.onTriggered(climberRetract, () -> {
+			leftClimber.retract();
+			rightClimber.retract();
+		});
+		reactor.onTriggered(climberExtend, () -> {
+			leftClimber.extend();
+			rightClimber.extend();
+		});
 	}
 
 	@Override
