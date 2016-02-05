@@ -39,6 +39,7 @@ public class Config {
 	/** Solenoids **/
 
 	public enum SingleSolenoids {
+
 		LEFT_CLIMBER(1), RIGHT_CLIMBER(2), KICKER(3);
 
 		private final int port;
@@ -61,7 +62,7 @@ public class Config {
 	}
 
 	public enum DoubleSolenoids {
-		SHIFTER(0, 4);
+		SHIFTER(0, 7);
 
 		private final int extend;
 		private final int retract;

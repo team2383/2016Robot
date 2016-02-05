@@ -13,6 +13,7 @@ import org.strongback.components.ui.ContinuousRange;
 import org.strongback.components.ui.FlightStick;
 import org.strongback.components.ui.Gamepad;
 import org.strongback.drive.TankDrive;
+import org.strongback.function.DoubleToDoubleFunction;
 import org.strongback.hardware.Hardware;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -36,21 +37,19 @@ public class Robot extends IterativeRobot {
 		// are fine.
 		Strongback.configure().recordCommands().useExecutionPeriod(25, TimeUnit.MILLISECONDS).initialize();
 
-		TalonSRX leftFront = Config.TalonSRXs.LEFT_FRONT.get();
-		TalonSRX leftRear = Config.TalonSRXs.LEFT_REAR.get();
-		TalonSRX rightFront = Config.TalonSRXs.RIGHT_FRONT.get();
-		TalonSRX rightRear = Config.TalonSRXs.RIGHT_REAR.get();
+		TalonSRX leftFront = Hardware.Motors.talonSRX(1);
+		TalonSRX leftRear = Hardware.Motors.talonSRX(2);
+		TalonSRX rightFront = Hardware.Motors.talonSRX(4);
+		TalonSRX rightRear = Hardware.Motors.talonSRX(5);
 
 		Motor left = Motor.compose(leftFront, leftRear);
 		Motor right = Motor.compose(rightFront, rightRear).invert();
 
-		Motor climberPivot = Config.TalonSRXs.CLIMBER.get();
-		Motor shooter = Config.TalonSRXs.CLIMBER.get();
+		Motor climberPivot = Hardware.Motors.talonSRX(7);
+		Motor shooter = Hardware.Motors.talonSRX(8);
 
 		Motor hood = Config.PWMMotors.HOOD.get();
 		Motor feeder = Config.PWMMotors.FEEDER.get();
-
-		edu.wpi.first.wpilibj.Solenoid kicker = new edu.wpi.first.wpilibj.Solenoid(0);
 
 		FlightStick leftJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.LEFT_JOYSTICK_PORT);
 		FlightStick rightJoystick = Hardware.HumanInterfaceDevices.logitechAttack3D(Config.RIGHT_JOYSTICK_PORT);
@@ -59,11 +58,17 @@ public class Robot extends IterativeRobot {
 		Solenoid shifter = Config.DoubleSolenoids.SHIFTER.get();
 		Solenoid leftClimber = Config.SingleSolenoids.LEFT_CLIMBER.get();
 		Solenoid rightClimber = Config.SingleSolenoids.RIGHT_CLIMBER.get();
+		Solenoid kicker = Config.SingleSolenoids.KICKER.get();
 
 		TankDrive drive = new TankDrive(left, right);
 
-		ContinuousRange leftSpeed = leftJoystick.getPitch();
-		ContinuousRange rightSpeed = rightJoystick.getPitch();
+		ContinuousRange expo = leftJoystick.getAxis(2);
+		DoubleToDoubleFunction expoFunc = (x) -> {
+			SmartDashboard.putNumber("expo", expo.read());
+			return expo.read() * Math.pow(x, 3) + (1 - expo.read()) * x;
+		};
+		ContinuousRange leftSpeed = leftJoystick.getPitch().map(expoFunc);
+		ContinuousRange rightSpeed = rightJoystick.getPitch().map(expoFunc);
 
 		chooser = new SendableChooser();
 		chooser.addDefault("Default Auto", defaultAuto);
@@ -96,11 +101,11 @@ public class Robot extends IterativeRobot {
 		});
 		reactor.onUntriggered(shoot, shooter::stop);
 		reactor.onTriggered(kickBall, () -> {
-			kicker.set(true);
+			kicker.extend();
 			feeder.setSpeed(1);
 		});
 		reactor.onUntriggered(kickBall, () -> {
-			kicker.set(false);
+			kicker.retract();
 			feeder.stop();
 		});
 
