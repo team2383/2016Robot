@@ -14,8 +14,6 @@ import org.strongback.components.ui.FlightStick;
 import org.strongback.drive.TankDrive;
 import org.strongback.function.DoubleToDoubleFunction;
 
-import com.team2383.robot.components.ToggleSwitch;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,8 +69,9 @@ public class Robot extends IterativeRobot {
          * DRIVER
          */
 
-        ToggleSwitch shift = new ToggleSwitch(leftJoystick.getTrigger());
-        ToggleSwitch invertDrive = new ToggleSwitch(leftJoystick.getThumb(), rightJoystick.getThumb());
+        Switch low = leftJoystick.getButton(4);
+        Switch high = leftJoystick.getButton(5);
+        Switch invertDrive = leftJoystick.getTrigger();
         Switch holdUpKicker = rightJoystick.getTrigger();
 
         // map -1 <-> 1 to 0-1;
@@ -88,7 +87,7 @@ public class Robot extends IterativeRobot {
         ContinuousRange leftSpeed = leftJoystick.getPitch().map(deadband).map(expoFunc);
         ContinuousRange rightSpeed = rightJoystick.getPitch().map(deadband).map(expoFunc);
 
-        ContinuousRange hoodAim = operatorJoystick.getPitch().map(deadband).map(expoFunc).mapToRange(-0.7, 0.7);
+        ContinuousRange hoodAim = operatorJoystick.getPitch().map(deadband).map(expoFunc).mapToRange(-0.2, 0.2);
 
         /**
          * OPERATOR
@@ -123,19 +122,19 @@ public class Robot extends IterativeRobot {
         reactor.whileUntriggered(invertDrive, () -> drive.tank(-rightSpeed.read(), -leftSpeed.read()));
 
         // shifter
-        reactor.onTriggered(shift, () -> {
+        reactor.onTriggered(low, () -> {
             shifter.retract();
         });
-        reactor.onUntriggered(shift, () -> {
+        reactor.onUntriggered(high, () -> {
             shifter.extend();
         });
 
         // hold kicker up
-        reactor.onTriggered(shift, () -> {
-            shifter.retract();
+        reactor.onTriggered(holdUpKicker, () -> {
+            kicker.extend();
         });
-        reactor.onUntriggered(shift, () -> {
-            shifter.extend();
+        reactor.onUntriggered(holdUpKicker, () -> {
+            kicker.retract();
         });
 
         /**
@@ -155,7 +154,7 @@ public class Robot extends IterativeRobot {
         });
 
         // hood
-        reactor.onTriggered(Switch.alwaysTriggered(), () -> {
+        reactor.whileTriggered(Switch.alwaysTriggered(), () -> {
             hood.setSpeed(hoodAim.read());
         });
 
