@@ -5,89 +5,48 @@ import org.strongback.components.Motor;
 import org.strongback.components.Solenoid;
 import org.strongback.components.Solenoid.Direction;
 import org.strongback.components.TalonSRX;
+import org.strongback.components.ui.FlightStick;
 import org.strongback.hardware.Hardware;
 
 public class Config {
-	/** Joysticks **/
+    /** Joysticks **/
 
-	public enum Joysticks {
-		LEFT, RIGHT, OPERATOR
-	}
+    public static final class Joysticks {
+        public static FlightStick left = Hardware.HumanInterfaceDevices.logitechAttack3(0);
+        public static FlightStick right = Hardware.HumanInterfaceDevices.logitechAttack3(1);
+        public static FlightStick operator = Hardware.HumanInterfaceDevices.logitechExtreme3DPro(2);
+    }
 
-	static int LEFT_JOYSTICK_PORT = 0;
-	static int RIGHT_JOYSTICK_PORT = 1;
-	static int OPERATOR_JOYSTICK_PORT = 2;
+    /** CAN IDs **/
 
-	/** CAN IDs **/
+    public static final class Motors {
+        public static TalonSRX leftFront = Hardware.Motors.talonSRX(1);
+        public static TalonSRX leftRear = Hardware.Motors.talonSRX(2);
+        public static TalonSRX leftThird = Hardware.Motors.talonSRX(3);
+        public static TalonSRX rightFront = Hardware.Motors.talonSRX(4);
+        public static TalonSRX rightRear = Hardware.Motors.talonSRX(5);
+        public static TalonSRX rightThird = Hardware.Motors.talonSRX(6);
+        public static TalonSRX climber = Hardware.Motors.talonSRX(7);
+        public static TalonSRX shooter = Hardware.Motors.talonSRX(8);
 
-	public enum TalonSRXs {
-		LEFT_FRONT, LEFT_REAR, LEFT_THIRD, RIGHT_FRONT, RIGHT_REAR, RIGHT_THIRD, CLIMBER, SHOOTER, FEEDER, HOOD;
+        public static Motor feeder = Hardware.Motors.victor(0);
+        public static Motor hood = Hardware.Motors.victor(1);
+    }
 
-		public TalonSRX get() {
-			return Hardware.Motors.talonSRX(this.ordinal());
-		}
-	}
+    /** Solenoids **/
 
-	public enum PWMMotors {
-		FEEDER, HOOD;
+    public static final class Solenoids {
+        public static Solenoid shifter = Hardware.Solenoids.doubleSolenoid(0, 7, Direction.RETRACTING);
+        public static Solenoid leftClimber = Hardware.Solenoids.singleSolenoid(1, Direction.RETRACTING);
+        public static Solenoid rightClimber = Hardware.Solenoids.singleSolenoid(2, Direction.RETRACTING);
+        public static Solenoid kicker = Hardware.Solenoids.singleSolenoid(3, Direction.RETRACTING);
 
-		public Motor get() {
-			return Hardware.Motors.victor(this.ordinal());
-		}
-	}
+    }
 
-	/** Solenoids **/
+    /** Constants **/
 
-	public enum SingleSolenoids {
-
-		LEFT_CLIMBER(1), RIGHT_CLIMBER(2), KICKER(3);
-
-		private final int port;
-		private final Direction initialDirection;
-
-		// extend is A, retract is B on vex manifold
-		SingleSolenoids(int port) {
-			this.port = port;
-			this.initialDirection = Direction.RETRACTING;
-		}
-
-		SingleSolenoids(int port, Direction initialDirection) {
-			this.port = port;
-			this.initialDirection = initialDirection;
-		}
-
-		public Solenoid get() {
-			return Hardware.Solenoids.singleSolenoid(this.port, this.initialDirection);
-		}
-	}
-
-	public enum DoubleSolenoids {
-		SHIFTER(0, 7);
-
-		private final int extend;
-		private final int retract;
-		private final Direction initialDirection;
-
-		// extend is A, retract is B on vex manifold
-		DoubleSolenoids(int extend, int retract) {
-			this.extend = extend;
-			this.retract = retract;
-			this.initialDirection = Direction.RETRACTING;
-		}
-
-		DoubleSolenoids(int extend, int retract, Direction initialDirection) {
-			this.extend = extend;
-			this.retract = retract;
-			this.initialDirection = initialDirection;
-		}
-
-		public Solenoid get() {
-			return Hardware.Solenoids.doubleSolenoid(this.extend, this.retract, this.initialDirection);
-		}
-	}
-
-	/** Constants **/
-
-	static double WHEEL_DIAMETER = 4.0;
-	static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+    public static final class Constants {
+        static double WHEEL_DIAMETER = 4.0;
+        static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+    }
 }
