@@ -14,11 +14,15 @@ import org.strongback.components.ui.FlightStick;
 import org.strongback.drive.TankDrive;
 import org.strongback.function.DoubleToDoubleFunction;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot implements PIDOutput {
 
     private final String defaultAuto = "Default Auto";
     private final String secondAuto = "Second Auto";
@@ -26,6 +30,18 @@ public class Robot extends IterativeRobot {
     private String autoSelected;
 
     private static SendableChooser chooser;
+    
+    AHRS ahrs;
+    PIDController turnController;
+    double rotateToAngleRate;
+    boolean rotateToAngle = false;
+    static final double kP = 0.03;
+    static final double kI = 0.00;
+    static final double kD = 0.00;
+    static final double kF = 0.00;
+    
+    static final double kToleranceDegrees = 2.0f;
+    
 
     @Override
     public void robotInit() {
@@ -58,6 +74,8 @@ public class Robot extends IterativeRobot {
         Solenoid rightClimber = Config.Solenoids.rightClimber;
         Solenoid kicker = Config.Solenoids.kicker;
 
+       
+        
         TankDrive drive = new TankDrive(left, right);
 
         chooser = new SendableChooser();
@@ -73,6 +91,9 @@ public class Robot extends IterativeRobot {
         Switch high = leftJoystick.getButton(5);
         Switch invertDrive = () -> !leftJoystick.getTrigger().isTriggered();
         Switch holdUpKicker = rightJoystick.getTrigger();
+        Switch straightDrive = rightJoystick.getButton(4);
+        Switch resetGyro = rightJoystick.getButton(11);
+        
 
         // map -1 <-> 1 to 0-1;
         ContinuousRange expo = leftJoystick.getAxis(2).invert().mapToRange(0, 1);
@@ -118,8 +139,8 @@ public class Robot extends IterativeRobot {
          */
 
         // tank drive
-        reactor.whileTriggered(invertDrive, () -> drive.tank(leftSpeed.read(), rightSpeed.read()));
-        reactor.whileUntriggered(invertDrive, () -> drive.tank(-rightSpeed.read(), -leftSpeed.read()));
+        reactor.whileTriggered(invertDrive, () -> drive.tank(leftSpeed.read(), rightSpeed.read(),true));
+        reactor.whileUntriggered(invertDrive, () -> drive.tank(-rightSpeed.read(), -leftSpeed.read(),true));
 
         // shifter
         reactor.onTriggered(low, () -> {
@@ -136,6 +157,23 @@ public class Robot extends IterativeRobot {
         reactor.onUntriggered(holdUpKicker, () -> {
             kicker.retract();
         });
+        
+        // gyro assist
+        reactor.whileTriggered(straightDrive, () -> {
+        	turnController.setSetpoint(0.0f);
+            rotateToAngle = true;
+        });
+        reactor.onTriggered(resetGyro, () -> {
+        	ahrs.reset();
+        });
+        double currentRotationRate;
+        if ( rotateToAngle ) {
+            turnController.enable();
+            currentRotationRate = rotateToAngleRate;
+        }
+        else{currentRotationRate = operatorJoystick.getYaw().read();}
+        	
+        
 
         /**
          * OPERATOR
@@ -187,6 +225,14 @@ public class Robot extends IterativeRobot {
             leftClimber.extend();
             rightClimber.extend();
         });
+        
+        //Angle Manipulation
+        
+        turnController = new PIDController(kP, kI, kD, kF, ahrs, this);
+        turnController.setInputRange(-180.0f,  180.0f);
+        turnController.setOutputRange(-1.0, 1.0);
+        turnController.setAbsoluteTolerance(kToleranceDegrees);
+        turnController.setContinuous(true);
     }
 
     @Override
@@ -218,5 +264,12 @@ public class Robot extends IterativeRobot {
         // Tell Strongback that the robot is disabled so it can flush and kill
         // commands.
         Strongback.disable();
+    }
+    
+    @Override
+    /* This function is invoked periodically by the PID Controller, */
+    /* based upon navX MXP yaw angle input and PID Coefficients.    */
+    public void pidWrite(double output) {
+        rotateToAngleRate = output;
     }
 }
