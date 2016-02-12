@@ -11,14 +11,13 @@ import org.strongback.components.Switch;
 import org.strongback.components.TalonSRX;
 import org.strongback.components.ui.ContinuousRange;
 import org.strongback.components.ui.FlightStick;
+import org.strongback.control.PIDController;
 import org.strongback.drive.TankDrive;
 import org.strongback.function.DoubleToDoubleFunction;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -32,8 +31,12 @@ public class Robot extends IterativeRobot implements PIDOutput {
     private static SendableChooser chooser;
     
     AHRS ahrs;
-    PIDController turnController;
+    SoftwarePIDController turnController;
     double rotateToAngleRate;
+    double ksR = 1;
+    double ksL = 1;
+    double kS = 0.1;
+
     boolean rotateToAngle = false;
     static final double kP = 0.03;
     static final double kI = 0.00;
@@ -75,8 +78,13 @@ public class Robot extends IterativeRobot implements PIDOutput {
         Solenoid kicker = Config.Solenoids.kicker;
 
        
-        
         TankDrive drive = new TankDrive(left, right);
+        
+        turnController = new PIDController(kP, kI, kD, kF, ahrs, this);
+        turnController.setInputRange(-180.0f,  180.0f);
+        turnController.setOutputRange(-1.0, 1.0);
+        turnController.setAbsoluteTolerance(kToleranceDegrees);
+        turnController.setContinuous(true);
 
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
@@ -104,9 +112,14 @@ public class Robot extends IterativeRobot implements PIDOutput {
         DoubleToDoubleFunction deadband = (x) -> {
             return Math.abs(x) <= 0.1 ? 0 : x;
         };
+        DoubleToDoubleFunction correctAngle = (x) -> {
+            x
+            
+            
+        };
 
-        ContinuousRange leftSpeed = leftJoystick.getPitch().map(deadband).map(expoFunc);
-        ContinuousRange rightSpeed = rightJoystick.getPitch().map(deadband).map(expoFunc);
+        ContinuousRange leftSpeed = leftJoystick.getPitch().map(deadband).map(expoFunc).map((x) -> x - /*pidcontroller*/);
+        ContinuousRange rightSpeed = rightJoystick.getPitch().map(deadband).map(expoFunc).map((x) -> x + /*pidcontroller*/);
 
         ContinuousRange hoodAim = operatorJoystick.getPitch().map(deadband).map(expoFunc).mapToRange(-0.8, 0.8);
 
@@ -139,8 +152,8 @@ public class Robot extends IterativeRobot implements PIDOutput {
          */
 
         // tank drive
-        reactor.whileTriggered(invertDrive, () -> drive.tank(leftSpeed.read(), rightSpeed.read(),true));
-        reactor.whileUntriggered(invertDrive, () -> drive.tank(-rightSpeed.read(), -leftSpeed.read(),true));
+        reactor.whileTriggered(invertDrive, () -> drive.tank(leftSpeed.read() * ksL, rightSpeed.read() * ksR));
+        reactor.whileUntriggered(invertDrive, () -> drive.tank(-rightSpeed.read() * ksR, -leftSpeed.read() * ksL));
 
         // shifter
         reactor.onTriggered(low, () -> {
@@ -159,22 +172,20 @@ public class Robot extends IterativeRobot implements PIDOutput {
         });
         
         // gyro assist
-        reactor.whileTriggered(straightDrive, () -> {
-        	turnController.setSetpoint(0.0f);
-            rotateToAngle = true;
-        });
-        reactor.onTriggered(resetGyro, () -> {
+        reactor.onTriggered(straightDrive, () -> {
         	ahrs.reset();
         });
-        double currentRotationRate;
-        if ( rotateToAngle ) {
-            turnController.enable();
-            currentRotationRate = rotateToAngleRate;
-        }
-        else{currentRotationRate = operatorJoystick.getYaw().read();}
-        	
-        
+        reactor.whileTriggered(straightDrive, () -> {
+        	ksL = (1+ ahrs.getAngle() / 90 ) * kS;
+            ksR = (1- ahrs.getAngle() / 90)  * kS;
+        });   
+        reactor.onUntriggered(straightDrive, () -> {
+        	ksR = 1; 
+        	ksL = 1;
+        });
 
+
+        	
         /**
          * OPERATOR
          */
@@ -186,6 +197,7 @@ public class Robot extends IterativeRobot implements PIDOutput {
         reactor.onUntriggered(spool, shooter::stop);
         reactor.onTriggered(shoot, () -> {
             kicker.extend();
+            feeder.setSpeed(1);
         });
         reactor.onUntriggered(shoot, () -> {
             kicker.retract();
@@ -226,13 +238,6 @@ public class Robot extends IterativeRobot implements PIDOutput {
             rightClimber.extend();
         });
         
-        //Angle Manipulation
-        
-        turnController = new PIDController(kP, kI, kD, kF, ahrs, this);
-        turnController.setInputRange(-180.0f,  180.0f);
-        turnController.setOutputRange(-1.0, 1.0);
-        turnController.setAbsoluteTolerance(kToleranceDegrees);
-        turnController.setContinuous(true);
     }
 
     @Override
