@@ -8,6 +8,8 @@ import org.strongback.components.TalonSRX;
 import org.strongback.components.ui.FlightStick;
 import org.strongback.hardware.Hardware;
 
+import edu.wpi.first.wpilibj.Encoder;
+
 public class Config {
     /** Joysticks **/
 
@@ -32,6 +34,12 @@ public class Config {
 
         public static Motor feeder = Hardware.Motors.victor(0);
     }
+    
+    /** Encoders **/
+    
+    public static final class Encoders {
+    	public static Encoder wheelEncoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+    }
 
     /** Solenoids **/
 
@@ -48,5 +56,13 @@ public class Config {
     public static final class Constants {
         static double WHEEL_DIAMETER = 4.0;
         static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+        public static double WHEEL_ENCODER_DISTANCE_PER_PULSE = 24;
+        
+        public static final double kP = 0.03;
+        public static final double kI = 0.00;
+        public static final double kD = 0.00;
+        public static final double kF = 0.00;
+        
+        public static final double kS = 0.1;
     }
 }
