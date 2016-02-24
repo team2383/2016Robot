@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Created Fri Jan 15 15:05:28 EST 2016 -->
-<project name="RobotProject2016" default="deploy">
+<project name="2016-Robot" default="deploy">
 
 	<!--
   The following properties can be defined to override system level
@@ -24,5 +24,4 @@
 
 	<property file="build.properties"/>
 	<import file="${user.home}/strongback/java/ant/build.xml"/>
-
 </project>

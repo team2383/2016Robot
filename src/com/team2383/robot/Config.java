@@ -28,18 +28,18 @@ public class Config {
         public static TalonSRX rightThird = Hardware.Motors.talonSRX(6);
         public static TalonSRX climber = Hardware.Motors.talonSRX(7);
         public static TalonSRX shooter = Hardware.Motors.talonSRX(8);
+        public static TalonSRX hood = Hardware.Motors.talonSRX(9);
 
         public static Motor feeder = Hardware.Motors.victor(0);
-        public static Motor hood = Hardware.Motors.victor(1);
     }
 
     /** Solenoids **/
 
     public static final class Solenoids {
-        public static Solenoid shifter = Hardware.Solenoids.doubleSolenoid(0, 7, Direction.RETRACTING);
-        public static Solenoid leftClimber = Hardware.Solenoids.singleSolenoid(1, Direction.RETRACTING);
-        public static Solenoid rightClimber = Hardware.Solenoids.singleSolenoid(2, Direction.RETRACTING);
-        public static Solenoid kicker = Hardware.Solenoids.singleSolenoid(3, Direction.RETRACTING);
+        public static Solenoid kicker = Hardware.Solenoids.doubleSolenoid(0, 7, Direction.RETRACTING);
+        public static Solenoid shifter = Hardware.Solenoids.singleSolenoid(2, Direction.RETRACTING);
+        public static Solenoid leftClimber = Hardware.Solenoids.singleSolenoid(3, Direction.RETRACTING);
+        public static Solenoid rightClimber = Hardware.Solenoids.singleSolenoid(4, Direction.RETRACTING);
 
     }
 
