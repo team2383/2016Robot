@@ -8,29 +8,28 @@ import org.strongback.function.DoubleToDoubleFunction;
 
 import com.kauailabs.navx.frc.AHRS;
 
-
 public class RotateToRelativeAngle extends ControllerCommand {
 
     private final DoubleToDoubleFunction leftApply;
     private final DoubleToDoubleFunction rightApply;
     private final TankDrive drive;
     private AHRS ahrs;
-    private Runnable initializer;
-    
-	public RotateToRelativeAngle(Controller sharedController, Runnable initializer, TankDrive drivetrain) {
-		super(sharedController, initializer, drivetrain);
+    @SuppressWarnings("unused")
+	private Runnable initializer;
+	public RotateToRelativeAngle(Controller sharedController, double setPoint, TankDrive drivetrain) {
+		super(sharedController, ()->{}, drivetrain);
+        this.initializer = () -> { ahrs.reset(); controller.withTarget(setPoint); };
 		this.leftApply = (x) -> x;
 		this.rightApply = (x) -> -x;
 		this.drive = drivetrain;
 	}
 
     public RotateToRelativeAngle(Controller sharedController,
-                               double setPoint,
+                               Runnable initializer,
                                DoubleToDoubleFunction leftApply,
                                DoubleToDoubleFunction rightApply,
                                TankDrive drivetrain) {
-        super(sharedController, ()->{}, drivetrain);
-        this.initializer = () -> { ahrs.reset(); controller.withTarget(setPoint); };
+        super(sharedController, initializer, drivetrain);
         this.leftApply = leftApply;
         this.rightApply = rightApply;
         this.drive = drivetrain;

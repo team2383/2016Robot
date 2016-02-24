@@ -103,6 +103,8 @@ public class Robot extends IterativeRobot implements PIDOutput {
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("Second Auto", secondAuto);
         SmartDashboard.putData("Auto Choices", chooser);
+        
+       
 
         /**
          * DRIVER
@@ -160,8 +162,8 @@ public class Robot extends IterativeRobot implements PIDOutput {
          */
 
         // tank drive
-        reactor.whileTriggered(invertDrive, () -> drive.tank(leftSpeed.read() * ksL, rightSpeed.read() * ksR));
-        reactor.whileUntriggered(invertDrive, () -> drive.tank(-rightSpeed.read() * ksR, -leftSpeed.read() * ksL));
+        reactor.whileUntriggered(invertDrive, () -> drive.tank(leftSpeed.read() * ksL, rightSpeed.read() * ksR));
+        reactor.whileTriggered(invertDrive, () -> drive.tank(-rightSpeed.read() * ksR, -leftSpeed.read() * ksL));
 
         // shifter
         reactor.onTriggered(low, () -> {
