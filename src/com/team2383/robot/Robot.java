@@ -71,7 +71,7 @@ public class Robot extends IterativeRobot {
 
         Switch low = leftJoystick.getButton(4);
         Switch high = leftJoystick.getButton(5);
-        Switch invertDrive = leftJoystick.getTrigger();
+        Switch invertDrive = () -> !leftJoystick.getTrigger().isTriggered();
         Switch holdUpKicker = rightJoystick.getTrigger();
 
         // map -1 <-> 1 to 0-1;
@@ -87,7 +87,7 @@ public class Robot extends IterativeRobot {
         ContinuousRange leftSpeed = leftJoystick.getPitch().map(deadband).map(expoFunc);
         ContinuousRange rightSpeed = rightJoystick.getPitch().map(deadband).map(expoFunc);
 
-        ContinuousRange hoodAim = operatorJoystick.getPitch().map(deadband).map(expoFunc).mapToRange(-0.2, 0.2);
+        ContinuousRange hoodAim = operatorJoystick.getPitch().map(deadband).map(expoFunc).mapToRange(-0.8, 0.8);
 
         /**
          * OPERATOR

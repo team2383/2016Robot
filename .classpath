@@ -2,11 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="build/test-classes" path="testsrc"/>
-	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
-	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="navx-mxp"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/strongback"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="var" path="navx-mxp"/>
+	<classpathentry kind="var" path="networktables"/>
+	<classpathentry kind="var" path="wpilib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/strongback-java"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
