@@ -7,6 +7,6 @@
 	<classpathentry kind="var" path="navx-mxp"/>
 	<classpathentry kind="var" path="networktables"/>
 	<classpathentry kind="var" path="wpilib"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/strongback-java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Strongback"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
