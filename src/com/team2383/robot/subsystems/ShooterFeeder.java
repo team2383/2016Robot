@@ -43,7 +43,7 @@ public class ShooterFeeder extends Subsystem {
         wpiHood.enableBrakeMode(true);
         wpiHood.changeControlMode(TalonControlMode.Position);
         wpiHood.setPIDSourceType(PIDSourceType.kDisplacement);
-        wpiHood.setPID(3.7, 0.0005, 25);
+        wpiHood.setPID(Constants.hoodP, Constants.hoodI, Constants.hoodD);
         wpiHood.reverseOutput(false);
         wpiHood.reverseSensor(false);
         wpiHood.setForwardSoftLimit(Constants.hoodForwardLimit);

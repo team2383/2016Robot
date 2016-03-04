@@ -62,4 +62,7 @@ public class Constants {
 
     public static double inputExpo = 0.5;
     public static double inputDeadband = 0.1;
+    public static double hoodP = 3.7;
+    public static double hoodI = 0.0005;
+    public static double hoodD = 25;
 }
