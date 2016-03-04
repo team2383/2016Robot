@@ -24,9 +24,8 @@ public class Constants {
     public static enum Preset {
         closeHoodAndStopShooter(new ShooterPreset(0.0, 0)),
         feeding(new ShooterPreset(2.0, 0)),
-        batter(new ShooterPreset(12.06, 4000)),
-        courtyardClose(new ShooterPreset(19.26, 4700)),
-        courtyardFar(new ShooterPreset(20.25, 4850));
+        batter(new ShooterPreset(24.0, 4000)),
+        courtyardFar(new ShooterPreset(37, 4850));
 
         private final ShooterPreset preset;
 
@@ -44,8 +43,9 @@ public class Constants {
     public static double shooterFeederKickPower = 1.0;
 
     public static int hoodDegreeTolerance = 1;
-    public static double hoodAngleMin = 1.205;
-    public static double hoodAngleMax = 0.705;
+    public static double hoodStallCurrent = 8; // amps
+    public static double hoodReverseLimit = 1.625;
+    public static double hoodForwardLimit = 2.1;
 
     public static double feedCurrentMultiplier = 6.0;
     public static double feedPower = 1.0;

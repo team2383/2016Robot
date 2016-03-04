@@ -72,6 +72,11 @@ public class ShootBall extends CommandGroup {
 
         @Override
         public void interrupted() {
+            this.end();
+        }
+
+        @Override
+        public void end() {
             shooterFeeder.setFeederPower(0);
             shooterFeeder.disableShooter();
         }

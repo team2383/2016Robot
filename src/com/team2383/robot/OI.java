@@ -29,35 +29,33 @@ public final class OI {
     private static DoubleToDoubleFunction mapper = (x) -> OI.expo(OI.deadband(x));
     private static DoubleToDoubleFunction mapperWithInvert = (x) -> OI.expo(OI.deadband(OI.invert(x)));
 
-    public static Switch invert = leftStick.getTrigger();
-
     public static ContinuousRange arcadeDriveSpeed = leftStick.getPitch().map(OI.mapperWithInvert);
     public static ContinuousRange arcadeTurnSpeed = rightStick.getRoll().map(OI.mapperWithInvert);
     public static ContinuousRange tankLeftSpeed = leftStick.getPitch().map(OI.mapperWithInvert);
     public static ContinuousRange tankRightSpeed = rightStick.getPitch().map(OI.mapperWithInvert);
 
-    public static Switch straight = rightStick.getTrigger();
-    public static Switch useTank = new ToggleSwitch(leftStick.getButton(2));
-
-    public static Switch shiftDown = leftStick.getThumb();
-    public static Switch shiftUp = rightStick.getThumb();
+    public static Switch invert = new ToggleSwitch(leftStick.getButton(11));
+    public static Switch shiftDown = leftStick.getButton(6);
+    public static Switch shiftUp = rightStick.getButton(11);
 
     private static FlightStick operatorStick = Hardware.HumanInterfaceDevices.logitechExtreme3DPro(2);
 
     public static ContinuousRange hood = OI.operatorStick.getPitch().map(OI.mapper);
 
-    public static Switch feedIn = operatorStick.getButton(7);
-    public static Switch feedOut = operatorStick.getButton(8);
+    // free operator mappings
+    // 7, 9. 10, 11, throttle
+
+    public static Switch feedIn = operatorStick.getButton(8);
+    public static Switch feedOut = operatorStick.getButton(12);
 
     public static Switch extendArms = operatorStick.getDPad(0).getDirectionAsSwitch(Direction.UP);
     public static Switch retractArms = operatorStick.getDPad(0).getDirectionAsSwitch(Direction.DOWN);
 
     public static Switch shoot = operatorStick.getTrigger();
-    public static Switch spool = operatorStick.getThumb();
+    public static Switch fullManual = operatorStick.getThumb();
 
-    public static Switch manualHood = operatorStick.getButton(9);
-    public static Switch presetBatter = operatorStick.getButton(10);
-    public static Switch presetClose = operatorStick.getButton(11);
-    public static Switch presetFar = operatorStick.getButton(12);
-    public static Switch presetCloseHoodAndStopShooter = operatorStick.getButton(6);
+    public static Switch manualHood = operatorStick.getButton(5);
+    public static Switch presetCloseHoodAndStopShooter = operatorStick.getButton(3);
+    public static Switch presetBatter = operatorStick.getButton(4);
+    public static Switch presetFar = operatorStick.getButton(6);
 }

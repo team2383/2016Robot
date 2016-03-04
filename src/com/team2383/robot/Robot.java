@@ -7,10 +7,11 @@ import org.strongback.command.Command;
 import org.strongback.components.Motor;
 import org.strongback.components.Switch;
 
+import com.team2383.robot.Constants.Preset;
 import com.team2383.robot.control.FeedInBall;
 import com.team2383.robot.control.ShootBall;
+import com.team2383.robot.control.TeleopDrive;
 import com.team2383.robot.subsystems.Drivetrain;
-import com.team2383.robot.subsystems.Drivetrain.Gear;
 import com.team2383.robot.subsystems.ShooterFeeder;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -69,10 +70,11 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
         // Start Strongback functions ...
         Strongback.restart();
-
         /**
          * OPERATOR
          */
+
+        Strongback.submit(new TeleopDrive(this.drivetrain));
 
         // feeder
         reactor.onTriggeredSubmit(OI.feedIn,
@@ -87,7 +89,7 @@ public class Robot extends IterativeRobot {
 
         // hood/shooter
         reactor.whileTriggered(OI.manualHood, () -> {
-            shooterFeeder.setHoodPower(OI.hood.read());
+            shooterFeeder.hood.setSpeed(OI.hood.read());
         });
         reactor.onUntriggered(OI.manualHood, () -> {
             shooterFeeder.setHoldHoodPosition();
@@ -99,26 +101,20 @@ public class Robot extends IterativeRobot {
         });
 
         // presets
-        // reactor.onTriggered(OI.presetCloseHoodAndStopShooter, shooterFeeder::closeAndStop);
-        // reactor.onTriggered(OI.presetBatter, () -> shooterFeeder.usePreset(Preset.batter));
-        // reactor.onTriggered(OI.presetClose, () -> shooterFeeder.usePreset(Preset.courtyardClose));
-        // reactor.onTriggered(OI.presetFar, () -> shooterFeeder.usePreset(Preset.courtyardFar));
+        reactor.onTriggered(OI.presetCloseHoodAndStopShooter, shooterFeeder::closeAndStop);
+        reactor.onTriggered(OI.presetBatter, () -> shooterFeeder.usePreset(Preset.batter));
+        reactor.onTriggered(OI.presetCloseHoodAndStopShooter, () -> shooterFeeder.usePreset(Preset.closeHoodAndStopShooter));
+        reactor.onTriggered(OI.presetFar, () -> shooterFeeder.usePreset(Preset.courtyardFar));
 
         // arms
         reactor.onTriggered(OI.extendArms, () -> arms.setSpeed(1.0));
-        reactor.onTriggered(OI.retractArms, () -> arms.setSpeed(1.0));
+        reactor.onTriggered(OI.retractArms, () -> arms.setSpeed(-1.0));
         reactor.onUntriggered(Switch.or(OI.extendArms, OI.retractArms), () -> arms.stop());
     }
 
     @Override
     public void teleopPeriodic() {
-        if (OI.shiftUp.isTriggered()) {
-            drivetrain.shiftTo(Gear.HIGH);
-        } else if (OI.shiftDown.isTriggered()) {
-            drivetrain.shiftTo(Gear.LOW);
-        }
 
-        drivetrain.drive.tank(OI.tankLeftSpeed.read(), OI.tankRightSpeed.read());
     }
 
     @Override

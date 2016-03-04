@@ -8,6 +8,12 @@ import edu.wpi.first.wpilibj.CANTalon;
 public class SRXMagEncoder implements Gyroscope {
     private final CANTalon talon;
 
+    public SRXMagEncoder(TalonSRX talonSB, CANTalon.FeedbackDevice device) {
+        this.talon = talonSB.getWPILibCANTalon();
+
+        talon.setFeedbackDevice(device);
+    }
+
     public SRXMagEncoder(TalonSRX talonSB) {
         this.talon = talonSB.getWPILibCANTalon();
 
@@ -22,7 +28,7 @@ public class SRXMagEncoder implements Gyroscope {
     @Override
     public Gyroscope zero() {
         // TODO Auto-generated method stub
-        talon.setPosition(talon.getPulseWidthPosition());
+        talon.setPosition(0);
         return this;
     }
 
