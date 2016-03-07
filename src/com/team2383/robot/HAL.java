@@ -24,7 +24,7 @@ public class HAL {
     private static TalonSRX shooter = Hardware.Motors.talonSRX(8);
     private static TalonSRX hood = Hardware.Motors.talonSRX(9);
 
-    private static Motor feeder = Hardware.Motors.victor(0);
+    private static Motor feeder = Hardware.Motors.victor(0).invert();
 
     /** Solenoids **/
     private static Solenoid shifter = Hardware.Solenoids.doubleSolenoid(0, 1, Direction.RETRACTING);

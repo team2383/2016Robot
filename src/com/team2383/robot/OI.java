@@ -45,17 +45,24 @@ public final class OI {
     // free operator mappings
     // 7, 9. 10, 11, throttle
 
+    public static Switch feedHood = operatorStick.getButton(7);
     public static Switch feedIn = operatorStick.getButton(8);
     public static Switch feedOut = operatorStick.getButton(12);
+    public static Switch feeding = Switch.or(OI.feedOut, OI.feedIn);
 
     public static Switch extendArms = operatorStick.getDPad(0).getDirectionAsSwitch(Direction.UP);
     public static Switch retractArms = operatorStick.getDPad(0).getDirectionAsSwitch(Direction.DOWN);
 
     public static Switch shoot = operatorStick.getTrigger();
-    public static Switch fullManual = operatorStick.getThumb();
+    public static Switch spool = operatorStick.getThumb();
 
     public static Switch manualHood = operatorStick.getButton(5);
     public static Switch presetCloseHoodAndStopShooter = operatorStick.getButton(3);
     public static Switch presetBatter = operatorStick.getButton(4);
+    public static Switch presetClose = operatorStick.getButton(9);
     public static Switch presetFar = operatorStick.getButton(6);
+
+    static {
+        new OI();
+    }
 }

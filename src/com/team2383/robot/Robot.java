@@ -3,19 +3,17 @@ package com.team2383.robot;
 
 import org.strongback.Strongback;
 import org.strongback.SwitchReactor;
-import org.strongback.command.Command;
-import org.strongback.components.Motor;
 import org.strongback.components.Switch;
+import org.strongback.components.TalonSRX;
 
-import com.team2383.robot.Constants.Preset;
-import com.team2383.robot.control.FeedInBall;
-import com.team2383.robot.control.ShootBall;
-import com.team2383.robot.control.TeleopDrive;
 import com.team2383.robot.subsystems.Drivetrain;
+import com.team2383.robot.subsystems.Drivetrain.Gear;
 import com.team2383.robot.subsystems.ShooterFeeder;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class Robot extends IterativeRobot {
 
@@ -30,7 +28,8 @@ public class Robot extends IterativeRobot {
 
     private Drivetrain drivetrain;
     private ShooterFeeder shooterFeeder;
-    private Motor arms;
+    private TalonSRX arms;
+    private USBCamera camera;
 
     @Override
     public void robotInit() {
@@ -42,9 +41,14 @@ public class Robot extends IterativeRobot {
 
         reactor = Strongback.switchReactor();
 
+        camera = new USBCamera();
+        CameraServer.getInstance().setQuality(50);
+        CameraServer.getInstance().startAutomaticCapture(camera);
+
         drivetrain = HAL.drivetrain;
         shooterFeeder = HAL.shooterFeeder;
         arms = HAL.arms;
+        arms.enableBrakeMode(true);
     }
 
     @Override
@@ -74,37 +78,37 @@ public class Robot extends IterativeRobot {
          * OPERATOR
          */
 
-        Strongback.submit(new TeleopDrive(this.drivetrain));
+        reactor.whileTriggered(Switch.alwaysTriggered(), () -> {
+            drivetrain.drive.tank(OI.tankLeftSpeed.read(), OI.tankRightSpeed.read());
+        });
+
+        reactor.onTriggered(OI.shiftDown, () -> drivetrain.shiftTo(Gear.LOW));
+        reactor.onTriggered(OI.shiftUp, () -> drivetrain.shiftTo(Gear.HIGH));
+
+        reactor.onTriggered(() -> {
+            return shooterFeeder.hood.getWPILibCANTalon().isRevLimitSwitchClosed();
+        } , () -> {
+            Strongback.logger().debug("setting zero...");
+            shooterFeeder.setHoodZero();
+        });
 
         // feeder
-        reactor.onTriggeredSubmit(OI.feedIn,
-                () -> new FeedInBall(shooterFeeder));
-        reactor.onUntriggered(OI.feedIn,
-                () -> Command.cancel(shooterFeeder));
-
+        reactor.whileTriggered(OI.feedIn,
+                () -> shooterFeeder.setFeederPower(1.0));
         reactor.whileTriggered(OI.feedOut,
                 () -> shooterFeeder.setFeederPower(-1.0));
-        reactor.onUntriggered(OI.feedOut,
-                () -> shooterFeeder.setFeederPower(0));
+        reactor.onUntriggered(OI.feeding, () -> shooterFeeder.setFeederPower(0));
 
         // hood/shooter
-        reactor.whileTriggered(OI.manualHood, () -> {
+        reactor.whileTriggered(Switch.alwaysTriggered(), () -> {
             shooterFeeder.hood.setSpeed(OI.hood.read());
         });
-        reactor.onUntriggered(OI.manualHood, () -> {
-            shooterFeeder.setHoldHoodPosition();
-        });
 
-        reactor.onTriggeredSubmit(OI.shoot, () -> new ShootBall(shooterFeeder));
-        reactor.onUntriggered(OI.shoot, () -> {
-            Command.cancel(shooterFeeder);
-        });
+        reactor.whileTriggered(OI.spool, () -> shooterFeeder.shooter.setSpeed(1.0));
+        reactor.onUntriggered(OI.spool, () -> shooterFeeder.shooter.setSpeed(0.0));
 
-        // presets
-        reactor.onTriggered(OI.presetCloseHoodAndStopShooter, shooterFeeder::closeAndStop);
-        reactor.onTriggered(OI.presetBatter, () -> shooterFeeder.usePreset(Preset.batter));
-        reactor.onTriggered(OI.presetCloseHoodAndStopShooter, () -> shooterFeeder.usePreset(Preset.closeHoodAndStopShooter));
-        reactor.onTriggered(OI.presetFar, () -> shooterFeeder.usePreset(Preset.courtyardFar));
+        reactor.whileTriggered(OI.shoot, () -> shooterFeeder.setFeederPower(1));
+        reactor.onUntriggered(OI.shoot, () -> shooterFeeder.setFeederPower(0));
 
         // arms
         reactor.onTriggered(OI.extendArms, () -> arms.setSpeed(1.0));
@@ -114,7 +118,7 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void teleopPeriodic() {
-
+        drivetrain.tank(OI.shiftUp, OI.shiftDown, OI.tankLeftSpeed.read(), OI.tankRightSpeed.read());
     }
 
     @Override

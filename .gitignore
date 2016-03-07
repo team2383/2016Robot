@@ -49,3 +49,4 @@ local.properties
 #build and dist
 build/
 dist/
+/target/

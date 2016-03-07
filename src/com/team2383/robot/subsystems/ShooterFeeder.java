@@ -27,6 +27,7 @@ public class ShooterFeeder extends Subsystem {
 
     private DoubleToDoubleFunction mapHoodAngle = (x) -> x;
     private DoubleToDoubleFunction mapHoodEncoderToAngle = (x) -> x;
+    private double presetShooterRPM;
 
     public ShooterFeeder(TalonSRX shooter, Motor feeder, TalonSRX hood, PowerDistributionPanel PDP, int feederPDPChannel) {
         super("Shooter");
@@ -47,26 +48,26 @@ public class ShooterFeeder extends Subsystem {
         wpiHood.reverseOutput(false);
         wpiHood.reverseSensor(false);
         wpiHood.setForwardSoftLimit(Constants.hoodForwardLimit);
-        wpiHood.enableForwardSoftLimit(true);
+        wpiHood.enableForwardSoftLimit(false);
 
         this.mapHoodAngle = Values.mapRange(0.0, 90.0).toRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit);
         this.mapHoodEncoderToAngle = Values.mapRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit).toRange(0.0, 90.0);
 
         CANTalon wpiShooter = shooter.getWPILibCANTalon();
         wpiShooter.enableBrakeMode(false);
-        wpiShooter.setAllowableClosedLoopErr(Constants.shooterRpmTolerance);
+        wpiShooter.reverseSensor(true);
         wpiShooter.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
         wpiShooter.changeControlMode(TalonControlMode.Speed);
         wpiShooter.setPIDSourceType(PIDSourceType.kRate);
-        wpiShooter.setPID(100, 0, 5);
-        wpiShooter.disable();
+        wpiShooter.setPID(100, 0, 40);
+        wpiShooter.enable();
     }
 
     public void usePreset(Preset preset) {
         ShooterPreset p = preset.get();
         this.disableShooter();
         this.setHoodAngleSetpoint(p.hoodAngle);
-        this.setShooterRPMSetpoint(p.shooterRPM);
+        this.presetShooterRPM = p.shooterRPM;
     }
 
     public void closeAndStop() {
@@ -94,7 +95,12 @@ public class ShooterFeeder extends Subsystem {
         useHoodPID();
         hoodEncoder.zero();
         double min = hoodEncoder.getAngle();
-        double max = min + 0.5; // half a rotation on the hood window motor
+        double max = min + 0.4; // half a rotation on the hood window motor
+        System.out.println("min: " + min);
+        System.out.println("max: " + max);
+        this.mapHoodAngle = Values.mapRange(0.0, 90.0).toRange(min, max);
+        this.mapHoodEncoderToAngle = Values.mapRange(min, max).toRange(0.0, 90.0);
+        wpiHood.setForwardSoftLimit(max);
         System.out.println(min);
         wpiHood.enable();
     }
@@ -126,20 +132,18 @@ public class ShooterFeeder extends Subsystem {
         return wpiHood.getError() <= Constants.hoodDegreeTolerance;
     }
 
-    private void setShooterRPMSetpoint(double speed) {
+    private void loadPresetShooterRPMSetpoint() {
         CANTalon wpiShooter = shooter.getWPILibCANTalon();
         useShooterPID();
-        wpiShooter.setSetpoint(speed);
+        wpiShooter.setSetpoint(this.presetShooterRPM);
     }
 
     public void setShooterPower(double power) {
         shooter.setSpeed(power);
     }
 
-    public double getShooterRPMSetpoint() {
-        CANTalon wpiShooter = shooter.getWPILibCANTalon();
-        useShooterPID();
-        return wpiShooter.getSetpoint();
+    public double getPresetShooterRPMSetpoint() {
+        return this.presetShooterRPM;
     }
 
     public double getShooterRPM() {
@@ -153,12 +157,13 @@ public class ShooterFeeder extends Subsystem {
 
     public void disableShooter() {
         CANTalon wpiShooter = shooter.getWPILibCANTalon();
-        wpiShooter.disable();
+        wpiShooter.disableControl();
     }
 
     public void enableShooter() {
         CANTalon wpiShooter = shooter.getWPILibCANTalon();
-        wpiShooter.enable();
+        wpiShooter.enableControl();
+        loadPresetShooterRPMSetpoint();
     }
 
     public void setFeederPower(double power) {

@@ -23,9 +23,10 @@ public class Constants {
 
     public static enum Preset {
         closeHoodAndStopShooter(new ShooterPreset(0.0, 0)),
-        feeding(new ShooterPreset(2.0, 0)),
-        batter(new ShooterPreset(24.0, 4000)),
-        courtyardFar(new ShooterPreset(37, 4850));
+        feed(new ShooterPreset(5.0, 0)),
+        batter(new ShooterPreset(29.92, 3000)),
+        courtyardClose(new ShooterPreset(54.73, 4850)),
+        courtyardFar(new ShooterPreset(50, 4850));
 
         private final ShooterPreset preset;
 
@@ -44,15 +45,16 @@ public class Constants {
 
     public static int hoodDegreeTolerance = 1;
     public static double hoodStallCurrent = 8; // amps
-    public static double hoodReverseLimit = 1.625;
-    public static double hoodForwardLimit = 2.1;
+    public static double hoodReverseLimit = 0.630;
+    public static double hoodForwardLimit = 1.000;
 
-    public static double feedCurrentMultiplier = 6.0;
+    public static double feedCurrentMultiplier = 2.0;
+    public static double feedCurrentMinimum = 5;
     public static double feedPower = 1.0;
     public static double feedShooterPower = -0.1;
 
     public static double feedPushAwayPower = -0.2;
-    public static double feedPushAwayLengthInSeconds = 0.3;
+    public static double feedPushAwayLengthInSeconds = 0.7;
 
     public static double driveWheelDiameter = 6.0;
     public static double driveWheelCircumference = driveWheelDiameter * Math.PI;
@@ -62,7 +64,7 @@ public class Constants {
 
     public static double inputExpo = 0.5;
     public static double inputDeadband = 0.1;
-    public static double hoodP = 3.7;
-    public static double hoodI = 0.0005;
+    public static double hoodP = 2.3;
+    public static double hoodI = 0.0008;
     public static double hoodD = 25;
 }
