@@ -1,130 +1,82 @@
-/* Created Fri Jan 15 15:05:28 EST 2016 */
+
 package com.team2383.robot;
 
-import org.strongback.Strongback;
-import org.strongback.SwitchReactor;
-import org.strongback.components.Switch;
-import org.strongback.components.TalonSRX;
-
-import com.team2383.robot.subsystems.Drivetrain;
-import com.team2383.robot.subsystems.Drivetrain.Gear;
-import com.team2383.robot.subsystems.ShooterFeeder;
-
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.vision.USBCamera;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
+	public static OI oi;
 
-    private final String defaultAuto = "Default Auto";
-    private final String secondAuto = "Second Auto";
+	Command autonomousCommand;
+	SendableChooser chooser;
 
-    private String autoSelected;
+	@Override
+	public void robotInit() {
+		oi = new OI();
+		chooser = new SendableChooser();
+		chooser.addDefault("Low Bar + High Goal", null);
+		// chooser.addObject("Damage Low Bar", null);
+		// chooser.addObject("Reach Any Defense", null);
+		// chooser.addObject("Spy Bot + High Goal", null);
+		SmartDashboard.putData("Auto mode", chooser);
+	}
 
-    private static SendableChooser chooser;
+	@Override
+	public void disabledInit() {
 
-    private SwitchReactor reactor;
+	}
 
-    private Drivetrain drivetrain;
-    private ShooterFeeder shooterFeeder;
-    private TalonSRX arms;
-    private USBCamera camera;
+	@Override
+	public void disabledPeriodic() {
+		Scheduler.getInstance().run();
 
-    @Override
-    public void robotInit() {
-        // Set up Strongback using its configurator. This is entirely optional,
-        // but we're not using
-        // events or data so it's better if we turn them off. All other defaults
-        // are fine.
-        Strongback.configure().recordNoEvents().recordNoData().recordNoCommands().initialize();
+		// 21.18 in TalonSRX software manual
+		HAL.leftFront.enableBrakeMode(false);
+		HAL.leftRear.enableBrakeMode(false);
+		HAL.rightFront.enableBrakeMode(false);
+		HAL.rightRear.enableBrakeMode(false);
+		HAL.shooterMotor.enableBrakeMode(false);
+		HAL.hoodMotor.enableBrakeMode(true);
+		HAL.armMotor.enableBrakeMode(true);
+	}
 
-        reactor = Strongback.switchReactor();
+	@Override
+	public void autonomousInit() {
+		autonomousCommand = (Command) chooser.getSelected();
 
-        camera = new USBCamera();
-        CameraServer.getInstance().setQuality(50);
-        CameraServer.getInstance().startAutomaticCapture(camera);
+		// schedule the autonomous command (example)
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
+		}
+	}
 
-        drivetrain = HAL.drivetrain;
-        shooterFeeder = HAL.shooterFeeder;
-        arms = HAL.arms;
-        arms.enableBrakeMode(true);
-    }
+	@Override
+	public void autonomousPeriodic() {
+		Scheduler.getInstance().run();
+	}
 
-    @Override
-    public void autonomousInit() {
-        Strongback.start();
-        autoSelected = (String) chooser.getSelected();
-        System.out.println("Auto Selected: " + autoSelected);
-    }
+	@Override
+	public void teleopInit() {
+		// This makes sure that the autonomous stops running when
+		// teleop starts running. If you want the autonomous to
+		// continue until interrupted by another command, remove
+		// this line or comment it out.
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
+		}
+	}
 
-    @Override
-    public void autonomousPeriodic() {
-        switch (autoSelected) {
-            case secondAuto:
-                // secondAuto command here
-                break;
-            case defaultAuto:
-                // defaultAuto command here
-                break;
-        }
-    }
+	@Override
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+	}
 
-    @Override
-    public void teleopInit() {
-        // Start Strongback functions ...
-        Strongback.restart();
-        /**
-         * OPERATOR
-         */
-
-        reactor.whileTriggered(Switch.alwaysTriggered(), () -> {
-            drivetrain.drive.tank(OI.tankLeftSpeed.read(), OI.tankRightSpeed.read());
-        });
-
-        reactor.onTriggered(OI.shiftDown, () -> drivetrain.shiftTo(Gear.LOW));
-        reactor.onTriggered(OI.shiftUp, () -> drivetrain.shiftTo(Gear.HIGH));
-
-        reactor.onTriggered(() -> {
-            return shooterFeeder.hood.getWPILibCANTalon().isRevLimitSwitchClosed();
-        } , () -> {
-            Strongback.logger().debug("setting zero...");
-            shooterFeeder.setHoodZero();
-        });
-
-        // feeder
-        reactor.whileTriggered(OI.feedIn,
-                () -> shooterFeeder.setFeederPower(1.0));
-        reactor.whileTriggered(OI.feedOut,
-                () -> shooterFeeder.setFeederPower(-1.0));
-        reactor.onUntriggered(OI.feeding, () -> shooterFeeder.setFeederPower(0));
-
-        // hood/shooter
-        reactor.whileTriggered(Switch.alwaysTriggered(), () -> {
-            shooterFeeder.hood.setSpeed(OI.hood.read());
-        });
-
-        reactor.whileTriggered(OI.spool, () -> shooterFeeder.shooter.setSpeed(1.0));
-        reactor.onUntriggered(OI.spool, () -> shooterFeeder.shooter.setSpeed(0.0));
-
-        reactor.whileTriggered(OI.shoot, () -> shooterFeeder.setFeederPower(1));
-        reactor.onUntriggered(OI.shoot, () -> shooterFeeder.setFeederPower(0));
-
-        // arms
-        reactor.onTriggered(OI.extendArms, () -> arms.setSpeed(1.0));
-        reactor.onTriggered(OI.retractArms, () -> arms.setSpeed(-1.0));
-        reactor.onUntriggered(Switch.or(OI.extendArms, OI.retractArms), () -> arms.stop());
-    }
-
-    @Override
-    public void teleopPeriodic() {
-        drivetrain.tank(OI.shiftUp, OI.shiftDown, OI.tankLeftSpeed.read(), OI.tankRightSpeed.read());
-    }
-
-    @Override
-    public void disabledInit() {
-        // Tell Strongback that the robot is disabled so it can flush and kill
-        // commands.
-        Strongback.disable();
-    }
+	@Override
+	public void testPeriodic() {
+		LiveWindow.run();
+	}
 }

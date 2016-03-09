@@ -1,47 +1,42 @@
-/* Created Fri Jan 15 15:05:28 EST 2016 */
 package com.team2383.robot;
 
-import org.strongback.components.Motor;
-import org.strongback.components.Solenoid;
-import org.strongback.components.Solenoid.Direction;
-import org.strongback.components.TalonSRX;
-import org.strongback.hardware.Hardware;
-
 import com.kauailabs.navx.frc.AHRS;
+import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain;
-import com.team2383.robot.subsystems.ShooterFeeder;
+import com.team2383.robot.subsystems.Feeder;
+import com.team2383.robot.subsystems.ShooterFlywheel;
+import com.team2383.robot.subsystems.ShooterHood;
 
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.VictorSP;
 
 public class HAL {
-    /** CAN IDs **/
-    private static TalonSRX leftFront = Hardware.Motors.talonSRX(1);
-    private static TalonSRX leftRear = Hardware.Motors.talonSRX(2);
-    private static TalonSRX rightFront = Hardware.Motors.talonSRX(4);
-    private static TalonSRX rightRear = Hardware.Motors.talonSRX(5);
+	/** CAN IDs **/
+	public static CANTalon leftFront = new CANTalon(1);
+	public static CANTalon leftRear = new CANTalon(2);
+	public static CANTalon rightFront = new CANTalon(4);
+	public static CANTalon rightRear = new CANTalon(5);
 
-    private static TalonSRX shooter = Hardware.Motors.talonSRX(8);
-    private static TalonSRX hood = Hardware.Motors.talonSRX(9);
+	public static CANTalon shooterMotor = new CANTalon(8);
+	public static CANTalon hoodMotor = new CANTalon(9);
+	public static CANTalon armMotor = new CANTalon(10);
+	public static VictorSP feederMotor = new VictorSP(0);
 
-    private static Motor feeder = Hardware.Motors.victor(0).invert();
+	/** Solenoids **/
+	public static DoubleSolenoid shifter = new DoubleSolenoid(0, 1);
+	public static DoubleSolenoid hoodTopLimit = new DoubleSolenoid(2, 3);
 
-    /** Solenoids **/
-    private static Solenoid shifter = Hardware.Solenoids.doubleSolenoid(0, 1, Direction.RETRACTING);
+	/** Sensors **/
 
-    /** Sensors **/
+	public static PowerDistributionPanel PDP = new PowerDistributionPanel(0);
+	public static AHRS navX = new AHRS(SPI.Port.kMXP);
 
-    private static PowerDistributionPanel PDP = new PowerDistributionPanel(0);
-    private static AHRS navX = new AHRS(SPI.Port.kMXP);
-
-    /** Subsystem Definitions **/
-
-    public static Drivetrain drivetrain = new Drivetrain(leftFront, leftRear,
-            rightFront, rightRear,
-            shifter, navX);
-
-    public static ShooterFeeder shooterFeeder = new ShooterFeeder(shooter, feeder, hood,
-            PDP, 13);
-
-    public static TalonSRX arms = Hardware.Motors.talonSRX(10);
+	public static Arms arms = new Arms();
+	public static Drivetrain drivetrain = new Drivetrain();
+	public static Feeder feeder = new Feeder();
+	public static ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	public static ShooterHood shooterHood = new ShooterHood();
 }

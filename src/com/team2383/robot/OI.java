@@ -1,68 +1,88 @@
 package com.team2383.robot;
 
-import org.strongback.components.Switch;
-import org.strongback.components.ui.ContinuousRange;
-import org.strongback.components.ui.DirectionalAxis.Direction;
-import org.strongback.components.ui.FlightStick;
-import org.strongback.function.DoubleToDoubleFunction;
-import org.strongback.hardware.Hardware;
+import static com.team2383.robot.HAL.arms;
+import static com.team2383.robot.HAL.drivetrain;
+import static com.team2383.robot.HAL.feeder;
+import static com.team2383.robot.HAL.hoodTopLimit;
 
-import com.team2383.robot.components.ToggleSwitch;
+import java.util.function.DoubleSupplier;
 
-public final class OI {
+import com.team2383.ninjaLib.DPadButton;
+import com.team2383.ninjaLib.DPadButton.Direction;
+import com.team2383.ninjaLib.WPILambdas;
+import com.team2383.robot.commands.SetState;
+import com.team2383.robot.commands.Shoot;
+import com.team2383.robot.commands.Spool;
+import com.team2383.robot.subsystems.Arms;
+import com.team2383.robot.subsystems.Drivetrain.Gear;
+import com.team2383.robot.subsystems.Feeder;
 
-    private static FlightStick leftStick = Hardware.HumanInterfaceDevices.logitechAttack3(0);
-    private static FlightStick rightStick = Hardware.HumanInterfaceDevices.logitechAttack3(1);
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-    private static double expo(double x) {
-        return Constants.inputExpo * Math.pow(x, 3) + (1 - Constants.inputExpo) * x;
-    };
+/**
+ * This class is the glue that binds the controls on the physical operator
+ * interface to the commands and command groups that allow control of the robot.
+ */
+public class OI {
+	//// CREATING BUTTONS
+	// One type of button is a joystick button which is any button on a
+	//// joystick.
+	// You create one by telling it which joystick it's on and which button
+	// number it is.
 
-    private static double deadband(double x) {
-        return Math.abs(x) <= Constants.inputDeadband ? 0 : x;
-    };
+	/* Sticks */
+	public static Joystick left = new Joystick(0);
+	public static Joystick right = new Joystick(1);
 
-    private static double invert(double x) {
-        return Math.abs(x) <= Constants.inputDeadband ? 0 : x;
-    };
+	public static DoubleSupplier leftSpeed = left::getY;
+	public static DoubleSupplier rightSpeed = right::getY;
+	public static Button shiftDown = new JoystickButton(left, 6);
+	public static Button shiftUp = new JoystickButton(right, 11);
 
-    private static DoubleToDoubleFunction mapper = (x) -> OI.expo(OI.deadband(x));
-    private static DoubleToDoubleFunction mapperWithInvert = (x) -> OI.expo(OI.deadband(OI.invert(x)));
+	public static Joystick operator = new Joystick(2);
 
-    public static ContinuousRange arcadeDriveSpeed = leftStick.getPitch().map(OI.mapperWithInvert);
-    public static ContinuousRange arcadeTurnSpeed = rightStick.getRoll().map(OI.mapperWithInvert);
-    public static ContinuousRange tankLeftSpeed = leftStick.getPitch().map(OI.mapperWithInvert);
-    public static ContinuousRange tankRightSpeed = rightStick.getPitch().map(OI.mapperWithInvert);
+	public static DoubleSupplier hood = operator::getY;
 
-    public static Switch invert = new ToggleSwitch(leftStick.getButton(11));
-    public static Switch shiftDown = leftStick.getButton(6);
-    public static Switch shiftUp = rightStick.getButton(11);
+	public static Button feedIn = new JoystickButton(operator, 8);
+	public static Button feedOut = new JoystickButton(operator, 12);
 
-    private static FlightStick operatorStick = Hardware.HumanInterfaceDevices.logitechExtreme3DPro(2);
+	public static Button extendArms = new DPadButton(operator, Direction.UP);
+	public static Button retractArms = new DPadButton(operator, Direction.DOWN);
 
-    public static ContinuousRange hood = OI.operatorStick.getPitch().map(OI.mapper);
+	public static Button shoot = new JoystickButton(operator, 1); // trigger
+	public static Button spool = new JoystickButton(operator, 2); // thumb
 
-    // free operator mappings
-    // 7, 9. 10, 11, throttle
+	public static Button closeHood = new JoystickButton(operator, 4);
+	public static Button hoodNear = new JoystickButton(operator, 9);
+	public static Button hoodFar = new JoystickButton(operator, 6);
 
-    public static Switch feedHood = operatorStick.getButton(7);
-    public static Switch feedIn = operatorStick.getButton(8);
-    public static Switch feedOut = operatorStick.getButton(12);
-    public static Switch feeding = Switch.or(OI.feedOut, OI.feedIn);
+	// use buttons
+	public OI() {
+		shiftDown.whenPressed(WPILambdas.createCommand(() -> {
+			drivetrain.shiftTo(Gear.LOW);
+			return true;
+		}));
 
-    public static Switch extendArms = operatorStick.getDPad(0).getDirectionAsSwitch(Direction.UP);
-    public static Switch retractArms = operatorStick.getDPad(0).getDirectionAsSwitch(Direction.DOWN);
+		shiftUp.whenPressed(WPILambdas.createCommand(() -> {
+			drivetrain.shiftTo(Gear.HIGH);
+			return true;
+		}));
 
-    public static Switch shoot = operatorStick.getTrigger();
-    public static Switch spool = operatorStick.getThumb();
+		feedIn.whenPressed(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
+		feedOut.whenPressed(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDING, Feeder.State.STOPPED));
 
-    public static Switch manualHood = operatorStick.getButton(5);
-    public static Switch presetCloseHoodAndStopShooter = operatorStick.getButton(3);
-    public static Switch presetBatter = operatorStick.getButton(4);
-    public static Switch presetClose = operatorStick.getButton(9);
-    public static Switch presetFar = operatorStick.getButton(6);
+		extendArms.whenPressed(new SetState<Arms.State>(arms, Arms.State.EXTENDING, Arms.State.STOPPED));
+		retractArms.whenPressed(new SetState<Arms.State>(arms, Arms.State.RETRACTING, Arms.State.STOPPED));
 
-    static {
-        new OI();
-    }
+		spool.whenPressed(new Spool());
+		shoot.whenPressed(new Shoot());
+
+		if (Constants.useMechanicalHoodPresets) {
+			hoodFar.toggleWhenActive(new ActuateHoodStop(hoodTopLimit));
+		} else {
+			// setup hood presets
+		}
+	}
 }

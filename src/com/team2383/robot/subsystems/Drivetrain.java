@@ -1,115 +1,116 @@
 package com.team2383.robot.subsystems;
 
-import org.strongback.components.Gyroscope;
-import org.strongback.components.Solenoid;
-import org.strongback.components.Switch;
-import org.strongback.components.TalonSRX;
-import org.strongback.drive.TankDrive;
+//bring in HAL
+import static com.team2383.robot.HAL.leftFront;
+import static com.team2383.robot.HAL.leftRear;
+import static com.team2383.robot.HAL.rightFront;
+import static com.team2383.robot.HAL.rightRear;
+import static com.team2383.robot.HAL.shifter;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.team2383.robot.Constants;
-import com.team2383.robot.components.SRXMagEncoder;
+import com.team2383.robot.OI;
+import com.team2383.robot.commands.TeleopDrive;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Drivetrain extends Subsystem {
-    public final TalonSRX leftFront, leftRear, rightFront, rightRear;
-    public final AHRS navX;
-    public final Solenoid shifter;
-    public final TankDrive drive;
-    public final Gyroscope leftEncoder, rightEncoder;
+public class Drivetrain extends Subsystem implements PIDSource {
+	private final RobotDrive robotDrive;
 
-    public enum Gear {
-        LOW, HIGH;
-    }
+	public enum Gear {
+		LOW, HIGH
+	}
 
-    /**
-     *
-     * @param leftFront
-     * @param leftRear
-     * @param rightFront
-     * @param rightRear
-     * @param shifter
-     * @param navX
-     */
-    public Drivetrain(TalonSRX leftFront, TalonSRX leftRear, TalonSRX rightFront, TalonSRX rightRear, Solenoid shifter,
-                      AHRS navX) {
-        super("Drive");
-        this.leftFront = leftFront;
-        this.leftRear = leftRear;
-        this.rightFront = rightFront;
-        this.rightRear = rightRear;
-        this.navX = navX;
+	public Drivetrain() {
+		super("Drivetrain");
 
-        leftRear.getWPILibCANTalon().changeControlMode(TalonControlMode.Follower);
-        leftRear.getWPILibCANTalon().set(leftFront.getDeviceID());
+		leftRear.changeControlMode(TalonControlMode.Follower);
+		leftRear.set(leftFront.getDeviceID());
 
-        rightFront.getWPILibCANTalon().setInverted(true);
-        // since rightRear is a slave, no need to invert it;
-        rightRear.getWPILibCANTalon().changeControlMode(TalonControlMode.Follower);
-        rightRear.getWPILibCANTalon().set(rightFront.getDeviceID());
+		rightRear.changeControlMode(TalonControlMode.Follower);
+		rightRear.set(rightFront.getDeviceID());
 
-        this.leftEncoder = new SRXMagEncoder(leftFront);
-        this.rightEncoder = new SRXMagEncoder(rightRear);
+		this.robotDrive = new RobotDrive(leftFront, rightFront);
+	}
 
-        this.drive = new TankDrive(leftFront, rightFront);
+	public void tank(double leftValue, double rightValue) {
+		robotDrive.tankDrive(leftValue, rightValue);
+	}
 
-        this.shifter = shifter;
-    }
+	public void arcade(double driveSpeed, double turnSpeed) {
+		robotDrive.arcadeDrive(driveSpeed, turnSpeed);
+	}
 
-    public double getFeetPerSecond() {
-        double avgDegreesPerSecond = (leftEncoder.getRate() + rightEncoder.getRate()) / 2.0;
-        return avgDegreesPerSecond * Constants.driveFeetPerDegree;
-    }
+	public void shiftTo(Gear gear) {
+		switch (gear) {
+		case HIGH:
+			leftFront.enableBrakeMode(true);
+			leftRear.enableBrakeMode(true);
+			rightFront.enableBrakeMode(true);
+			rightRear.enableBrakeMode(true);
+			shifter.set(Value.kForward);
+			break;
+		case LOW:
+			leftFront.enableBrakeMode(false);
+			leftRear.enableBrakeMode(false);
+			rightFront.enableBrakeMode(false);
+			rightRear.enableBrakeMode(false);
+			shifter.set(Value.kReverse);
+			break;
+		}
+	}
 
-    public boolean tank(Switch shiftUp, Switch shiftDown, double leftSpeed, double rightSpeed) {
-        if (shiftUp.isTriggered()) {
-            shiftTo(Gear.HIGH);
-        } else if (shiftDown.isTriggered()) {
-            shiftTo(Gear.LOW);
-        }
+	public void shift() {
+		if (getGear() == Gear.HIGH) {
+			shiftTo(Gear.LOW);
+		} else {
+			shiftTo(Gear.HIGH);
+		}
+	}
 
-        drive.tank(leftSpeed, rightSpeed);
-        return false;
-    }
+	public Gear getGear() {
+		switch (shifter.get()) {
+		case kForward:
+			return Gear.HIGH;
+		default:
+		case kReverse:
+			return Gear.LOW;
+		}
+	}
 
-    public boolean arcade(Switch shiftUp, Switch shiftDown, double driveSpeed, double turnSpeed) {
-        if (shiftUp.isTriggered()) {
-            shiftTo(Gear.HIGH);
-        } else if (shiftDown.isTriggered()) {
-            shiftTo(Gear.LOW);
-        }
+	public void resetEncoders() {
+		leftFront.setPosition(0);
+		rightRear.setPosition(0);
+	}
 
-        drive.arcade(driveSpeed, turnSpeed);
-        return false;
-    }
+	public double getDegrees() {
+		return (leftFront.getPosition() + rightRear.getPosition()) / 2.0;
+	}
 
-    public void shiftTo(Gear gear) {
-        switch (gear) {
-            case HIGH:
-                shifter.extend();
-                break;
-            case LOW:
-                shifter.retract();
-                break;
-        }
-    }
+	public double getInches() {
+		return getDegrees() * Constants.driveInchesPerDegree;
+	}
 
-    public void shift() {
-        if (shifter.isRetracting()) {
-            shifter.extend();
-        } else {
-            shifter.retract();
-        }
-    }
+	@Override
+	protected void initDefaultCommand() {
+		this.setDefaultCommand(new TeleopDrive(OI.leftSpeed, OI.rightSpeed));
+	}
 
-    public Gear getGear() {
-        switch (shifter.getDirection()) {
-            case EXTENDING:
-                return Gear.HIGH;
-            default:
-            case RETRACTING:
-                return Gear.LOW;
-        }
-    }
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		return PIDSourceType.kDisplacement;
+	}
+
+	@Override
+	public double pidGet() {
+		return getInches();
+	}
 }
