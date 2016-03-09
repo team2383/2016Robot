@@ -58,6 +58,10 @@ public class OI {
 	public static Button hoodNear = new JoystickButton(operator, 9);
 	public static Button hoodFar = new JoystickButton(operator, 6);
 
+	static {
+		OI oi = new OI();
+	}
+
 	// use buttons
 	public OI() {
 		shiftDown.whenPressed(WPILambdas.createCommand(() -> {
@@ -70,14 +74,14 @@ public class OI {
 			return true;
 		}));
 
-		feedIn.whenPressed(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
-		feedOut.whenPressed(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDING, Feeder.State.STOPPED));
+		feedIn.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
+		feedOut.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDING, Feeder.State.STOPPED));
 
-		extendArms.whenPressed(new SetState<Arms.State>(arms, Arms.State.EXTENDING, Arms.State.STOPPED));
-		retractArms.whenPressed(new SetState<Arms.State>(arms, Arms.State.RETRACTING, Arms.State.STOPPED));
+		extendArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.EXTENDING, Arms.State.STOPPED));
+		retractArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.RETRACTING, Arms.State.STOPPED));
 
-		spool.whenPressed(new Spool());
-		shoot.whenPressed(new Shoot());
+		spool.whileHeld(new Spool());
+		shoot.whileHeld(new Shoot());
 
 		if (Constants.useMechanicalHoodPresets) {
 			hoodFar.toggleWhenActive(new ActuateHoodStop(hoodTopLimit));

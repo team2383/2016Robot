@@ -1,6 +1,11 @@
 
 package com.team2383.robot;
 
+import com.team2383.robot.auto.LowBar;
+import com.team2383.robot.auto.LowBarHighGoal;
+import com.team2383.robot.auto.Reach;
+import com.team2383.robot.auto.SpyBotHighGoal;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -9,19 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
-	public static OI oi;
 
 	Command autonomousCommand;
 	SendableChooser chooser;
 
 	@Override
 	public void robotInit() {
-		oi = new OI();
 		chooser = new SendableChooser();
-		chooser.addDefault("Low Bar + High Goal", null);
-		// chooser.addObject("Damage Low Bar", null);
-		// chooser.addObject("Reach Any Defense", null);
-		// chooser.addObject("Spy Bot + High Goal", null);
+		chooser.addDefault("Low Bar + High Goal", new LowBarHighGoal());
+		chooser.addObject("Damage Low Bar", new LowBar());
+		chooser.addObject("Reach Any Defense", new Reach());
+		chooser.addObject("Spy Bot + High Goal", new SpyBotHighGoal());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 

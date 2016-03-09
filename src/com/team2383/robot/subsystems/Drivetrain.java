@@ -8,15 +8,18 @@ import static com.team2383.robot.HAL.rightRear;
 import static com.team2383.robot.HAL.shifter;
 
 import com.team2383.robot.Constants;
+import com.team2383.robot.HAL;
 import com.team2383.robot.OI;
 import com.team2383.robot.commands.TeleopDrive;
 
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends Subsystem implements PIDSource {
 	private final RobotDrive robotDrive;
@@ -28,37 +31,41 @@ public class Drivetrain extends Subsystem implements PIDSource {
 	public Drivetrain() {
 		super("Drivetrain");
 
+		leftFront.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		leftRear.changeControlMode(TalonControlMode.Follower);
 		leftRear.set(leftFront.getDeviceID());
 
-		rightRear.changeControlMode(TalonControlMode.Follower);
-		rightRear.set(rightFront.getDeviceID());
+		rightRear.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		rightRear.reverseSensor(true);
+		rightFront.changeControlMode(TalonControlMode.Follower);
+		rightFront.set(rightRear.getDeviceID());
 
-		this.robotDrive = new RobotDrive(leftFront, rightFront);
+		this.robotDrive = new RobotDrive(leftFront, rightRear);
+		robotDrive.setSafetyEnabled(false);
 	}
 
 	public void tank(double leftValue, double rightValue) {
+		SmartDashboard.putNumber("Encoder Rotations", getRotations());
+		SmartDashboard.putNumber("Encoder Degrees", getInches());
+		SmartDashboard.putNumber("Gyro Yaw", HAL.navX.getYaw());
 		robotDrive.tankDrive(leftValue, rightValue);
 	}
 
 	public void arcade(double driveSpeed, double turnSpeed) {
+		SmartDashboard.putNumber("Encoder Rotations", getRotations());
+		SmartDashboard.putNumber("Encoder Degrees", getInches());
+		SmartDashboard.putNumber("Gyro Yaw", HAL.navX.getYaw());
 		robotDrive.arcadeDrive(driveSpeed, turnSpeed);
 	}
 
 	public void shiftTo(Gear gear) {
 		switch (gear) {
 		case HIGH:
-			leftFront.enableBrakeMode(true);
-			leftRear.enableBrakeMode(true);
-			rightFront.enableBrakeMode(true);
-			rightRear.enableBrakeMode(true);
+			enableBrake();
 			shifter.set(Value.kForward);
 			break;
 		case LOW:
-			leftFront.enableBrakeMode(false);
-			leftRear.enableBrakeMode(false);
-			rightFront.enableBrakeMode(false);
-			rightRear.enableBrakeMode(false);
+			disableBrake();
 			shifter.set(Value.kReverse);
 			break;
 		}
@@ -87,12 +94,12 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		rightRear.setPosition(0);
 	}
 
-	public double getDegrees() {
+	public double getRotations() {
 		return (leftFront.getPosition() + rightRear.getPosition()) / 2.0;
 	}
 
 	public double getInches() {
-		return getDegrees() * Constants.driveInchesPerDegree;
+		return getRotations() * Constants.driveWheelCircumference;
 	}
 
 	@Override
@@ -112,5 +119,19 @@ public class Drivetrain extends Subsystem implements PIDSource {
 	@Override
 	public double pidGet() {
 		return getInches();
+	}
+
+	public void enableBrake() {
+		leftFront.enableBrakeMode(true);
+		leftRear.enableBrakeMode(true);
+		rightFront.enableBrakeMode(true);
+		rightRear.enableBrakeMode(true);
+	}
+
+	public void disableBrake() {
+		leftFront.enableBrakeMode(false);
+		leftRear.enableBrakeMode(false);
+		rightFront.enableBrakeMode(false);
+		rightRear.enableBrakeMode(false);
 	}
 }

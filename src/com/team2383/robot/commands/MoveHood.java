@@ -39,7 +39,7 @@ public class MoveHood extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return this.isTimedOut();
+		return false; //this.isTimedOut();
 	}
 
 	@Override

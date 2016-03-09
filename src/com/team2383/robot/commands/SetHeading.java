@@ -4,16 +4,23 @@ import static com.team2383.robot.HAL.drivetrain;
 import static com.team2383.robot.HAL.navX;
 
 import com.team2383.robot.Constants;
+import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SetHeading extends PIDCommand {
 
 	public SetHeading(double angle) {
-		super("Set Heading", Constants.driveHeadingP, Constants.driveHeadingI, Constants.driveHeadingD);
+		this(Constants.driveHeadingMoveToVelocity, angle);
+	}
+
+	public SetHeading(double velocity, double angle) {
+		super("Set Heading", Constants.driveHeadingMoveToP, Constants.driveHeadingMoveToI,
+				Constants.driveHeadingMoveToD);
 		requires(drivetrain);
 		this.getPIDController().setInputRange(-180.0, 180.0);
-		this.getPIDController().setOutputRange(-0.5, 0.5);
+		this.getPIDController().setOutputRange(-velocity, velocity);
 		this.getPIDController().setContinuous();
 		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingTolerance);
 		this.getPIDController().setSetpoint(angle);
@@ -21,6 +28,9 @@ public class SetHeading extends PIDCommand {
 
 	@Override
 	protected void initialize() {
+		navX.reset();
+		drivetrain.enableBrake();
+		drivetrain.shiftTo(Gear.LOW);
 	}
 
 	@Override
@@ -29,7 +39,8 @@ public class SetHeading extends PIDCommand {
 
 	@Override
 	protected boolean isFinished() {
-		return this.getPIDController().onTarget();
+		SmartDashboard.putNumber("SetHeading error", this.getPIDController().getError());
+		return Math.abs(this.getPIDController().getError()) <= Constants.driveHeadingTolerance;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.Spool;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.command.WaitForChildren;
 
@@ -20,19 +21,15 @@ import edu.wpi.first.wpilibj.command.WaitForChildren;
 public class LowBarHighGoal extends CommandGroup {
 
 	public LowBarHighGoal() {
-		addSequential(new DriveDistance(0.5, 296));
-		addSequential(new SetHeading(30));
-		addSequential(new DriveDistance(0.5, 67));
-		addSequential(new DriveDistance(0.5, 67));
+		addSequential(new DriveDistance(0.71, 175));
+		addParallel(new MoveHood(() -> 0.2, 1));
+		addSequential(new SetHeading(49));
+		addSequential(new DriveDistance(0.71, 126));
 		// Raise hood at 0.4 for 0.2 seconds
-		addParallel(new Spool());
-		addSequential(new WaitForChildren());
-		addSequential(new MoveHood(() -> 0.4, 0.2));
-		addSequential(new Shoot());
-		addSequential(new WaitCommand("Wait for shooter", 3));
-		addParallel(new MoveHood(() -> 0.4, 0.2));
-		addSequential(new DriveDistance(0.5, -67));
-		addSequential(new SetHeading(-60));
-		addSequential(new DriveDistance(0.5, -100));
+		addParallel(new Spool(4));
+		addSequential(new WaitCommand(2));
+		addSequential(new Shoot(5));
+		addSequential(new PrintCommand("Shooting!"));
+		addSequential(new WaitForChildren()); // wait for spool down
 	}
 }

@@ -6,19 +6,25 @@ import com.team2383.robot.commands.SetState.StatefulSubsystem;
 
 public class Feeder extends StatefulSubsystem<Feeder.State> {
 
+	public Feeder() {
+		feederMotor.setInverted(true);
+		feederMotor.setSafetyEnabled(false);
+	}
+
 	public enum State {
 		FEEDING, OUTFEEDING, STOPPED
 	}
 
-	private void feedIn() {
+	public void feedIn() {
+		System.out.println("Feeding!");
 		feederMotor.set(1);
 	}
 
-	private void feedOut() {
+	public void feedOut() {
 		feederMotor.set(-1);
 	}
 
-	private void stop() {
+	public void stop() {
 		feederMotor.set(0);
 	}
 

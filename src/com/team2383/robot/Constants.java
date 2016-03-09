@@ -58,22 +58,27 @@ public class Constants {
 	public static double feedPushAwayPower = -0.2;
 	public static double feedPushAwayLengthInSeconds = 0.7;
 
-	public static double driveWheelDiameter = 6.0;
+	public static double driveWheelDiameter = 7.30;
 	public static double driveWheelCircumference = driveWheelDiameter * Math.PI;
 	public static double driveInchesPerDegree = driveWheelCircumference / 360.0;
 	public static double driveFeetPerDegree = driveInchesPerDegree / 12.0;
 	public static double driveUpshiftFPSThreshold = 4.0;
 	public static double driveDownshiftFPSThreshold = 3.0;
 
-	public static double driveHeadingTolerance = 0.4;
-	public static double driveHeadingP = SmartDashboard.getNumber("driveHeadingP", 0.03);
-	public static double driveHeadingI = SmartDashboard.getNumber("driveHeadingI", 0.0001);
-	public static double driveHeadingD = SmartDashboard.getNumber("driveHeadingD", 0);
+	public static double driveHeadingTolerance = 1;
+	public static double driveHeadingMoveToP = 0.040;
+	public static double driveHeadingMoveToI = 0.0023;
+	public static double driveHeadingMoveToD = 0.0;
+	public static double driveHeadingMoveToVelocity = 0.7;
 
-	public static double drivePositionTolerance = 1;
-	public static double drivePositionP = SmartDashboard.getNumber("drivePositionP", 1.0);
-	public static double drivePositionI = SmartDashboard.getNumber("drivePositionI", 0.0);
-	public static double drivePositionD = SmartDashboard.getNumber("drivePositionD", 0.5);
+	public static double driveHeadingMaintainP = 0.41;
+	public static double driveHeadingMaintainI = 0.000;
+	public static double driveHeadingMaintainD = 0.5;
+
+	public static double drivePositionTolerance = 0.5;
+	public static double drivePositionP = SmartDashboard.getNumber("drivePositionP", 0.5);
+	public static double drivePositionI = SmartDashboard.getNumber("drivePositionI", 0);
+	public static double drivePositionD = SmartDashboard.getNumber("drivePositionD", 0);
 
 	public static double inputExpo = 0.5;
 	public static double inputDeadband = 0.1;
@@ -81,5 +86,6 @@ public class Constants {
 	public static double hoodPositionP = 2.3;
 	public static double hoodPositionI = 0.0008;
 	public static double hoodPositionD = 25;
+
 	public static boolean useMechanicalHoodPresets = true;
 }

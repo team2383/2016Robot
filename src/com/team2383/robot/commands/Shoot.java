@@ -2,8 +2,6 @@ package com.team2383.robot.commands;
 
 import static com.team2383.robot.HAL.feeder;
 
-import com.team2383.robot.subsystems.Feeder.State;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -19,28 +17,33 @@ public class Shoot extends Command {
 		requires(feeder);
 	}
 
+	public Shoot(double timeout) {
+		super("Kick Ball", timeout);
+		requires(feeder);
+	}
+
 	@Override
 	protected void initialize() {
 	}
 
 	@Override
 	protected void execute() {
-		feeder.setState(State.FEEDING);
+		feeder.feedIn();
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return this.isTimedOut();
 	}
 
 	@Override
 	protected void end() {
-		feeder.setState(State.STOPPED);
+		feeder.stop();
 	}
 
 	@Override
 	protected void interrupted() {
-		feeder.setState(State.STOPPED);
+		feeder.stop();
 	}
 
 }
