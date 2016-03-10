@@ -7,6 +7,7 @@ import com.team2383.robot.auto.LowBarBatterHighGoal;
 import com.team2383.robot.auto.LowBarBatterLowGoal;
 import com.team2383.robot.auto.LowBarCourtyardHighGoal;
 import com.team2383.robot.auto.Reach;
+import com.team2383.robot.commands.GeneralPeriodic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
+	Command generalPeriodicCommand = new GeneralPeriodic();
 	SendableChooser chooser;
 
 	@Override
@@ -25,7 +27,7 @@ public class Robot extends IterativeRobot {
 		chooser = new SendableChooser();
 		chooser.addDefault("Low Bar + Batter High Goal", new LowBarBatterHighGoal());
 		chooser.addObject("Low Bar + Batter Low Goal", new LowBarBatterLowGoal());
-		chooser.addObject("Low Bar + Courtyard Low Goal", new LowBarCourtyardHighGoal());
+		chooser.addObject("Low Bar + Courtyard High Goal", new LowBarCourtyardHighGoal());
 		chooser.addObject("Damage Low Bar", new LowBar());
 		chooser.addObject("Reach Any Defense", new Reach());
 		SmartDashboard.putData("Auto mode", chooser);
@@ -33,7 +35,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-
+		if (!generalPeriodicCommand.isRunning()) {
+			generalPeriodicCommand.start();
+		}
 	}
 
 	@Override
@@ -57,6 +61,10 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
+		if (!generalPeriodicCommand.isRunning()) {
+			generalPeriodicCommand.start();
+		}
+
 		autonomousCommand = (Command) chooser.getSelected();
 
 		// schedule the autonomous command (example)
@@ -72,6 +80,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		if (!generalPeriodicCommand.isRunning()) {
+			generalPeriodicCommand.start();
+		}
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
