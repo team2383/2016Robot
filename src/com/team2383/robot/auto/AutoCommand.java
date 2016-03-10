@@ -13,13 +13,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public abstract class AutoCommand extends CommandGroup {
-	public HashMap<String, Double> options = getDefaultOptions();
+	public HashMap<String, Double> options = getOptionDefaults();
+	public HashMap<String, Double> globalOptions = getGlobalOptionDefaults();
 
-	public abstract HashMap<String, Double> getDefaultOptions();
+	public HashMap<String, Double> getOptionDefaults() {
+		return new HashMap<>();
+	};
+
+	public HashMap<String, Double> getGlobalOptionDefaults() {
+		return new HashMap<>();
+	};
 
 	public String getPrefix() {
-		return this.getClass().getSimpleName();
+		return this.getName();
 	};
+
+	public Double getGlobalOption(String name) {
+		return SmartDashboard.getNumber("Auto Parameter -" + name);
+	}
 
 	public Double getOption(String name) {
 		return SmartDashboard.getNumber(getPrefix() + "-" + name);

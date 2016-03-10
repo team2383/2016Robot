@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveDistance extends Command {
 	private final PIDController headingController;
 	private final PIDController distanceController;
+	private final boolean brake;
+	private final Gear gear;
 
 	private class NullPIDOutput implements PIDOutput {
 
@@ -31,8 +33,10 @@ public class DriveDistance extends Command {
 
 	}
 
-	public DriveDistance(double velocity, double distance) {
+	public DriveDistance(double velocity, double distance, Gear gear, boolean brake) {
 		super("Drive Distance");
+		this.gear = gear;
+		this.brake = brake;
 
 		distanceController = new PIDController(Constants.drivePositionP, Constants.drivePositionI,
 				Constants.drivePositionD, drivetrain, new NullPIDOutput());
@@ -63,8 +67,8 @@ public class DriveDistance extends Command {
 		this.distanceController.enable();
 		drivetrain.resetEncoders();
 		navX.reset();
-		drivetrain.shiftTo(Gear.HIGH);
-		drivetrain.enableBrake();
+		drivetrain.shiftTo(gear);
+		drivetrain.setBrake(brake);
 	}
 
 	@Override

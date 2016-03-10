@@ -2,9 +2,6 @@ package com.team2383.robot.auto;
 
 import java.util.HashMap;
 
-import com.team2383.robot.commands.DriveDistance;
-import com.team2383.robot.commands.MoveHood;
-import com.team2383.robot.commands.SetHeading;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.Spool;
 
@@ -19,13 +16,9 @@ import edu.wpi.first.wpilibj.command.WaitForChildren;
  * @author Matthew Alonso
  *
  */
-public class LowBarBatterHighGoal extends AutoCommand {
+public class BatterHighGoal extends AutoCommand {
 
-	public LowBarBatterHighGoal() {
-		addSequential(new DriveDistance(0.71, getOption("AutoLine to Pivot")));
-		addParallel(new MoveHood(() -> 0.2, 1));
-		addSequential(new SetHeading(getOption("Pivot Angle")));
-		addSequential(new DriveDistance(0.71, getOption("Pivot To Batter")));
+	public BatterHighGoal() {
 		// Raise hood at 0.4 for 0.2 seconds
 		addParallel(new Spool(getOption("Spool Time")));
 		addSequential(new WaitCommand(2));
@@ -35,13 +28,19 @@ public class LowBarBatterHighGoal extends AutoCommand {
 	}
 
 	@Override
-	public HashMap<String, Double> getDefaultOptions() {
+	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
 		options.put("AutoLine to Pivot", 175.0);
-		options.put("Pivot Angle", 49.0);
 		options.put("Pivot To Batter", 126.0);
-		options.put("Spool Time", 2.0);
-		options.put("Shoot Time", 1.0);
 		return options;
 	}
+
+	@Override
+	public HashMap<String, Double> getGlobalOptionDefaults() {
+		HashMap<String, Double> globalOptions = new HashMap<>();
+		globalOptions.put("Spool Time", 2.0);
+		globalOptions.put("Shoot Time", 1.0);
+		return globalOptions;
+	}
+
 }

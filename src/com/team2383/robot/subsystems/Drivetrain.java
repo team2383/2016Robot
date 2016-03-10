@@ -118,17 +118,18 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		return getInches();
 	}
 
+	public void setBrake(boolean brake) {
+		leftFront.enableBrakeMode(brake);
+		leftRear.enableBrakeMode(brake);
+		rightFront.enableBrakeMode(brake);
+		rightRear.enableBrakeMode(brake);
+	}
+
 	public void enableBrake() {
-		leftFront.enableBrakeMode(true);
-		leftRear.enableBrakeMode(true);
-		rightFront.enableBrakeMode(true);
-		rightRear.enableBrakeMode(true);
+		setBrake(true);
 	}
 
 	public void disableBrake() {
-		leftFront.enableBrakeMode(false);
-		leftRear.enableBrakeMode(false);
-		rightFront.enableBrakeMode(false);
-		rightRear.enableBrakeMode(false);
+		setBrake(false);
 	}
 }

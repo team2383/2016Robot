@@ -3,19 +3,17 @@ package com.team2383.robot;
 
 import java.util.Arrays;
 
-import com.team2383.robot.auto.ChevaldeFrise;
-import com.team2383.robot.auto.LowBar;
-import com.team2383.robot.auto.LowBarBatterHighGoal;
-import com.team2383.robot.auto.LowBarBatterLowGoal;
-import com.team2383.robot.auto.LowBarCourtyardHighGoal;
-import com.team2383.robot.auto.Moat;
-import com.team2383.robot.auto.Portcullis;
-import com.team2383.robot.auto.Ramparts;
-import com.team2383.robot.auto.Reach;
-import com.team2383.robot.auto.RockWall;
-import com.team2383.robot.auto.RoughTerrain;
-import com.team2383.robot.auto.SpyBotHighGoal;
-import com.team2383.robot.auto.SpyBotLowGoal;
+import com.team2383.robot.auto.BatterHighGoal;
+import com.team2383.robot.auto.BatterLowGoal;
+import com.team2383.robot.auto.CommandHolder;
+import com.team2383.robot.auto.defenses.ChevalDeFrise;
+import com.team2383.robot.auto.defenses.Moat;
+import com.team2383.robot.auto.defenses.Portcullis;
+import com.team2383.robot.auto.defenses.Ramparts;
+import com.team2383.robot.auto.defenses.RockWall;
+import com.team2383.robot.auto.defenses.RoughTerrain;
+import com.team2383.robot.auto.defenses.TestDistance;
+import com.team2383.robot.auto.defenses.TestTurn;
 import com.team2383.robot.commands.GeneralPeriodic;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,29 +26,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
-	Command autonomousCommand;
+	Command defenseCommand, courtyardCommand;
 	Command generalPeriodicCommand = new GeneralPeriodic();
-	SendableChooser chooser;
+	SendableChooser autoChooser, defenseChooser, positionChooser;
 
 	@Override
 	public void robotInit() {
-		chooser = new SendableChooser();
-		chooser.addDefault("Low Bar + Batter High Goal", new LowBarBatterHighGoal());
-		chooser.addObject("Low Bar + Batter Low Goal", new LowBarBatterLowGoal());
-		chooser.addObject("Low Bar + Courtyard High Goal", new LowBarCourtyardHighGoal());
-		chooser.addObject("Spy Bot + High Goal", new SpyBotHighGoal());
-		chooser.addObject("Spy Bot + Low Goal", new SpyBotLowGoal());
-		chooser.addObject("Reach Any Defense", new Reach());
-		chooser.addObject("Damage Low Bar", new LowBar());
-		chooser.addObject("Reach Any Defense", new Reach());
-		chooser.addObject("Rough Terrain", new RoughTerrain());
-		chooser.addObject("Rock Wall", new RockWall());
-		chooser.addObject("Portcullis", new Portcullis());
-		chooser.addObject("Cheval de Frise", new ChevaldeFrise());
-		chooser.addObject("Moat", new Moat());
-		chooser.addObject("Ramparts", new Ramparts());
+		defenseChooser.addDefault("No auto", null);
+		defenseChooser.addObject("Rough Terrain", new CommandHolder(RoughTerrain::new));
+		defenseChooser.addObject("Rock Wall", new CommandHolder(RockWall::new));
+		defenseChooser.addObject("Portcullis", new CommandHolder(Portcullis::new));
+		defenseChooser.addObject("Cheval de Frise", new CommandHolder(ChevalDeFrise::new));
+		defenseChooser.addObject("Moat", new CommandHolder(Moat::new));
+		defenseChooser.addObject("Ramparts", new CommandHolder(Ramparts::new));
 
-		SmartDashboard.putData("Auto mode", chooser);
+		// test commands
+		defenseChooser.addObject("Test Distance", new CommandHolder(TestDistance::new));
+		defenseChooser.addObject("Test Turn", new CommandHolder(TestTurn::new));
+
+		autoChooser = new SendableChooser();
+		autoChooser.addDefault("Just Cross", null);
+		autoChooser.addObject("Batter High Goal", new CommandHolder(BatterHighGoal::new));
+		autoChooser.addObject("Batter Low Goal", new CommandHolder(BatterLowGoal::new));
+
+		SmartDashboard.putData("Auto mode", autoChooser);
 	}
 
 	@Override
@@ -81,7 +80,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		try {
-			autonomousCommand = (Command) chooser.getSelected().getClass().newInstance();
+			autonomousCommand = (Command) autoChooser.getSelected().getClass().newInstance();
 		} catch (Throwable e) {
 			DriverStation.reportError(
 					"ERROR instantiating autonomous " + e.toString() + " at " + Arrays.toString(e.getStackTrace()),
