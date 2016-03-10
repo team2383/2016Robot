@@ -1,12 +1,12 @@
 
 package com.team2383.robot;
 
+import com.team2383.robot.auto.AutoCommand;
 import com.team2383.robot.auto.LowBar;
-import com.team2383.robot.auto.LowBarHighGoal;
+import com.team2383.robot.auto.LowBarBatterHighGoal;
+import com.team2383.robot.auto.LowBarBatterLowGoal;
+import com.team2383.robot.auto.LowBarCourtyardHighGoal;
 import com.team2383.robot.auto.Reach;
-import com.team2383.robot.auto.SpyBotHighGoal;
-import com.team2383.robot.auto.SpyBotLowGoal;
-import com.team2383.robot.auto.LowBarAngleGoal;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -23,12 +23,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		chooser = new SendableChooser();
-		chooser.addDefault("Low Bar + High Goal", new LowBarHighGoal());
+		chooser.addDefault("Low Bar + Batter High Goal", new LowBarBatterHighGoal());
+		chooser.addObject("Low Bar + Batter Low Goal", new LowBarBatterLowGoal());
+		chooser.addObject("Low Bar + Courtyard Low Goal", new LowBarCourtyardHighGoal());
 		chooser.addObject("Damage Low Bar", new LowBar());
 		chooser.addObject("Reach Any Defense", new Reach());
-		chooser.addObject("Spy Bot + High Goal", new SpyBotHighGoal());
-		chooser.addObject("Spy Bot + Low Goal", new SpyBotLowGoal());
-		chooser.addObject("Low Bar + Angle High Goal", new LowBarAngleGoal());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
@@ -39,6 +38,11 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		// if autonomousCommand has options, check dashboard for updates;
+		if (autonomousCommand != null && autonomousCommand instanceof AutoCommand) {
+			((AutoCommand) autonomousCommand).update();
+		}
+
 		Scheduler.getInstance().run();
 
 		// 21.18 in TalonSRX software manual
