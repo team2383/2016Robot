@@ -5,6 +5,8 @@ import com.team2383.robot.auto.LowBar;
 import com.team2383.robot.auto.LowBarHighGoal;
 import com.team2383.robot.auto.Reach;
 import com.team2383.robot.auto.SpyBotHighGoal;
+import com.team2383.robot.auto.SpyBotLowGoal;
+import com.team2383.robot.auto.LowBarAngleGoal;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -25,6 +27,8 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Damage Low Bar", new LowBar());
 		chooser.addObject("Reach Any Defense", new Reach());
 		chooser.addObject("Spy Bot + High Goal", new SpyBotHighGoal());
+		chooser.addObject("Spy Bot + Low Goal", new SpyBotLowGoal());
+		chooser.addObject("Low Bar + Angle High Goal", new LowBarAngleGoal());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.command.WaitForChildren;
 
 /**
- * Starts in Neutral Zone with ball Drives under low bar Pivots ~30 degrees
+ * Starts in Neutral Zone with ball. Drives under low bar Pivots ~30 degrees
  * Drives to Batter Reverse Raises Hood Fire
  *
  * @author Matthew Alonso
