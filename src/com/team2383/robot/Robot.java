@@ -1,7 +1,8 @@
 
 package com.team2383.robot;
 
-import com.team2383.robot.auto.AutoCommand;
+import java.util.Arrays;
+
 import com.team2383.robot.auto.LowBar;
 import com.team2383.robot.auto.LowBarBatterHighGoal;
 import com.team2383.robot.auto.LowBarBatterLowGoal;
@@ -9,6 +10,7 @@ import com.team2383.robot.auto.LowBarCourtyardHighGoal;
 import com.team2383.robot.auto.Reach;
 import com.team2383.robot.commands.GeneralPeriodic;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -42,11 +44,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		// if autonomousCommand has options, check dashboard for updates;
-		if (autonomousCommand != null && autonomousCommand instanceof AutoCommand) {
-			((AutoCommand) autonomousCommand).update();
-		}
-
 		Scheduler.getInstance().run();
 
 		// 21.18 in TalonSRX software manual
@@ -65,7 +62,13 @@ public class Robot extends IterativeRobot {
 			generalPeriodicCommand.start();
 		}
 
-		autonomousCommand = (Command) chooser.getSelected();
+		try {
+			autonomousCommand = (Command) chooser.getSelected().getClass().newInstance();
+		} catch (Throwable e) {
+			DriverStation.reportError(
+					"ERROR instantiating autonomous " + e.toString() + " at " + Arrays.toString(e.getStackTrace()),
+					false);
+		}
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null) {

@@ -22,7 +22,7 @@ public abstract class AutoCommand extends CommandGroup {
 	};
 
 	public Double getOption(String name) {
-		return options.get(name);
+		return SmartDashboard.getNumber(getPrefix() + "-" + name);
 	}
 
 	/**
@@ -31,15 +31,6 @@ public abstract class AutoCommand extends CommandGroup {
 	public AutoCommand() {
 		options.forEach((name, value) -> {
 			SmartDashboard.putNumber(getPrefix() + "-" + name, value);
-		});
-	}
-
-	/**
-	 * update config options
-	 */
-	public void update() {
-		options.forEach((name, value) -> {
-			options.put(name, SmartDashboard.getNumber(getPrefix() + "-" + name));
 		});
 	}
 }
