@@ -3,7 +3,6 @@ package com.team2383.robot.commands;
 import static com.team2383.robot.HAL.shooterFlywheel;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
  * Spool shooter flywheel to maximum power
@@ -26,7 +25,6 @@ public class Spool extends Command {
 
 	@Override
 	protected void execute() {
-		SmartDashboard.putNumber("Shooter Flywheel RPM", shooterFlywheel.getRPM());
 		shooterFlywheel.spool();
 	}
 

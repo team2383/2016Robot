@@ -28,7 +28,7 @@ public abstract class AutoCommand extends CommandGroup {
 	/**
 	 * Push/pull values to SmartDashboard
 	 */
-	public void init() {
+	public AutoCommand() {
 		options.forEach((name, value) -> {
 			SmartDashboard.putNumber(getPrefix() + "-" + name, value);
 		});
