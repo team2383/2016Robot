@@ -44,6 +44,7 @@ public class OI {
 	public static Joystick operator = new Joystick(2);
 
 	public static DoubleSupplier hood = operator::getY;
+	public static DoubleSupplier shooterSpeed = operator::getThrottle;
 
 	public static Button feedIn = new JoystickButton(operator, 8);
 	public static Button feedOut = new JoystickButton(operator, 12);

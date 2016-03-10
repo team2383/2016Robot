@@ -41,6 +41,7 @@ public class Constants {
 		}
 	}
 
+	public static double shooterMaxRPM = 4800;
 	public static int shooterRPMTolerance = 100;
 	public static double shooterFollowThruTime = 3.0;
 	public static double shooterFeederKickPower = 1.0;

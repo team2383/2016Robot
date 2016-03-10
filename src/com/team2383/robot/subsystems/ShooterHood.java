@@ -18,11 +18,7 @@ public class ShooterHood extends Subsystem {
 		hoodMotor.setPIDSourceType(PIDSourceType.kDisplacement);
 		hoodMotor.setPID(Constants.hoodPositionP, Constants.hoodPositionI, Constants.hoodPositionD);
 		hoodMotor.reverseOutput(false);
-		/*
-		 * hoodMotor.reverseSensor(false);
-		 * hoodMotor.setForwardSoftLimit(Constants.hoodForwardLimit);
-		 * hoodMotor.enableForwardSoftLimit(false);
-		 */
+		hoodMotor.reverseSensor(false);
 	}
 
 	public void moveAtSpeed(double speed) {
@@ -30,9 +26,21 @@ public class ShooterHood extends Subsystem {
 		hoodMotor.set(speed);
 	}
 
-	public void setAngle(double angle) {
+	public void setSetpoint(double angle) {
 		hoodMotor.changeControlMode(TalonControlMode.Position);
 		hoodMotor.setSetpoint(angle);
+	}
+
+	public boolean isAtSetpoint() {
+		return hoodMotor.getError() <= Constants.hoodDegreeTolerance;
+	}
+
+	public double getSetpoint() {
+		return hoodMotor.getSetpoint();
+	}
+
+	public double getRotations() {
+		return hoodMotor.getPosition();
 	}
 
 	public void stop() {

@@ -9,7 +9,6 @@ import com.team2383.robot.subsystems.Drivetrain.Gear;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -41,7 +40,7 @@ public class DriveDistance extends Command {
 		distanceController.setSetpoint(distance);
 		distanceController.setOutputRange(-velocity, velocity);
 
-		LiveWindow.addActuator("drivetrain", "distanceController", distanceController);
+		SmartDashboard.putData("Distance Controller", distanceController);
 
 		navX.reset();
 		headingController = new PIDController(Constants.driveHeadingMaintainP, Constants.driveHeadingMaintainI,
@@ -53,7 +52,7 @@ public class DriveDistance extends Command {
 		headingController.setSetpoint(0);
 		headingController.setAbsoluteTolerance(Constants.driveHeadingTolerance);
 
-		LiveWindow.addActuator("drivetrain", "headingController", headingController);
+		SmartDashboard.putData("MaintainHeading Controller", headingController);
 
 		requires(drivetrain);
 	}

@@ -24,6 +24,7 @@ public class SetHeading extends PIDCommand {
 		this.getPIDController().setContinuous();
 		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingTolerance);
 		this.getPIDController().setSetpoint(angle);
+		SmartDashboard.putData("SetHeading Controller", this.getPIDController());
 	}
 
 	@Override

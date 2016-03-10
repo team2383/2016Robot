@@ -8,7 +8,6 @@ import static com.team2383.robot.HAL.rightRear;
 import static com.team2383.robot.HAL.shifter;
 
 import com.team2383.robot.Constants;
-import com.team2383.robot.HAL;
 import com.team2383.robot.OI;
 import com.team2383.robot.commands.TeleopDrive;
 
@@ -19,13 +18,17 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends Subsystem implements PIDSource {
 	private final RobotDrive robotDrive;
 
 	public enum Gear {
-		LOW, HIGH
+		LOW, HIGH;
+
+		@Override
+		public String toString() {
+			return super.toString().toLowerCase();
+		}
 	}
 
 	public Drivetrain() {
@@ -45,16 +48,10 @@ public class Drivetrain extends Subsystem implements PIDSource {
 	}
 
 	public void tank(double leftValue, double rightValue) {
-		SmartDashboard.putNumber("Encoder Rotations", getRotations());
-		SmartDashboard.putNumber("Encoder Degrees", getInches());
-		SmartDashboard.putNumber("Gyro Yaw", HAL.navX.getYaw());
 		robotDrive.tankDrive(leftValue, rightValue);
 	}
 
 	public void arcade(double driveSpeed, double turnSpeed) {
-		SmartDashboard.putNumber("Encoder Rotations", getRotations());
-		SmartDashboard.putNumber("Encoder Degrees", getInches());
-		SmartDashboard.putNumber("Gyro Yaw", HAL.navX.getYaw());
 		robotDrive.arcadeDrive(driveSpeed, turnSpeed);
 	}
 
@@ -79,6 +76,11 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		}
 	}
 
+	public void resetEncoders() {
+		leftFront.setPosition(0);
+		rightRear.setPosition(0);
+	}
+
 	public Gear getGear() {
 		switch (shifter.get()) {
 		case kForward:
@@ -87,11 +89,6 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		case kReverse:
 			return Gear.LOW;
 		}
-	}
-
-	public void resetEncoders() {
-		leftFront.setPosition(0);
-		rightRear.setPosition(0);
 	}
 
 	public double getRotations() {

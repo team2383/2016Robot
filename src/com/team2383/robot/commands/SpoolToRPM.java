@@ -29,12 +29,12 @@ public class SpoolToRPM extends Command {
 
 	@Override
 	protected void execute() {
-		shooterFlywheel.spoolToRPM(rpm);
+		shooterFlywheel.spoolToSetpoint();
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return shooterFlywheel.isAtRPM(rpm);
+		return shooterFlywheel.isAtSetpoint();
 	}
 
 	@Override

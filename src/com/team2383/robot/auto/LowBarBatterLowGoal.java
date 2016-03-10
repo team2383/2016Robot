@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.command.WaitForChildren;
 
-public class LowBarAngleGoal extends CommandGroup{
-	public LowBarAngleGoal() {
-		addSequential(new DriveDistance(0.71, 175));
+public class LowBarBatterLowGoal extends CommandGroup{
+	public LowBarBatterLowGoal() {
+		addSequential(new DriveDistance(0.71, -175));
 		addParallel(new MoveHood(() -> 0.2, 1));
 		addSequential(new SetHeading(49));
-		// Shoot
+		addSequential(new DriveDistance(0.71, -126));
+		// Raise hood at 0.4 for 0.2 seconds
 		addParallel(new Spool(4));
 		addSequential(new WaitCommand(2));
 		addSequential(new Shoot(5));

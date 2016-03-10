@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ShooterFlywheel extends Subsystem {
 
+	private double setpoint;
+
 	public ShooterFlywheel() {
 		shooterMotor.enableBrakeMode(false);
 		shooterMotor.reverseSensor(true);
@@ -22,8 +24,8 @@ public class ShooterFlywheel extends Subsystem {
 	 *
 	 * @param rpm
 	 */
-	public void spoolToRPM(double rpm) {
-		if (shooterMotor.getSpeed() < rpm) {
+	public void spoolToSetpoint() {
+		if (shooterMotor.getSpeed() < this.setpoint) {
 			spool();
 		} else {
 			stop();
@@ -52,7 +54,19 @@ public class ShooterFlywheel extends Subsystem {
 
 	}
 
-	public boolean isAtRPM(double rpm) {
-		return Math.abs(shooterMotor.getSpeed() - rpm) < Constants.shooterRPMTolerance;
+	public boolean isAtSetpoint() {
+		return Math.abs(shooterMotor.getSpeed() - setpoint) < Constants.shooterRPMTolerance;
+	}
+
+	public double getRPM() {
+		return shooterMotor.getSpeed();
+	}
+
+	public double getSetpoint() {
+		return setpoint;
+	}
+
+	public void setSetpoint(double setpoint) {
+		this.setpoint = setpoint;
 	}
 }
