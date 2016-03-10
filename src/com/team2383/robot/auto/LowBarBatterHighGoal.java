@@ -27,9 +27,9 @@ public class LowBarBatterHighGoal extends AutoCommand {
 		addSequential(new SetHeading(getOption("Pivot Angle")));
 		addSequential(new DriveDistance(0.71, getOption("Pivot To Batter")));
 		// Raise hood at 0.4 for 0.2 seconds
-		addParallel(new Spool(4));
+		addParallel(new Spool(getOption("Spool Time")));
 		addSequential(new WaitCommand(2));
-		addSequential(new Shoot(5));
+		addSequential(new Shoot(getOption("Shoot Time")));
 		addSequential(new PrintCommand("Shooting!"));
 		addSequential(new WaitForChildren()); // wait for spool down
 	}
@@ -38,8 +38,10 @@ public class LowBarBatterHighGoal extends AutoCommand {
 	public HashMap<String, Double> getDefaultOptions() {
 		HashMap<String, Double> options = new HashMap<>();
 		options.put("AutoLine to Pivot", 175.0);
-		options.put("Pivot Angle", 90.0);
+		options.put("Pivot Angle", 49.0);
 		options.put("Pivot To Batter", 126.0);
+		options.put("Spool Time", 2.0);
+		options.put("Shoot Time", 1.0);
 		return options;
 	}
 }
