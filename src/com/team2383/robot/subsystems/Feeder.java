@@ -7,7 +7,7 @@ import com.team2383.robot.commands.SetState.StatefulSubsystem;
 public class Feeder extends StatefulSubsystem<Feeder.State> {
 
 	public Feeder() {
-		feederMotor.setInverted(true);
+		feederMotor.setInverted(false);
 		feederMotor.setSafetyEnabled(false);
 	}
 

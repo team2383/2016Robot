@@ -2,11 +2,19 @@
 package com.team2383.robot;
 
 import com.team2383.robot.auto.AutoCommand;
+import com.team2383.robot.auto.ChevaldeFrise;
 import com.team2383.robot.auto.LowBar;
 import com.team2383.robot.auto.LowBarBatterHighGoal;
 import com.team2383.robot.auto.LowBarBatterLowGoal;
 import com.team2383.robot.auto.LowBarCourtyardHighGoal;
+import com.team2383.robot.auto.Moat;
+import com.team2383.robot.auto.Portcullis;
+import com.team2383.robot.auto.Ramparts;
 import com.team2383.robot.auto.Reach;
+import com.team2383.robot.auto.RockWall;
+import com.team2383.robot.auto.RoughTerrain;
+import com.team2383.robot.auto.SpyBotHighGoal;
+import com.team2383.robot.auto.SpyBotLowGoal;
 import com.team2383.robot.commands.GeneralPeriodic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -28,8 +36,18 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Low Bar + Batter High Goal", new LowBarBatterHighGoal());
 		chooser.addObject("Low Bar + Batter Low Goal", new LowBarBatterLowGoal());
 		chooser.addObject("Low Bar + Courtyard High Goal", new LowBarCourtyardHighGoal());
+		chooser.addObject("Spy Bot + High Goal", new SpyBotHighGoal());
+		chooser.addObject("Spy Bot + Low Goal", new SpyBotLowGoal());
+		chooser.addObject("Reach Any Defense", new Reach());
 		chooser.addObject("Damage Low Bar", new LowBar());
 		chooser.addObject("Reach Any Defense", new Reach());
+		chooser.addObject("Rough Terrain", new RoughTerrain());
+		chooser.addObject("Rock Wall", new RockWall());
+		chooser.addObject("Portcullis", new Portcullis());
+		chooser.addObject("Cheval de Frise",new ChevaldeFrise());
+		chooser.addObject("Moat", new Moat());
+		chooser.addObject("Ramparts", new Ramparts());
+		
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
