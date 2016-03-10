@@ -2,7 +2,7 @@ package com.team2383.robot.auto.defenses;
 
 import java.util.HashMap;
 
-public class RoughTerrain extends LowBar {
+public class RoughTerrain extends DriveToDefense {
 	@Override
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
