@@ -19,7 +19,7 @@ public class LowBar extends AutoCommand {
 	@Override
 	public final HashMap<String, Double> getGlobalOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
-		options.put("Auto Start to Ramp Distance", 70.0);
+		options.put("Auto Start to Ramp Distance", 122.0);
 		return options;
 	};
 
@@ -27,7 +27,7 @@ public class LowBar extends AutoCommand {
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
 		options.put("Velocity", 0.6);
-		options.put("Distance", 70.0);
+		options.put("Distance", 122.0);
 		return options;
 	};
 
