@@ -5,6 +5,7 @@ import com.team2383.ninjaLib.SequentialRunner;
 import com.team2383.robot.auto.BatterHighGoal;
 import com.team2383.robot.auto.BatterLowGoal;
 import com.team2383.robot.auto.CommandHolder;
+import com.team2383.robot.auto.defenses.Lowbar;
 import com.team2383.robot.auto.defenses.Moat;
 import com.team2383.robot.auto.defenses.Ramparts;
 import com.team2383.robot.auto.defenses.RockWall;
@@ -32,6 +33,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		defenseChooser.addDefault("No auto", null);
+		defenseChooser.addObject("Low Bar", new CommandHolder(Lowbar::new));
 		defenseChooser.addObject("Rough Terrain", new CommandHolder(RoughTerrain::new));
 		defenseChooser.addObject("Rock Wall", new CommandHolder(RockWall::new));
 		defenseChooser.addObject("Moat", new CommandHolder(Moat::new));
@@ -42,14 +44,14 @@ public class Robot extends IterativeRobot {
 				new CommandHolder(() -> new DriveDistance(0.66, 50, Gear.LOW, false)));
 		defenseChooser.addObject("Test Turn", new CommandHolder(() -> new SetHeading(0.66, 90)));
 
+		positionChooser = new SendableChooser();
+		positionChooser.addDefault("Low Bar", new CommandHolder(LowBarPosition::new));
+		positionChooser.addObject("Center", new CommandHolder(Center::new));
+
 		courtyardChooser = new SendableChooser();
 		courtyardChooser.addDefault("Just Cross", null);
 		courtyardChooser.addObject("Batter High Goal", new CommandHolder(BatterHighGoal::new));
 		courtyardChooser.addObject("Batter Low Goal", new CommandHolder(BatterLowGoal::new));
-
-		positionChooser = new SendableChooser();
-		positionChooser.addDefault("Low Bar", new CommandHolder(LowBarPosition::new));
-		positionChooser.addObject("Center", new CommandHolder(Center::new));
 
 		SmartDashboard.putData("Auto mode", courtyardChooser);
 	}
@@ -80,8 +82,13 @@ public class Robot extends IterativeRobot {
 		defenseCommand = ((CommandHolder) defenseChooser.getSelected()).get();
 		courtyardCommand = ((CommandHolder) courtyardChooser.getSelected()).get();
 		positionCommand = ((CommandHolder) courtyardChooser.getSelected()).get();
-		if (defenseCommand != null && courtyardCommand != null && positionCommand != null) {
-			autonomousCommand = new SequentialRunner(defenseCommand, courtyardCommand, positionCommand);
+		if (defenseCommand != null) {
+			if (courtyardCommand != null && positionCommand != null) {
+				autonomousCommand = new SequentialRunner(defenseCommand, courtyardCommand, positionCommand);
+			} else {
+				// only crossing
+				autonomousCommand = defenseCommand;
+			}
 			autonomousCommand.start();
 		}
 
