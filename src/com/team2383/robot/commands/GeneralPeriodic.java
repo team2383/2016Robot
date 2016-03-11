@@ -2,6 +2,7 @@ package com.team2383.robot.commands;
 
 import com.team2383.robot.HAL;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -39,6 +40,9 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putNumber("Hood Current Rotations", HAL.shooterHood.getRotations());
 		SmartDashboard.putNumber("Hood Target Rotations", HAL.shooterHood.getSetpoint());
 		SmartDashboard.putBoolean("Hood At Setpoint", HAL.shooterHood.isAtSetpoint());
+
+		// Pneumatics
+		SmartDashboard.putBoolean("Hard Stop Extended?", HAL.hoodTopLimit.get() == Value.kForward ? true : false);
 	}
 
 	@Override

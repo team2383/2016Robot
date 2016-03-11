@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 
 import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
+import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.WPILambdas;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.Shoot;
@@ -46,8 +47,13 @@ public class OI {
 	public static DoubleSupplier hood = operator::getY;
 	public static DoubleSupplier shooterSpeed = operator::getThrottle;
 
-	public static Button feedIn = new JoystickButton(operator, 8);
-	public static Button feedOut = new JoystickButton(operator, 12);
+	public static Button feedIn = new LambdaButton(() -> {
+		return operator.getRawButton(7) || operator.getRawButton(8);
+	});
+
+	public static Button feedOut = new LambdaButton(() -> {
+		return operator.getRawButton(11) || operator.getRawButton(12);
+	});
 
 	public static Button extendArms = new DPadButton(operator, Direction.UP);
 	public static Button retractArms = new DPadButton(operator, Direction.DOWN);
@@ -55,9 +61,7 @@ public class OI {
 	public static Button shoot = new JoystickButton(operator, 1); // trigger
 	public static Button spool = new JoystickButton(operator, 2); // thumb
 
-	public static Button closeHood = new JoystickButton(operator, 4);
-	public static Button hoodNear = new JoystickButton(operator, 9);
-	public static Button hoodFar = new JoystickButton(operator, 6);
+	public static Button hoodPancake = new JoystickButton(operator, 3);
 
 	static {
 		OI oi = new OI();
@@ -85,7 +89,7 @@ public class OI {
 		shoot.whileHeld(new Shoot());
 
 		if (Constants.useMechanicalHoodPresets) {
-			hoodFar.toggleWhenActive(new ActuateHoodStop(hoodTopLimit));
+			hoodPancake.toggleWhenActive(new ActuateHoodStop(hoodTopLimit));
 		} else {
 			// setup hood presets
 		}

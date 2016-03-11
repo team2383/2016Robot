@@ -7,10 +7,16 @@ import com.team2383.robot.commands.DriveDistance;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveToDefense extends AutoCommand {
+	SendableChooser gearChooser = getGearChooser();
+	SendableChooser brakeChooser = getBrakeChooser();
+
 	public DriveToDefense() {
 		super();
+		SmartDashboard.putData(this.getName() + " gear chooser", gearChooser);
+		SmartDashboard.putData(this.getName() + " brake chooser", brakeChooser);
 
 		addSequential(new DriveDistance(getOption("Velocity"),
 				getGlobalOption("Auto Start to Ramp Distance") + getOption("Distance"), getGear(), getBrake()));
@@ -52,10 +58,10 @@ public class DriveToDefense extends AutoCommand {
 	}
 
 	private final Gear getGear() {
-		return (Gear) getGearChooser().getSelected();
+		return (Gear) gearChooser.getSelected();
 	}
 
 	private final boolean getBrake() {
-		return (boolean) getBrakeChooser().getSelected();
+		return (boolean) brakeChooser.getSelected();
 	}
 }

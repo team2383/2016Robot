@@ -8,8 +8,12 @@ import com.team2383.robot.commands.SetHeading;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class DriveToBatter extends AutoCommand {
+	SendableChooser gearChooser = getGearChooser();
+	SendableChooser brakeChooser = getBrakeChooser();
+
 	public class DriveToBatterParams {
 		double distanceToPivot;
 		double pivot;
@@ -23,6 +27,8 @@ public abstract class DriveToBatter extends AutoCommand {
 	}
 
 	public DriveToBatter() {
+		SmartDashboard.putData(this.getName() + " gear chooser", gearChooser);
+		SmartDashboard.putData(this.getName() + " brake chooser", brakeChooser);
 		double distanceToPivot = getOption("Drive To Pivot Distance");
 		double pivot = getOption("Pivot Angle");
 		if (distanceToPivot >= 0) {
@@ -71,10 +77,10 @@ public abstract class DriveToBatter extends AutoCommand {
 	}
 
 	private final Gear getGear() {
-		return (Gear) getGearChooser().getSelected();
+		return (Gear) gearChooser.getSelected();
 	}
 
 	private final boolean getBrake() {
-		return (boolean) getBrakeChooser().getSelected();
+		return (boolean) brakeChooser.getSelected();
 	}
 }

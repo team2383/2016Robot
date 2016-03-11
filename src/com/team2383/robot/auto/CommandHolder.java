@@ -9,6 +9,13 @@ public class CommandHolder {
 
 	public CommandHolder(Supplier<Command> commandSupplier) {
 		this.commandSupplier = commandSupplier;
+
+		/*
+		 * Just to BS init the command to get any dashboard values it pushes to
+		 * update
+		 */
+		@SuppressWarnings("unused")
+		Command command = commandSupplier.get();
 	}
 
 	public Command get() {

@@ -20,19 +20,11 @@ public class BatterHighGoal extends AutoCommand {
 
 	public BatterHighGoal() {
 		// Raise hood at 0.4 for 0.2 seconds
-		addParallel(new Spool(getOption("Spool Time")));
+		addParallel(new Spool(getGlobalOption("Spool Time")));
 		addSequential(new WaitCommand(2));
-		addSequential(new Shoot(getOption("Shoot Time")));
+		addSequential(new Shoot(getGlobalOption("Shoot Time")));
 		addSequential(new PrintCommand("Shooting!"));
 		addSequential(new WaitForChildren()); // wait for spool down
-	}
-
-	@Override
-	public HashMap<String, Double> getOptionDefaults() {
-		HashMap<String, Double> options = new HashMap<>();
-		options.put("AutoLine to Pivot", 175.0);
-		options.put("Pivot To Batter", 126.0);
-		return options;
 	}
 
 	@Override
@@ -42,5 +34,4 @@ public class BatterHighGoal extends AutoCommand {
 		globalOptions.put("Shoot Time", 1.0);
 		return globalOptions;
 	}
-
 }

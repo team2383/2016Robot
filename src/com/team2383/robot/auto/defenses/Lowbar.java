@@ -7,7 +7,7 @@ public class Lowbar extends DriveToDefense {
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
 		options.put("Velocity", 0.6);
-		options.put("Distance", 70.0);
+		options.put("Distance", 130.0);
 		return options;
 	};
 }

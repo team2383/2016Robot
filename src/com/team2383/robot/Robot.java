@@ -1,21 +1,9 @@
 
 package com.team2383.robot;
 
-import com.team2383.ninjaLib.SequentialRunner;
-import com.team2383.robot.auto.BatterHighGoal;
-import com.team2383.robot.auto.BatterLowGoal;
-import com.team2383.robot.auto.CommandHolder;
-import com.team2383.robot.auto.defenses.Lowbar;
-import com.team2383.robot.auto.defenses.Moat;
-import com.team2383.robot.auto.defenses.Ramparts;
-import com.team2383.robot.auto.defenses.RockWall;
-import com.team2383.robot.auto.defenses.RoughTerrain;
-import com.team2383.robot.auto.positions.Center;
-import com.team2383.robot.auto.positions.LowBarPosition;
-import com.team2383.robot.commands.DriveDistance;
+import com.team2383.robot.auto.FeederForwardConstant;
+import com.team2383.robot.auto.LowBarConstant;
 import com.team2383.robot.commands.GeneralPeriodic;
-import com.team2383.robot.commands.SetHeading;
-import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -26,34 +14,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
-	Command autonomousCommand, defenseCommand, courtyardCommand, positionCommand;
+	Command autoCommand;
 	Command generalPeriodicCommand = new GeneralPeriodic();
-	SendableChooser courtyardChooser, defenseChooser, positionChooser;
+	SendableChooser autoChooser;
 
 	@Override
 	public void robotInit() {
-		defenseChooser.addDefault("No auto", null);
-		defenseChooser.addObject("Low Bar", new CommandHolder(Lowbar::new));
-		defenseChooser.addObject("Rough Terrain", new CommandHolder(RoughTerrain::new));
-		defenseChooser.addObject("Rock Wall", new CommandHolder(RockWall::new));
-		defenseChooser.addObject("Moat", new CommandHolder(Moat::new));
-		defenseChooser.addObject("Ramparts", new CommandHolder(Ramparts::new));
+		autoChooser = new SendableChooser();
+		autoChooser.addDefault("No auto", null);
+		autoChooser.addObject("Low Bar", new LowBarConstant());
+		autoChooser.addObject("All other defenses", new FeederForwardConstant());
 
-		// test commands
-		defenseChooser.addObject("Test Distance",
-				new CommandHolder(() -> new DriveDistance(0.66, 50, Gear.LOW, false)));
-		defenseChooser.addObject("Test Turn", new CommandHolder(() -> new SetHeading(0.66, 90)));
-
-		positionChooser = new SendableChooser();
-		positionChooser.addDefault("Low Bar", new CommandHolder(LowBarPosition::new));
-		positionChooser.addObject("Center", new CommandHolder(Center::new));
-
-		courtyardChooser = new SendableChooser();
-		courtyardChooser.addDefault("Just Cross", null);
-		courtyardChooser.addObject("Batter High Goal", new CommandHolder(BatterHighGoal::new));
-		courtyardChooser.addObject("Batter Low Goal", new CommandHolder(BatterLowGoal::new));
-
-		SmartDashboard.putData("Auto mode", courtyardChooser);
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 	@Override
@@ -79,17 +51,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-		defenseCommand = ((CommandHolder) defenseChooser.getSelected()).get();
-		courtyardCommand = ((CommandHolder) courtyardChooser.getSelected()).get();
-		positionCommand = ((CommandHolder) courtyardChooser.getSelected()).get();
-		if (defenseCommand != null) {
-			if (courtyardCommand != null && positionCommand != null) {
-				autonomousCommand = new SequentialRunner(defenseCommand, courtyardCommand, positionCommand);
-			} else {
-				// only crossing
-				autonomousCommand = defenseCommand;
-			}
-			autonomousCommand.start();
+		autoCommand = (Command) autoChooser.getSelected();
+		if (autoCommand != null) {
+			autoCommand.start();
 		}
 
 		if (!generalPeriodicCommand.isRunning()) {
@@ -111,8 +75,8 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (autonomousCommand != null) {
-			autonomousCommand.cancel();
+		if (autoCommand != null) {
+			autoCommand.cancel();
 		}
 	}
 

@@ -43,5 +43,9 @@ public abstract class AutoCommand extends CommandGroup {
 		options.forEach((name, value) -> {
 			SmartDashboard.putNumber(getPrefix() + "-" + name, value);
 		});
+
+		globalOptions.forEach((name, value) -> {
+			SmartDashboard.putNumber("Auto Parameter -" + name, value);
+		});
 	}
 }

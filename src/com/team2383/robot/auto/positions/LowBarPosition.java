@@ -7,7 +7,7 @@ public class LowBarPosition extends DriveToBatter {
 	public final HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
 		options.put("Drive To Pivot Velocity", 0.7);
-		options.put("Drive To Pivot Distance", 170.0);
+		options.put("Drive To Pivot Distance", 42.0);
 
 		options.put("Pivot Velocity", 0.6);
 		options.put("Pivot Angle", 50.0);

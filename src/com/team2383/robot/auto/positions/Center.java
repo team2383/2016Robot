@@ -13,7 +13,7 @@ public class Center extends DriveToBatter {
 		options.put("Pivot Angle", 0.0);
 
 		options.put("Drive To Batter Velocity", 0.7);
-		options.put("Drive To Batter Distance", 140.0);
+		options.put("Drive To Batter Distance", 50.0);
 		return options;
 	};
 }

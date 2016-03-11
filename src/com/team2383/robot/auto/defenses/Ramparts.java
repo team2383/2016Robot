@@ -5,15 +5,16 @@ import java.util.HashMap;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+
 public class Ramparts extends DriveToDefense {
 	@Override
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
-		options.put("Velocity", 0.6);
-		options.put("Distance", 122.0);
+		options.put("Velocity", 0.75);
+		options.put("Distance", -150.0);
 		return options;
 	};
-	
+
 	/**
 	 * Default Low Gear
 	 */

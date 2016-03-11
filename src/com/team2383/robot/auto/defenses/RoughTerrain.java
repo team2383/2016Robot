@@ -11,10 +11,10 @@ public class RoughTerrain extends DriveToDefense {
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
 		options.put("Velocity", 0.6);
-		options.put("Distance", 122.0);
+		options.put("Distance", -132.0);
 		return options;
 	};
-	
+
 	/**
 	 * Default Low Gear
 	 */

@@ -11,21 +11,18 @@ import edu.wpi.first.wpilibj.command.WaitForChildren;
 
 public class BatterLowGoal extends AutoCommand {
 	public BatterLowGoal() {
-		addParallel(new Spool(getOption("Spool Time")));
+		addParallel(new Spool(getGlobalOption("Spool Time")));
 		addSequential(new WaitCommand(2));
-		addSequential(new Shoot(getOption("Shoot Time")));
+		addSequential(new Shoot(getGlobalOption("Shoot Time")));
 		addSequential(new PrintCommand("Shooting!"));
 		addSequential(new WaitForChildren()); // wait for spool down
 	}
 
 	@Override
-	public HashMap<String, Double> getOptionDefaults() {
-		HashMap<String, Double> options = new HashMap<>();
-		options.put("AutoLine to Pivot", -175.0);
-		options.put("Pivot Angle", 49.0);
-		options.put("Pivot To Batter", -126.0);
-		options.put("Spool Time", 1.0);
-		options.put("Shoot Time", 1.0);
-		return options;
+	public HashMap<String, Double> getGlobalOptionDefaults() {
+		HashMap<String, Double> globalOptions = new HashMap<>();
+		globalOptions.put("Spool Time", 2.0);
+		globalOptions.put("Shoot Time", 1.0);
+		return globalOptions;
 	}
 }
