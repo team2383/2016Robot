@@ -11,6 +11,7 @@ import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.WPILambdas;
+import com.team2383.robot.commands.CameraSwitcher;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.Spool;
@@ -63,6 +64,10 @@ public class OI {
 
 	public static Button hoodPancake = new JoystickButton(operator, 3);
 
+	public static Button switchCamera = new LambdaButton(() -> {
+		return operator.getRawButton(9) || operator.getRawButton(10);
+	});
+
 	static {
 		OI oi = new OI();
 	}
@@ -84,6 +89,8 @@ public class OI {
 
 		extendArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.EXTENDING, Arms.State.STOPPED));
 		retractArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.RETRACTING, Arms.State.STOPPED));
+
+		switchCamera.whenPressed(new CameraSwitcher());
 
 		spool.whileHeld(new Spool());
 		shoot.whileHeld(new Shoot());

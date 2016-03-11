@@ -3,6 +3,7 @@ package com.team2383.robot;
 
 import com.team2383.robot.auto.FeederForwardConstant;
 import com.team2383.robot.auto.LowBarConstant;
+import com.team2383.robot.auto.LowBarHighGoalConstant;
 import com.team2383.robot.commands.GeneralPeriodic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -23,6 +24,7 @@ public class Robot extends IterativeRobot {
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("No auto", null);
 		autoChooser.addObject("Low Bar", new LowBarConstant());
+		autoChooser.addObject("Low Bar + High Goal", new LowBarHighGoalConstant());
 		autoChooser.addObject("All other defenses", new FeederForwardConstant());
 
 		SmartDashboard.putData("Auto Chooser", autoChooser);

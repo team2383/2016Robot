@@ -3,6 +3,7 @@ package com.team2383.robot;
 import com.kauailabs.navx.frc.AHRS;
 import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain;
+import com.team2383.robot.subsystems.DualUSBCamera;
 import com.team2383.robot.subsystems.Feeder;
 import com.team2383.robot.subsystems.ShooterFlywheel;
 import com.team2383.robot.subsystems.ShooterHood;
@@ -40,6 +41,7 @@ public class HAL {
 	public static Feeder feeder = new Feeder();
 	public static ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 	public static ShooterHood shooterHood = new ShooterHood();
+	public static DualUSBCamera dualCams = new DualUSBCamera();
 
 	static {
 		HAL hal = new HAL();
