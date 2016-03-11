@@ -8,8 +8,8 @@ import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class LowBar extends AutoCommand {
-	public LowBar() {
+public class DriveToDefense extends AutoCommand {
+	public DriveToDefense() {
 		super();
 
 		addSequential(new DriveDistance(getOption("Velocity"),
@@ -26,8 +26,8 @@ public class LowBar extends AutoCommand {
 	@Override
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
-		options.put("Velocity", 0.6);
-		options.put("Distance", 122.0);
+		options.put("Velocity", 0.0);
+		options.put("Distance", 0.0);
 		return options;
 	};
 

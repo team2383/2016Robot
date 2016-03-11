@@ -1,22 +1,20 @@
 
 package com.team2383.robot;
 
-import java.util.Arrays;
-
+import com.team2383.ninjaLib.SequentialRunner;
 import com.team2383.robot.auto.BatterHighGoal;
 import com.team2383.robot.auto.BatterLowGoal;
 import com.team2383.robot.auto.CommandHolder;
-import com.team2383.robot.auto.defenses.ChevalDeFrise;
 import com.team2383.robot.auto.defenses.Moat;
-import com.team2383.robot.auto.defenses.Portcullis;
 import com.team2383.robot.auto.defenses.Ramparts;
 import com.team2383.robot.auto.defenses.RockWall;
 import com.team2383.robot.auto.defenses.RoughTerrain;
 import com.team2383.robot.auto.defenses.TestDistance;
 import com.team2383.robot.auto.defenses.TestTurn;
+import com.team2383.robot.auto.positions.Center;
+import com.team2383.robot.auto.positions.LowBarPosition;
 import com.team2383.robot.commands.GeneralPeriodic;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -26,17 +24,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 
-	Command defenseCommand, courtyardCommand;
+	Command autonomousCommand, defenseCommand, courtyardCommand, positionCommand;
 	Command generalPeriodicCommand = new GeneralPeriodic();
-	SendableChooser autoChooser, defenseChooser, positionChooser;
+	SendableChooser courtyardChooser, defenseChooser, positionChooser;
 
 	@Override
 	public void robotInit() {
 		defenseChooser.addDefault("No auto", null);
 		defenseChooser.addObject("Rough Terrain", new CommandHolder(RoughTerrain::new));
 		defenseChooser.addObject("Rock Wall", new CommandHolder(RockWall::new));
-		defenseChooser.addObject("Portcullis", new CommandHolder(Portcullis::new));
-		defenseChooser.addObject("Cheval de Frise", new CommandHolder(ChevalDeFrise::new));
 		defenseChooser.addObject("Moat", new CommandHolder(Moat::new));
 		defenseChooser.addObject("Ramparts", new CommandHolder(Ramparts::new));
 
@@ -44,12 +40,16 @@ public class Robot extends IterativeRobot {
 		defenseChooser.addObject("Test Distance", new CommandHolder(TestDistance::new));
 		defenseChooser.addObject("Test Turn", new CommandHolder(TestTurn::new));
 
-		autoChooser = new SendableChooser();
-		autoChooser.addDefault("Just Cross", null);
-		autoChooser.addObject("Batter High Goal", new CommandHolder(BatterHighGoal::new));
-		autoChooser.addObject("Batter Low Goal", new CommandHolder(BatterLowGoal::new));
+		courtyardChooser = new SendableChooser();
+		courtyardChooser.addDefault("Just Cross", null);
+		courtyardChooser.addObject("Batter High Goal", new CommandHolder(BatterHighGoal::new));
+		courtyardChooser.addObject("Batter Low Goal", new CommandHolder(BatterLowGoal::new));
 
-		SmartDashboard.putData("Auto mode", autoChooser);
+		positionChooser = new SendableChooser();
+		positionChooser.addDefault("Low Bar", new CommandHolder(LowBarPosition::new));
+		positionChooser.addObject("Center", new CommandHolder(Center::new));
+
+		SmartDashboard.putData("Auto mode", courtyardChooser);
 	}
 
 	@Override
@@ -75,21 +75,16 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
+		defenseCommand = ((CommandHolder) defenseChooser.getSelected()).get();
+		courtyardCommand = ((CommandHolder) courtyardChooser.getSelected()).get();
+		positionCommand = ((CommandHolder) courtyardChooser.getSelected()).get();
+		if (defenseCommand != null && courtyardCommand != null && positionCommand != null) {
+			autonomousCommand = new SequentialRunner(defenseCommand, courtyardCommand, positionCommand);
+			autonomousCommand.start();
+		}
+
 		if (!generalPeriodicCommand.isRunning()) {
 			generalPeriodicCommand.start();
-		}
-
-		try {
-			autonomousCommand = (Command) autoChooser.getSelected().getClass().newInstance();
-		} catch (Throwable e) {
-			DriverStation.reportError(
-					"ERROR instantiating autonomous " + e.toString() + " at " + Arrays.toString(e.getStackTrace()),
-					false);
-		}
-
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null) {
-			autonomousCommand.start();
 		}
 	}
 

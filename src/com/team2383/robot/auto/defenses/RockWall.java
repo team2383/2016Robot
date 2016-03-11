@@ -1,12 +1,11 @@
 package com.team2383.robot.auto.defenses;
 
 import java.util.HashMap;
-
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class RockWall extends LowBar {
+public class RockWall extends DriveToDefense {
 	@Override
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();

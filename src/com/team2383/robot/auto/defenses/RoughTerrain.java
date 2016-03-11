@@ -6,7 +6,7 @@ import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class RoughTerrain extends LowBar {
+public class RoughTerrain extends DriveToDefense {
 	@Override
 	public HashMap<String, Double> getOptionDefaults() {
 		HashMap<String, Double> options = new HashMap<>();
