@@ -9,11 +9,12 @@ import com.team2383.robot.auto.defenses.Moat;
 import com.team2383.robot.auto.defenses.Ramparts;
 import com.team2383.robot.auto.defenses.RockWall;
 import com.team2383.robot.auto.defenses.RoughTerrain;
-import com.team2383.robot.auto.defenses.TestDistance;
-import com.team2383.robot.auto.defenses.TestTurn;
 import com.team2383.robot.auto.positions.Center;
 import com.team2383.robot.auto.positions.LowBarPosition;
+import com.team2383.robot.commands.DriveDistance;
 import com.team2383.robot.commands.GeneralPeriodic;
+import com.team2383.robot.commands.SetHeading;
+import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -37,8 +38,9 @@ public class Robot extends IterativeRobot {
 		defenseChooser.addObject("Ramparts", new CommandHolder(Ramparts::new));
 
 		// test commands
-		defenseChooser.addObject("Test Distance", new CommandHolder(TestDistance::new));
-		defenseChooser.addObject("Test Turn", new CommandHolder(TestTurn::new));
+		defenseChooser.addObject("Test Distance",
+				new CommandHolder(() -> new DriveDistance(0.66, 50, Gear.LOW, false)));
+		defenseChooser.addObject("Test Turn", new CommandHolder(() -> new SetHeading(0.66, 90)));
 
 		courtyardChooser = new SendableChooser();
 		courtyardChooser.addDefault("Just Cross", null);
