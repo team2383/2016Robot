@@ -12,7 +12,7 @@ public class Feeder extends StatefulSubsystem<Feeder.State> {
 	}
 
 	public enum State {
-		FEEDING, OUTFEEDING, STOPPED
+		FEEDING, OUTFEEDING, STOPPED, OUTFEEDINGSLOW
 	}
 
 	public void feedIn() {
@@ -22,6 +22,10 @@ public class Feeder extends StatefulSubsystem<Feeder.State> {
 
 	public void feedOut() {
 		feederMotor.set(-1);
+	}
+
+	public void feedOutSlow() {
+		feederMotor.set(-0.6);
 	}
 
 	public void stop() {
@@ -44,6 +48,9 @@ public class Feeder extends StatefulSubsystem<Feeder.State> {
 		default:
 		case STOPPED:
 			stop();
+			break;
+		case OUTFEEDINGSLOW:
+			feedOutSlow();
 			break;
 		}
 	}

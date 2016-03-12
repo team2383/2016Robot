@@ -19,8 +19,13 @@ public class Robot extends IterativeRobot {
 	Command generalPeriodicCommand = new GeneralPeriodic();
 	SendableChooser autoChooser;
 
+	@SuppressWarnings("unused")
 	@Override
 	public void robotInit() {
+		HAL hal = new HAL();
+		Constants constants = new Constants();
+		OI oi = new OI();
+
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("No auto", null);
 		autoChooser.addObject("Low Bar", new LowBarConstant());

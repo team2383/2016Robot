@@ -2,6 +2,7 @@ package com.team2383.robot;
 
 import static com.team2383.robot.HAL.arms;
 import static com.team2383.robot.HAL.drivetrain;
+import static com.team2383.robot.HAL.dualCams;
 import static com.team2383.robot.HAL.feeder;
 import static com.team2383.robot.HAL.hoodTopLimit;
 
@@ -11,7 +12,6 @@ import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.WPILambdas;
-import com.team2383.robot.commands.CameraSwitcher;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.Spool;
@@ -56,6 +56,10 @@ public class OI {
 		return operator.getRawButton(11) || operator.getRawButton(12);
 	});
 
+	public static Button feedOutSlow = new LambdaButton(() -> {
+		return operator.getRawButton(6);
+	});
+
 	public static Button extendArms = new DPadButton(operator, Direction.UP);
 	public static Button retractArms = new DPadButton(operator, Direction.DOWN);
 
@@ -67,10 +71,6 @@ public class OI {
 	public static Button switchCamera = new LambdaButton(() -> {
 		return operator.getRawButton(9) || operator.getRawButton(10);
 	});
-
-	static {
-		OI oi = new OI();
-	}
 
 	// use buttons
 	public OI() {
@@ -86,11 +86,15 @@ public class OI {
 
 		feedIn.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
 		feedOut.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDING, Feeder.State.STOPPED));
+		feedOutSlow.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDINGSLOW, Feeder.State.STOPPED));
 
 		extendArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.EXTENDING, Arms.State.STOPPED));
 		retractArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.RETRACTING, Arms.State.STOPPED));
 
-		switchCamera.whenPressed(new CameraSwitcher());
+		switchCamera.whenPressed(WPILambdas.createCommand(() -> {
+			dualCams.switchCam();
+			return true;
+		}));
 
 		spool.whileHeld(new Spool());
 		shoot.whileHeld(new Shoot());

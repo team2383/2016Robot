@@ -2,8 +2,6 @@ package com.team2383.robot;
 
 import java.util.LinkedList;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class Constants {
 	public static class ShooterPreset {
 		public static LinkedList<ShooterPreset> presets = new LinkedList<ShooterPreset>();
@@ -67,19 +65,19 @@ public class Constants {
 	public static double driveDownshiftFPSThreshold = 3.0;
 
 	public static double driveHeadingTolerance = 1;
-	public static double driveHeadingMoveToP = 0.040;
-	public static double driveHeadingMoveToI = 0.0023;
+	public static double driveHeadingMoveToP = 0.034;
+	public static double driveHeadingMoveToI = 0.0018;
 	public static double driveHeadingMoveToD = 0.0;
 	public static double driveHeadingMoveToVelocity = 0.7;
 
-	public static double driveHeadingMaintainP = 0.41;
+	public static double driveHeadingMaintainP = 0.38;
 	public static double driveHeadingMaintainI = 0.000;
-	public static double driveHeadingMaintainD = 0.5;
+	public static double driveHeadingMaintainD = 0.8;
 
 	public static double drivePositionTolerance = 0.5;
-	public static double drivePositionP = SmartDashboard.getNumber("drivePositionP", 0.5);
-	public static double drivePositionI = SmartDashboard.getNumber("drivePositionI", 0);
-	public static double drivePositionD = SmartDashboard.getNumber("drivePositionD", 0);
+	public static double drivePositionP = 0.29;
+	public static double drivePositionI = 0.0003;
+	public static double drivePositionD = 0.0;
 
 	public static double inputExpo = 0.5;
 	public static double inputDeadband = 0.1;
