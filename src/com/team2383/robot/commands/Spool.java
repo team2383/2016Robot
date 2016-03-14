@@ -1,6 +1,7 @@
 package com.team2383.robot.commands;
 
 import static com.team2383.robot.HAL.shooterFlywheel;
+import static com.team2383.robot.HAL.shooterHood;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -12,10 +13,12 @@ public class Spool extends Command {
 	public Spool() {
 		super("Spool");
 		requires(shooterFlywheel);
+		requires(shooterHood);
 	}
 
 	public Spool(double timeout) {
 		super("Spool", timeout);
+		requires(shooterHood);
 		requires(shooterFlywheel);
 	}
 
@@ -25,6 +28,7 @@ public class Spool extends Command {
 
 	@Override
 	protected void execute() {
+		shooterHood.moveAtSpeed(0.25);
 		shooterFlywheel.spool();
 	}
 
@@ -35,12 +39,13 @@ public class Spool extends Command {
 
 	@Override
 	protected void end() {
+		shooterHood.stop();
 		shooterFlywheel.stop();
 	}
 
 	@Override
 	protected void interrupted() {
-		shooterFlywheel.stop();
+		end();
 	}
 
 }

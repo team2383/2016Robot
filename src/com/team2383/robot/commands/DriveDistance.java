@@ -73,9 +73,10 @@ public class DriveDistance extends Command {
 
 	@Override
 	protected void execute() {
-		// NOTE: if weird shit happening with heading following
-		// reverse sign of headingController output!
-		SmartDashboard.putNumber("distance error", distanceController.getError());
+		// wait 0.1 seconds before starting
+		// to ensure navX reset correctly.
+		// also ensure we arent Calibrating
+		System.out.println(this.timeSinceInitialized());
 		drivetrain.arcade(distanceController.get(), headingController.get());
 	}
 

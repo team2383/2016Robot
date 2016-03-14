@@ -40,6 +40,7 @@ public class Constants {
 	}
 
 	public static double shooterMaxRPM = 4800;
+	public static double shooterMinRPM = 3900;
 	public static int shooterRPMTolerance = 100;
 	public static double shooterFollowThruTime = 3.0;
 	public static double shooterFeederKickPower = 1.0;
@@ -64,19 +65,19 @@ public class Constants {
 	public static double driveUpshiftFPSThreshold = 4.0;
 	public static double driveDownshiftFPSThreshold = 3.0;
 
-	public static double driveHeadingTolerance = 1;
-	public static double driveHeadingMoveToP = 0.034;
-	public static double driveHeadingMoveToI = 0.0018;
+	public static double driveHeadingTolerance = 1.25;
+	public static double driveHeadingMoveToP = 0.032; // .034 last q
+	public static double driveHeadingMoveToI = 0.0018; // .0018 last q
 	public static double driveHeadingMoveToD = 0.0;
-	public static double driveHeadingMoveToVelocity = 0.7;
+	public static double driveHeadingMoveToVelocity = 0.8;
 
 	public static double driveHeadingMaintainP = 0.38;
 	public static double driveHeadingMaintainI = 0.000;
 	public static double driveHeadingMaintainD = 0.8;
 
-	public static double drivePositionTolerance = 0.5;
-	public static double drivePositionP = 0.29;
-	public static double drivePositionI = 0.0003;
+	public static double drivePositionTolerance = 0.85;
+	public static double drivePositionP = 0.20;
+	public static double drivePositionI = 0.0001;
 	public static double drivePositionD = 0.0;
 
 	public static double inputExpo = 0.5;
@@ -87,4 +88,6 @@ public class Constants {
 	public static double hoodPositionD = 25;
 
 	public static boolean useMechanicalHoodPresets = true;
+
+	public static double navXResetDelay = 0.07; // seconds
 }

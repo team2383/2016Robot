@@ -2,6 +2,8 @@ package com.team2383.robot.auto;
 
 import java.util.HashMap;
 
+import com.team2383.robot.ActuateHoodStop;
+import com.team2383.robot.HAL;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.Spool;
 
@@ -20,6 +22,7 @@ public class BatterHighGoal extends AutoCommand {
 
 	public BatterHighGoal() {
 		// Raise hood at 0.4 for 0.2 seconds
+		addParallel(new ActuateHoodStop(HAL.hoodTopLimit));
 		addParallel(new Spool(getGlobalOption("Spool Time")));
 		addSequential(new WaitCommand(2));
 		addSequential(new Shoot(getGlobalOption("Shoot Time")));

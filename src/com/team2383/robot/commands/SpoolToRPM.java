@@ -14,17 +14,18 @@ public class SpoolToRPM extends Command {
 	public SpoolToRPM(double rpm) {
 		super("Spool To RPM");
 		requires(shooterFlywheel);
-		this.rpm = 0;
+		this.rpm = rpm;
 	}
 
 	public SpoolToRPM(double rpm, double timeout) {
 		super("Spool To RPM", timeout);
 		requires(shooterFlywheel);
-		this.rpm = 0;
+		this.rpm = rpm;
 	}
 
 	@Override
 	protected void initialize() {
+		shooterFlywheel.setSetpoint(rpm);
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class SpoolToRPM extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return shooterFlywheel.isAtSetpoint();
+		return false;
 	}
 
 	@Override

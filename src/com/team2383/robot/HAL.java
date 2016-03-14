@@ -28,7 +28,7 @@ public class HAL {
 	public static VictorSP feederMotor = new VictorSP(0);
 
 	/** Solenoids **/
-	public static DoubleSolenoid shifter = new DoubleSolenoid(0, 1);
+	public static DoubleSolenoid shifter = new DoubleSolenoid(1, 0);
 	public static DoubleSolenoid hoodTopLimit = new DoubleSolenoid(2, 3);
 
 	/** Sensors **/
