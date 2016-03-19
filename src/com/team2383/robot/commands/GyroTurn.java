@@ -9,13 +9,13 @@ import com.team2383.robot.subsystems.Drivetrain.Gear;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class SetHeading extends PIDCommand {
+public class GyroTurn extends PIDCommand {
 
-	public SetHeading(double angle) {
+	public GyroTurn(double angle) {
 		this(Constants.driveHeadingMoveToVelocity, angle);
 	}
 
-	public SetHeading(double velocity, double angle) {
+	public GyroTurn(double velocity, double angle) {
 		super("Set Heading", Constants.driveHeadingMoveToP, Constants.driveHeadingMoveToI,
 				Constants.driveHeadingMoveToD);
 		requires(drivetrain);

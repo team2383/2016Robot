@@ -1,6 +1,7 @@
 package com.team2383.robot.commands;
 
 import com.team2383.robot.HAL;
+import com.team2383.robot.OI;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
@@ -25,14 +26,19 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putNumber("Gyro Yaw", HAL.navX.getYaw());
 		SmartDashboard.putNumber("Total Robot Current Draw", HAL.PDP.getTotalCurrent());
 
+		// Vision
+		SmartDashboard.putNumber("Closest target distance", HAL.vision.getNearestTarget().getDistance());
+		SmartDashboard.putNumber("Closest target azimuth", HAL.vision.getNearestTarget().getAzimuth());
+		SmartDashboard.putBoolean("Aligned With closest target", HAL.vision.getNearestTarget().isAligned());
+
 		// Drivetrain
 		SmartDashboard.putNumber("Drive Encoder Rotations", HAL.drivetrain.getRotations());
 		SmartDashboard.putNumber("Drive Encoder Inches", HAL.drivetrain.getInches());
 		SmartDashboard.putString("Drivetrain Gear", HAL.drivetrain.getGear().toString());
 
 		// Shooter Flywheel
+		SmartDashboard.putNumber("Shooter Joystick Choosen RPM", OI.shooterSpeed.getAsDouble());
 		SmartDashboard.putNumber("Shooter Flywheel Target RPM", HAL.shooterFlywheel.getSetpoint());
-		HAL.shooterFlywheel.setSetpoint(SmartDashboard.getNumber("Shooter Flywheel Target RPM"));
 		SmartDashboard.putNumber("Shooter Flywheel Current RPM", HAL.shooterFlywheel.getRPM());
 		SmartDashboard.putBoolean("Shooter At Setpoint", HAL.shooterFlywheel.isAtSetpoint());
 

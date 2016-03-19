@@ -1,27 +1,61 @@
 package com.team2383.robot.subsystems;
 
+import java.util.ArrayList;
+
+import com.team2383.robot.Constants;
+import com.team2383.robot.commands.UpdateVision;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Vision extends Subsystem {
 
-	private double distanceFromGoal;
-	private double angle;
+	public static class Target {
+		private final double distance;
+		private final double azimuth;
 
-	private void hasNewData(double distanceFromGoal, double angle) {
-		this.distanceFromGoal = distanceFromGoal;
-		this.angle = angle;
+		public Target(double distance, double azimuth) {
+			this.distance = distance;
+			this.azimuth = azimuth;
+		}
+
+		public double getDistance() {
+			return distance;
+		}
+
+		public double getAzimuth() {
+			return azimuth;
+		}
+
+		public boolean isAligned() {
+			return Math.abs(azimuth) < Constants.visionTargetAzimuthThreshold;
+		}
+	}
+
+	private ArrayList<Target> targets = new ArrayList<>();
+
+	private void hasNewData(ArrayList<Target> targets) {
+		this.targets = targets;
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-		new VisionDataSocket(this::hasNewData);
+		this.setDefaultCommand(new UpdateVision(this::hasNewData));
 	}
 
-	public double getAngle() {
-		return angle;
+	public ArrayList<Target> getTargets() {
+		return targets;
 	}
 
-	public double getDistanceFromGoal() {
-		return distanceFromGoal;
+	public Target getNearestTarget() {
+		try {
+			Target t = targets.get(0);
+			return t == null ? new Target(0, 0) : t;
+		} catch (IndexOutOfBoundsException e) {
+			return new Target(0, 0);
+		}
+	}
+
+	public void setTargets(ArrayList<Target> targets) {
+		this.targets = targets;
 	}
 }

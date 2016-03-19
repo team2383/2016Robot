@@ -5,16 +5,21 @@ import static com.team2383.robot.HAL.shooterMotor;
 import com.team2383.robot.Constants;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ShooterFlywheel extends Subsystem {
 
-	private double setpoint = Constants.shooterMinRPM;
+	private final double setpoint = Constants.shooterMinRPM;
 
 	public ShooterFlywheel() {
 		shooterMotor.enableBrakeMode(false);
-		shooterMotor.reverseSensor(true);
 		shooterMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		shooterMotor.changeControlMode(TalonControlMode.Speed);
+		shooterMotor.reverseSensor(true);
+		shooterMotor.configPeakOutputVoltage(12.0, 0.0);
+		shooterMotor.setPID(Constants.shooterFlywheelP, Constants.shooterFlywheelI, Constants.shooterFlywheelD,
+				Constants.shooterFlywheelF, Constants.shooterFlywheelIZone, 0, 0);
 		shooterMotor.enable();
 	}
 
@@ -24,38 +29,38 @@ public class ShooterFlywheel extends Subsystem {
 	 *
 	 * @param rpm
 	 */
-	public void spoolToSetpoint() {
-		if (shooterMotor.getSpeed() <= this.setpoint) {
-			spool();
-		} else {
-			stop();
-		}
+	public void spoolToSetpoint(double setpoint) {
+		shooterMotor.enableBrakeMode(false);
+		shooterMotor.changeControlMode(TalonControlMode.Speed);
+		shooterMotor.setSetpoint(setpoint);
 	}
 
 	public void set(double speed) {
+		shooterMotor.enableBrakeMode(false);
+		shooterMotor.changeControlMode(TalonControlMode.PercentVbus);
 		shooterMotor.set(speed);
 	}
 
 	public void spool() {
-		shooterMotor.set(1);
+		set(1);
 	}
 
 	public void stop() {
-		shooterMotor.set(0);
+		shooterMotor.enableBrakeMode(true);
+		set(0);
 	}
 
 	public void unspool() {
-		shooterMotor.set(-1);
+		set(-1);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
-
 	}
 
 	public boolean isAtSetpoint() {
-		return shooterMotor.getSpeed() > setpoint;
+		return Math.abs(shooterMotor.getError()) < Constants.shooterRPMTolerance;
 	}
 
 	public double getRPM() {
@@ -63,10 +68,6 @@ public class ShooterFlywheel extends Subsystem {
 	}
 
 	public double getSetpoint() {
-		return setpoint;
-	}
-
-	public void setSetpoint(double setpoint) {
-		this.setpoint = setpoint;
+		return shooterMotor.getSetpoint();
 	}
 }

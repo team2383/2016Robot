@@ -2,21 +2,30 @@ package com.team2383.robot.subsystems;
 
 import static com.team2383.robot.HAL.hoodMotor;
 
+import java.util.function.DoubleUnaryOperator;
+
+import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants;
 import com.team2383.robot.OI;
 import com.team2383.robot.commands.MoveHood;
 
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ShooterHood extends Subsystem {
 
+	public DoubleUnaryOperator mapToAngle = Values.mapRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit, 0,
+			90);
+	public DoubleUnaryOperator mapToNative = Values.mapRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit, 0,
+			90);
+
 	public ShooterHood() {
 		hoodMotor.enableBrakeMode(true);
+		hoodMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		hoodMotor.changeControlMode(TalonControlMode.Position);
-		hoodMotor.setPIDSourceType(PIDSourceType.kDisplacement);
-		hoodMotor.setPID(Constants.hoodPositionP, Constants.hoodPositionI, Constants.hoodPositionD);
+		hoodMotor.setPID(Constants.hoodPositionP, Constants.hoodPositionI, Constants.hoodPositionD,
+				Constants.hoodPositionF, Constants.hoodPositionIZone, 0, 0);
 		hoodMotor.reverseOutput(false);
 		hoodMotor.reverseSensor(false);
 	}
@@ -29,6 +38,10 @@ public class ShooterHood extends Subsystem {
 	public void setSetpoint(double angle) {
 		hoodMotor.changeControlMode(TalonControlMode.Position);
 		hoodMotor.setSetpoint(angle);
+	}
+
+	public void holdPosition(double angle) {
+		this.setSetpoint(this.getSetpoint());
 	}
 
 	public boolean isAtSetpoint() {

@@ -2,11 +2,11 @@ package com.team2383.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.team2383.robot.subsystems.Arms;
-import com.team2383.robot.subsystems.CameraFeeds;
 import com.team2383.robot.subsystems.Drivetrain;
 import com.team2383.robot.subsystems.Feeder;
 import com.team2383.robot.subsystems.ShooterFlywheel;
 import com.team2383.robot.subsystems.ShooterHood;
+import com.team2383.robot.subsystems.Vision;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -41,5 +41,5 @@ public class HAL {
 	public static Feeder feeder = new Feeder();
 	public static ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 	public static ShooterHood shooterHood = new ShooterHood();
-	public static CameraFeeds dualCams = new CameraFeeds();
+	public static Vision vision = new Vision();
 }

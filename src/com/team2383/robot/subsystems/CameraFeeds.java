@@ -79,10 +79,14 @@ public class CameraFeeds extends Subsystem {
 	 *            for camera
 	 */
 	public void changeCam(int newId) {
-		NIVision.IMAQdxStopAcquisition(curCam);
-		NIVision.IMAQdxConfigureGrab(newId);
-		NIVision.IMAQdxStartAcquisition(newId);
-		curCam = newId;
+		try {
+			NIVision.IMAQdxStopAcquisition(curCam);
+			NIVision.IMAQdxConfigureGrab(newId);
+			NIVision.IMAQdxStartAcquisition(newId);
+			curCam = newId;
+		} catch (Throwable e) {
+			System.err.println("Failed to start camera acquisition! " + e.getMessage());
+		}
 	}
 
 	/**

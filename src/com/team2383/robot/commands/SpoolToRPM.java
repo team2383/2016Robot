@@ -2,6 +2,8 @@ package com.team2383.robot.commands;
 
 import static com.team2383.robot.HAL.shooterFlywheel;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /*
@@ -9,28 +11,33 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class SpoolToRPM extends Command {
 
-	private final double rpm;
+	private final DoubleSupplier rpmSupplier;
 
 	public SpoolToRPM(double rpm) {
-		super("Spool To RPM");
-		requires(shooterFlywheel);
-		this.rpm = rpm;
+		this(() -> rpm);
 	}
 
 	public SpoolToRPM(double rpm, double timeout) {
+		this(() -> rpm, timeout);
+	}
+
+	public SpoolToRPM(DoubleSupplier rpmSupplier) {
+		this(rpmSupplier, 0);
+	}
+
+	public SpoolToRPM(DoubleSupplier rpmSupplier, double timeout) {
 		super("Spool To RPM", timeout);
 		requires(shooterFlywheel);
-		this.rpm = rpm;
+		this.rpmSupplier = rpmSupplier;
 	}
 
 	@Override
 	protected void initialize() {
-		shooterFlywheel.setSetpoint(rpm);
 	}
 
 	@Override
 	protected void execute() {
-		shooterFlywheel.spoolToSetpoint();
+		shooterFlywheel.spoolToSetpoint(rpmSupplier.getAsDouble());
 	}
 
 	@Override

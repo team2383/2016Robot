@@ -2,7 +2,6 @@ package com.team2383.robot;
 
 import static com.team2383.robot.HAL.arms;
 import static com.team2383.robot.HAL.drivetrain;
-import static com.team2383.robot.HAL.dualCams;
 import static com.team2383.robot.HAL.feeder;
 import static com.team2383.robot.HAL.hoodTopLimit;
 
@@ -11,10 +10,11 @@ import java.util.function.DoubleSupplier;
 import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.LambdaButton;
+import com.team2383.ninjaLib.Values;
 import com.team2383.ninjaLib.WPILambdas;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.Shoot;
-import com.team2383.robot.commands.Spool;
+import com.team2383.robot.commands.SpoolToRPM;
 import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 import com.team2383.robot.subsystems.Feeder;
@@ -46,7 +46,9 @@ public class OI {
 	public static Joystick operator = new Joystick(2);
 
 	public static DoubleSupplier hood = operator::getY;
-	public static DoubleSupplier shooterSpeed = operator::getThrottle;
+	public static DoubleSupplier shooterSpeed = () -> {
+		return Values.mapRange(-1.0, 1.0, 0, Constants.shooterMaxRPM).applyAsDouble(operator.getThrottle());
+	};
 
 	public static Button feedIn = new LambdaButton(() -> {
 		return operator.getRawButton(7) || operator.getRawButton(8);
@@ -74,6 +76,7 @@ public class OI {
 
 	// use buttons
 	public OI() {
+
 		shiftDown.whenPressed(WPILambdas.createCommand(() -> {
 			drivetrain.shiftTo(Gear.LOW);
 			return true;
@@ -91,12 +94,13 @@ public class OI {
 		extendArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.EXTENDING, Arms.State.STOPPED));
 		retractArms.whileHeld(new SetState<Arms.State>(arms, Arms.State.RETRACTING, Arms.State.STOPPED));
 
-		switchCamera.whenPressed(WPILambdas.createCommand(() -> {
-			dualCams.switchCam();
-			return true;
-		}));
+		/*
+		 * if (dualCams != null && dualCams instanceof CameraFeeds) {
+		 * switchCamera.whenPressed(WPILambdas.createCommand(() -> {
+		 * dualCams.switchCam(); return true; })); }
+		 */
 
-		spool.whileHeld(new Spool());
+		spool.whileHeld(new SpoolToRPM(shooterSpeed));
 		shoot.whileHeld(new Shoot());
 
 		if (Constants.useMechanicalHoodPresets) {

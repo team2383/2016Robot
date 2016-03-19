@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.team2383.robot.auto.AutoCommand;
 import com.team2383.robot.commands.DriveDistance;
-import com.team2383.robot.commands.SetHeading;
+import com.team2383.robot.commands.GyroTurn;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,7 +37,7 @@ public abstract class DriveToBatter extends AutoCommand {
 		}
 
 		if (pivot != 0) {
-			addSequential(new SetHeading(getOption("Pivot Velocity"), pivot));
+			addSequential(new GyroTurn(getOption("Pivot Velocity"), pivot));
 		}
 
 		addSequential(new DriveDistance(getOption("Drive To Batter Velocity"), getOption("Drive To Batter Distance"),

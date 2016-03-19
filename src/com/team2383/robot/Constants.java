@@ -45,10 +45,22 @@ public class Constants {
 	public static double shooterFollowThruTime = 3.0;
 	public static double shooterFeederKickPower = 1.0;
 
+	public static double shooterFlywheelP = 0.35;
+	public static double shooterFlywheelI = 0.0035;
+	public static double shooterFlywheelD = 0.0;
+	public static double shooterFlywheelF = 0.030;
+	public static int shooterFlywheelIZone = 40;
+
 	public static int hoodDegreeTolerance = 1;
 	public static double hoodStallCurrent = 8; // amps
 	public static double hoodReverseLimit = 0.630;
 	public static double hoodForwardLimit = 1.000;
+
+	public static double hoodPositionP = 2.3;
+	public static double hoodPositionI = 0.0023;
+	public static double hoodPositionD = 0.5;
+	public static double hoodPositionF = 0.002;
+	public static int hoodPositionIZone = 40;
 
 	public static double feedCurrentMultiplier = 2.0;
 	public static double feedCurrentMinimum = 5;
@@ -83,11 +95,8 @@ public class Constants {
 	public static double inputExpo = 0.5;
 	public static double inputDeadband = 0.1;
 
-	public static double hoodPositionP = 2.3;
-	public static double hoodPositionI = 0.0008;
-	public static double hoodPositionD = 25;
-
 	public static boolean useMechanicalHoodPresets = true;
 
 	public static double navXResetDelay = 0.07; // seconds
+	public static double visionTargetAzimuthThreshold = 0.7;
 }
