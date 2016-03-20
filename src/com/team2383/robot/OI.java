@@ -10,6 +10,7 @@ import java.util.function.DoubleUnaryOperator;
 
 import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
+import com.team2383.ninjaLib.Gamepad;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.Values;
 import com.team2383.ninjaLib.WPILambdas;
@@ -37,17 +38,26 @@ public class OI {
 	// number it is.
 
 	/* Sticks */
-	public static Joystick left = new Joystick(0);
-	public static Joystick right = new Joystick(1);
+	//public static Joystick left = new Joystick(0);
+	//public static Joystick right = new Joystick(1);
+	
+	public static Gamepad gamepad = new Gamepad(3);
 
 	private static DoubleUnaryOperator deadband = (x) -> {
 		return Math.abs(x) > Constants.inputDeadband ? x : 0;
 	};
+	
+	public static DoubleSupplier leftSpeed = () -> deadband.applyAsDouble(gamepad.getLeftY());
+	public static DoubleSupplier rightSpeed = () -> deadband.applyAsDouble(gamepad.getRightY());
 
-	public static DoubleSupplier leftSpeed = () -> deadband.applyAsDouble(left.getY());
-	public static DoubleSupplier rightSpeed = () -> deadband.applyAsDouble(right.getY());
-	public static Button shiftDown = new JoystickButton(left, 6);
-	public static Button shiftUp = new JoystickButton(right, 11);
+
+	//public static DoubleSupplier leftSpeed = () -> deadband.applyAsDouble(left.getY());
+	//public static DoubleSupplier rightSpeed = () -> deadband.applyAsDouble(right.getY());
+	
+	public static Button shiftDown = gamepad.getLeftShoulder();
+	public static Button shiftUp = gamepad.getRightShoulder();
+	//public static Button shiftDown = new JoystickButton(left, 6);
+	//public static Button shiftUp = new JoystickButton(right, 11);
 
 	public static Joystick operator = new Joystick(2);
 
