@@ -53,8 +53,8 @@ public class Constants {
 
 	public static int hoodDegreeTolerance = 1;
 	public static double hoodStallCurrent = 8; // amps
-	public static double hoodReverseLimit = 0.630;
-	public static double hoodForwardLimit = 1.000;
+	public static double hoodReverseLimit = -0.564;
+	public static double hoodForwardLimit = -0.982;
 
 	public static double hoodPositionP = 2.3;
 	public static double hoodPositionI = 0.0023;

@@ -6,19 +6,19 @@ import java.util.function.DoubleUnaryOperator;
 
 import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants;
-import com.team2383.robot.OI;
-import com.team2383.robot.commands.MoveHood;
+import com.team2383.robot.commands.HoldHood;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterHood extends Subsystem {
 
 	public DoubleUnaryOperator mapToAngle = Values.mapRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit, 0,
 			90);
-	public DoubleUnaryOperator mapToNative = Values.mapRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit, 0,
-			90);
+	public DoubleUnaryOperator mapToNative = Values.mapRange(0, 90, Constants.hoodReverseLimit,
+			Constants.hoodForwardLimit);
 
 	public ShooterHood() {
 		hoodMotor.enableBrakeMode(true);
@@ -26,8 +26,11 @@ public class ShooterHood extends Subsystem {
 		hoodMotor.changeControlMode(TalonControlMode.Position);
 		hoodMotor.setPID(Constants.hoodPositionP, Constants.hoodPositionI, Constants.hoodPositionD,
 				Constants.hoodPositionF, Constants.hoodPositionIZone, 0, 0);
+		hoodMotor.setReverseSoftLimit(Constants.hoodReverseLimit);
+		hoodMotor.setForwardSoftLimit(Constants.hoodForwardLimit);
 		hoodMotor.reverseOutput(false);
-		hoodMotor.reverseSensor(false);
+		hoodMotor.reverseSensor(true);
+		SmartDashboard.putData("hoodMotor", hoodMotor);
 	}
 
 	public void moveAtSpeed(double speed) {
@@ -35,24 +38,36 @@ public class ShooterHood extends Subsystem {
 		hoodMotor.set(speed);
 	}
 
-	public void setSetpoint(double angle) {
-		hoodMotor.changeControlMode(TalonControlMode.Position);
-		hoodMotor.setSetpoint(angle);
+	public void setSetpointAngle(double angle) {
+		setSetpointNative(mapToNative.applyAsDouble(angle));
 	}
 
-	public void holdPosition(double angle) {
-		this.setSetpoint(this.getSetpoint());
+	public void setSetpointNative(double rotations) {
+		hoodMotor.changeControlMode(TalonControlMode.Position);
+		hoodMotor.setSetpoint(rotations);
+	}
+
+	public void holdPosition() {
+		this.setSetpointNative(this.getRotationsNative());
 	}
 
 	public boolean isAtSetpoint() {
 		return hoodMotor.getError() <= Constants.hoodDegreeTolerance;
 	}
 
-	public double getSetpoint() {
+	public double getSetpointAngle() {
+		return mapToAngle.applyAsDouble(getSetpointNative());
+	}
+
+	public double getAngle() {
+		return mapToAngle.applyAsDouble(getRotationsNative());
+	}
+
+	public double getSetpointNative() {
 		return hoodMotor.getSetpoint();
 	}
 
-	public double getRotations() {
+	public double getRotationsNative() {
 		return hoodMotor.getPosition();
 	}
 
@@ -63,6 +78,6 @@ public class ShooterHood extends Subsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		this.setDefaultCommand(new MoveHood(OI.hood));
+		this.setDefaultCommand(new HoldHood());
 	}
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.team2383.robot.ActuateHoodStop;
 import com.team2383.robot.HAL;
 import com.team2383.robot.commands.Shoot;
-import com.team2383.robot.commands.Spool;
+import com.team2383.robot.commands.SpoolToRPM;
 
 import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.WaitCommand;
@@ -23,7 +23,7 @@ public class BatterHighGoal extends AutoCommand {
 	public BatterHighGoal() {
 		// Raise hood at 0.4 for 0.2 seconds
 		addParallel(new ActuateHoodStop(HAL.hoodTopLimit));
-		addParallel(new Spool(getGlobalOption("Spool Time")));
+		addParallel(new SpoolToRPM(3250, getGlobalOption("Spool Time")));
 		addSequential(new WaitCommand(2));
 		addSequential(new Shoot(getGlobalOption("Shoot Time")));
 		addSequential(new PrintCommand("Shooting!"));

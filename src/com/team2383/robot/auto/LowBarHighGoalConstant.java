@@ -3,10 +3,10 @@ package com.team2383.robot.auto;
 import com.team2383.robot.ActuateHoodStop;
 import com.team2383.robot.HAL;
 import com.team2383.robot.commands.DriveDistance;
-import com.team2383.robot.commands.MoveHood;
 import com.team2383.robot.commands.GyroTurn;
+import com.team2383.robot.commands.MoveHood;
 import com.team2383.robot.commands.Shoot;
-import com.team2383.robot.commands.Spool;
+import com.team2383.robot.commands.SpoolToRPM;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -22,7 +22,7 @@ public class LowBarHighGoalConstant extends CommandGroup {
 		addSequential(new GyroTurn(49));
 		addSequential(new DriveDistance(0.74, 126, Gear.HIGH, true));
 		// Raise hood at 0.4 for 0.2 seconds
-		addParallel(new Spool(4));
+		addParallel(new SpoolToRPM(4000, 4));
 		addSequential(new WaitCommand(3));
 		addSequential(new Shoot(2));
 		addSequential(new PrintCommand("Shooting!"));

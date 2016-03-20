@@ -17,7 +17,7 @@ public class ShooterFlywheel extends Subsystem {
 		shooterMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		shooterMotor.changeControlMode(TalonControlMode.Speed);
 		shooterMotor.reverseSensor(true);
-		shooterMotor.configPeakOutputVoltage(12.0, 0.0);
+		shooterMotor.configPeakOutputVoltage(12.0, -3.0);
 		shooterMotor.setPID(Constants.shooterFlywheelP, Constants.shooterFlywheelI, Constants.shooterFlywheelD,
 				Constants.shooterFlywheelF, Constants.shooterFlywheelIZone, 0, 0);
 		shooterMotor.enable();
@@ -30,28 +30,15 @@ public class ShooterFlywheel extends Subsystem {
 	 * @param rpm
 	 */
 	public void spoolToSetpoint(double setpoint) {
+		shooterMotor.enable();
 		shooterMotor.enableBrakeMode(false);
 		shooterMotor.changeControlMode(TalonControlMode.Speed);
 		shooterMotor.setSetpoint(setpoint);
 	}
 
-	public void set(double speed) {
-		shooterMotor.enableBrakeMode(false);
-		shooterMotor.changeControlMode(TalonControlMode.PercentVbus);
-		shooterMotor.set(speed);
-	}
-
-	public void spool() {
-		set(1);
-	}
-
 	public void stop() {
 		shooterMotor.enableBrakeMode(true);
-		set(0);
-	}
-
-	public void unspool() {
-		set(-1);
+		shooterMotor.disable();
 	}
 
 	@Override

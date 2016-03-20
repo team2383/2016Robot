@@ -6,12 +6,14 @@ import static com.team2383.robot.HAL.feeder;
 import static com.team2383.robot.HAL.hoodTopLimit;
 
 import java.util.function.DoubleSupplier;
+import java.util.function.DoubleUnaryOperator;
 
 import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.Values;
 import com.team2383.ninjaLib.WPILambdas;
+import com.team2383.robot.commands.MoveHood;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.SpoolToRPM;
@@ -38,14 +40,18 @@ public class OI {
 	public static Joystick left = new Joystick(0);
 	public static Joystick right = new Joystick(1);
 
-	public static DoubleSupplier leftSpeed = left::getY;
-	public static DoubleSupplier rightSpeed = right::getY;
+	private static DoubleUnaryOperator deadband = (x) -> {
+		return Math.abs(x) > Constants.inputDeadband ? x : 0;
+	};
+
+	public static DoubleSupplier leftSpeed = () -> deadband.applyAsDouble(left.getY());
+	public static DoubleSupplier rightSpeed = () -> deadband.applyAsDouble(right.getY());
 	public static Button shiftDown = new JoystickButton(left, 6);
 	public static Button shiftUp = new JoystickButton(right, 11);
 
 	public static Joystick operator = new Joystick(2);
 
-	public static DoubleSupplier hood = operator::getY;
+	public static DoubleSupplier hood = () -> deadband.applyAsDouble(operator.getY());;
 	public static DoubleSupplier shooterSpeed = () -> {
 		return Values.mapRange(-1.0, 1.0, 0, Constants.shooterMaxRPM).applyAsDouble(operator.getThrottle());
 	};
@@ -70,8 +76,12 @@ public class OI {
 
 	public static Button hoodPancake = new JoystickButton(operator, 3);
 
-	public static Button switchCamera = new LambdaButton(() -> {
+	public static Button alignBall = new LambdaButton(() -> {
 		return operator.getRawButton(9) || operator.getRawButton(10);
+	});
+
+	public static Button moveHood = new LambdaButton(() -> {
+		return hood.getAsDouble() != 0;
 	});
 
 	// use buttons
@@ -102,6 +112,10 @@ public class OI {
 
 		spool.whileHeld(new SpoolToRPM(shooterSpeed));
 		shoot.whileHeld(new Shoot());
+
+		alignBall.whileHeld(new SpoolToRPM(-2000));
+
+		moveHood.whileHeld(new MoveHood(OI.hood));
 
 		if (Constants.useMechanicalHoodPresets) {
 			hoodPancake.toggleWhenActive(new ActuateHoodStop(hoodTopLimit));
