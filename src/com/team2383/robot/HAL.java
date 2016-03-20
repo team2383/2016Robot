@@ -29,7 +29,7 @@ public class HAL {
 
 	/** Solenoids **/
 	public static DoubleSolenoid shifter = new DoubleSolenoid(1, 0);
-	public static DoubleSolenoid hoodTopLimit = new DoubleSolenoid(2, 3);
+	public static DoubleSolenoid hoodHardStop = new DoubleSolenoid(2, 3);
 
 	/** Sensors **/
 

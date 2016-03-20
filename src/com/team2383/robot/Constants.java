@@ -39,8 +39,8 @@ public class Constants {
 		}
 	}
 
-	public static double shooterMaxRPM = 4800;
-	public static double shooterMinRPM = 3900;
+	public static double shooterMaxRPM = 4500;
+	public static double shooterMinRPM = 2500;
 	public static int shooterRPMTolerance = 100;
 	public static double shooterFollowThruTime = 3.0;
 	public static double shooterFeederKickPower = 1.0;
@@ -70,27 +70,30 @@ public class Constants {
 	public static double feedPushAwayPower = -0.2;
 	public static double feedPushAwayLengthInSeconds = 0.7;
 
-	public static double driveWheelDiameter = 7.30;
+	public static double driveWheelDiameter = 7.15;
 	public static double driveWheelCircumference = driveWheelDiameter * Math.PI;
 	public static double driveInchesPerDegree = driveWheelCircumference / 360.0;
 	public static double driveFeetPerDegree = driveInchesPerDegree / 12.0;
 	public static double driveUpshiftFPSThreshold = 4.0;
 	public static double driveDownshiftFPSThreshold = 3.0;
 
-	public static double driveHeadingTolerance = 1.25;
-	public static double driveHeadingMoveToP = 0.032; // .034 last q
-	public static double driveHeadingMoveToI = 0.0018; // .0018 last q
+	public static double driveHeadingMoveToTolerance = 0.85;
+	public static double driveHeadingMoveToP = 0.023;
+	public static double driveHeadingMoveToI = 0.0023;
 	public static double driveHeadingMoveToD = 0.0;
 	public static double driveHeadingMoveToVelocity = 0.8;
 
-	public static double driveHeadingMaintainP = 0.38;
-	public static double driveHeadingMaintainI = 0.000;
-	public static double driveHeadingMaintainD = 0.8;
+	public static double driveHeadingMaintainTolerance = 0.25;
+	public static double driveHeadingMaintainP = 0.18;
+	public static double driveHeadingMaintainI = 0.0001;
+	public static double driveHeadingMaintainD = 0.0;
+	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 0.85;
-	public static double drivePositionP = 0.20;
-	public static double drivePositionI = 0.0001;
+	public static double drivePositionP = 0.06;
+	public static double drivePositionI = 0.0020;
 	public static double drivePositionD = 0.0;
+	public static double drivePositionF = 0;
 
 	public static double inputExpo = 0.5;
 	public static double inputDeadband = 0.1;

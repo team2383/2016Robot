@@ -22,7 +22,9 @@ public class SpoolToRPM extends Command {
 	}
 
 	public SpoolToRPM(DoubleSupplier rpmSupplier) {
-		this(rpmSupplier, 0);
+		super("Spool To RPM");
+		requires(shooterFlywheel);
+		this.rpmSupplier = rpmSupplier;
 	}
 
 	public SpoolToRPM(DoubleSupplier rpmSupplier, double timeout) {
@@ -33,16 +35,16 @@ public class SpoolToRPM extends Command {
 
 	@Override
 	protected void initialize() {
-	}
-
-	@Override
-	protected void execute() {
 		shooterFlywheel.spoolToSetpoint(rpmSupplier.getAsDouble());
 	}
 
 	@Override
+	protected void execute() {
+	}
+
+	@Override
 	protected boolean isFinished() {
-		return false;
+		return this.isTimedOut();
 	}
 
 	@Override

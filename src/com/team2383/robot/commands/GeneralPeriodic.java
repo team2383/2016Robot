@@ -48,7 +48,7 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putBoolean("Hood At Setpoint", HAL.shooterHood.isAtSetpoint());
 
 		// Pneumatics
-		SmartDashboard.putBoolean("Hard Stop Extended?", HAL.hoodTopLimit.get() == Value.kForward ? true : false);
+		SmartDashboard.putBoolean("Hard Stop Extended?", HAL.hoodHardStop.get() == Value.kForward ? true : false);
 	}
 
 	@Override

@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GyroTurn extends PIDCommand {
 
+	private double timeAtSetpoint;
+	private double lastCheck;
+
 	public GyroTurn(double angle) {
 		this(Constants.driveHeadingMoveToVelocity, angle);
 	}
@@ -22,7 +25,7 @@ public class GyroTurn extends PIDCommand {
 		this.getPIDController().setInputRange(-180.0, 180.0);
 		this.getPIDController().setOutputRange(-velocity, velocity);
 		this.getPIDController().setContinuous();
-		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingTolerance);
+		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingMoveToTolerance);
 		this.getPIDController().setSetpoint(angle);
 		SmartDashboard.putData("SetHeading Controller", this.getPIDController());
 	}
@@ -40,8 +43,13 @@ public class GyroTurn extends PIDCommand {
 
 	@Override
 	protected boolean isFinished() {
-		SmartDashboard.putNumber("SetHeading error", this.getPIDController().getError());
-		return Math.abs(this.getPIDController().getError()) <= Constants.driveHeadingTolerance;
+		if (Math.abs(this.getPIDController().getError()) <= Constants.driveHeadingMoveToTolerance) {
+			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
+		} else {
+			timeAtSetpoint = 0;
+		}
+		lastCheck = this.timeSinceInitialized();
+		return timeAtSetpoint >= 0.15;
 	}
 
 	@Override
@@ -61,7 +69,11 @@ public class GyroTurn extends PIDCommand {
 
 	@Override
 	protected void usePIDOutput(double output) {
-		drivetrain.tank(-output, output);
+		if (this.timeSinceInitialized() > 0.1) {
+			drivetrain.tank(-output, output);
+		} else {
+			System.out.println("Waiting for reset");
+		}
 	}
 
 }

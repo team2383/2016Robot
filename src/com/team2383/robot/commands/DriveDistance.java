@@ -23,6 +23,8 @@ public class DriveDistance extends Command {
 	private final PIDController distanceController;
 	private final boolean brake;
 	private final Gear gear;
+	private double lastCheck;
+	private double timeAtSetpoint;
 
 	private class NullPIDOutput implements PIDOutput {
 
@@ -39,7 +41,7 @@ public class DriveDistance extends Command {
 		this.brake = brake;
 
 		distanceController = new PIDController(Constants.drivePositionP, Constants.drivePositionI,
-				Constants.drivePositionD, drivetrain, new NullPIDOutput());
+				Constants.drivePositionD, Constants.drivePositionF, drivetrain, new NullPIDOutput());
 		distanceController.setAbsoluteTolerance(Constants.drivePositionTolerance);
 		distanceController.setSetpoint(distance);
 		distanceController.setOutputRange(-velocity, velocity);
@@ -48,13 +50,12 @@ public class DriveDistance extends Command {
 
 		navX.reset();
 		headingController = new PIDController(Constants.driveHeadingMaintainP, Constants.driveHeadingMaintainI,
-				Constants.driveHeadingMaintainD, navX, new NullPIDOutput());
+				Constants.driveHeadingMaintainD, Constants.driveHeadingMaintainF, navX, new NullPIDOutput());
 		headingController.setInputRange(-180.0, 180.0);
 		headingController.setOutputRange(-0.5, 0.5);
 		headingController.setContinuous();
-		headingController.setAbsoluteTolerance(Constants.driveHeadingTolerance);
+		headingController.setAbsoluteTolerance(Constants.driveHeadingMaintainTolerance);
 		headingController.setSetpoint(0);
-		headingController.setAbsoluteTolerance(Constants.driveHeadingTolerance);
 
 		SmartDashboard.putData("MaintainHeading Controller", headingController);
 
@@ -73,16 +74,22 @@ public class DriveDistance extends Command {
 
 	@Override
 	protected void execute() {
-		// wait 0.1 seconds before starting
-		// to ensure navX reset correctly.
-		// also ensure we arent Calibrating
-		System.out.println(this.timeSinceInitialized());
-		drivetrain.arcade(distanceController.get(), headingController.get());
+		if (this.timeSinceInitialized() > 0.1) {
+			drivetrain.arcade(distanceController.get(), headingController.get());
+		} else {
+			System.out.println("Waiting for reset " + this.timeSinceInitialized());
+		}
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Math.abs(distanceController.getError()) <= Constants.drivePositionTolerance;
+		if (Math.abs(distanceController.getError()) <= Constants.drivePositionTolerance) {
+			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
+		} else {
+			timeAtSetpoint = 0;
+		}
+		lastCheck = this.timeSinceInitialized();
+		return timeAtSetpoint >= 0.15;
 	}
 
 	@Override

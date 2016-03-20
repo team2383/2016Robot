@@ -30,9 +30,10 @@ public class ShooterFlywheel extends Subsystem {
 	 * @param rpm
 	 */
 	public void spoolToSetpoint(double setpoint) {
-		shooterMotor.enable();
-		shooterMotor.enableBrakeMode(false);
 		shooterMotor.changeControlMode(TalonControlMode.Speed);
+		shooterMotor.enable();
+		shooterMotor.changeControlMode(TalonControlMode.Speed);
+		shooterMotor.enableBrakeMode(false);
 		shooterMotor.setSetpoint(setpoint);
 	}
 
