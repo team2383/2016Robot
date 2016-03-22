@@ -49,7 +49,7 @@ public class GyroTurn extends PIDCommand {
 			timeAtSetpoint = 0;
 		}
 		lastCheck = this.timeSinceInitialized();
-		return timeAtSetpoint >= 0.15;
+		return timeAtSetpoint >= Constants.pidSetpointWait;
 	}
 
 	@Override

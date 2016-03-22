@@ -1,7 +1,6 @@
 package com.team2383.robot;
 
 import static com.team2383.robot.HAL.arms;
-import static com.team2383.robot.HAL.drivetrain;
 import static com.team2383.robot.HAL.feeder;
 
 import java.util.function.DoubleSupplier;
@@ -12,12 +11,12 @@ import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.Gamepad;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.Values;
-import com.team2383.ninjaLib.WPILambdas;
-import com.team2383.robot.commands.ActuateHoodStop;
 import com.team2383.robot.commands.MoveHood;
 import com.team2383.robot.commands.SetState;
+import com.team2383.robot.commands.ShiftTo;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.SpoolToRPM;
+import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 import com.team2383.robot.subsystems.Feeder;
@@ -38,18 +37,17 @@ public class OI {
 	// number it is.
 
 	/* Sticks */
-	public static Joystick left = new Joystick(0);
-	public static Joystick right = new Joystick(1);
 
 	private static DoubleUnaryOperator deadband = (x) -> {
 		return Math.abs(x) > Constants.inputDeadband ? x : 0;
 	};
 
-	public static DoubleSupplier leftSpeed;
-	public static DoubleSupplier rightSpeed;
+	public static Gamepad gamepad = new Gamepad(0);
 
-	public static Button shiftDown;
-	public static Button shiftUp;
+	public static Button shiftDown = gamepad.getLeftShoulder();
+	public static Button shiftUp = gamepad.getRightShoulder();
+	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
+	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
 
 	public static Joystick operator = new Joystick(2);
 
@@ -89,29 +87,8 @@ public class OI {
 
 	// use buttons
 	public OI() {
-		if (left.getIsXbox()) {
-			Gamepad gamepad = new Gamepad(0);
-			shiftDown = gamepad.getLeftShoulder();
-			shiftUp = gamepad.getRightShoulder();
-			leftSpeed = () -> deadband.applyAsDouble(gamepad.getLeftY());
-			rightSpeed = () -> deadband.applyAsDouble(gamepad.getRightY());
-		} else {
-			shiftDown = new JoystickButton(left, 6);
-			shiftUp = new JoystickButton(right, 11);
-			leftSpeed = () -> deadband.applyAsDouble(left.getY());
-			rightSpeed = () -> deadband.applyAsDouble(right.getY());
-
-		}
-
-		shiftDown.whenPressed(WPILambdas.createCommand(() -> {
-			drivetrain.shiftTo(Gear.LOW);
-			return false;
-		}));
-
-		shiftUp.whenPressed(WPILambdas.createCommand(() -> {
-			drivetrain.shiftTo(Gear.HIGH);
-			return false;
-		}));
+		shiftDown.whileHeld(new ShiftTo(Gear.LOW));
+		shiftUp.whileHeld(new ShiftTo(Gear.HIGH));
 
 		feedIn.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
 		feedOut.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDING, Feeder.State.STOPPED));
@@ -134,8 +111,7 @@ public class OI {
 		moveHood.whileHeld(new MoveHood(OI.hood));
 
 		if (Constants.useMechanicalHoodPresets) {
-			hoodPancake.whenPressed(new ActuateHoodStop(true));
-			hoodPancake.whenReleased(new ActuateHoodStop(false));
+			hoodPancake.toggleWhenActive(new ToggleHoodStop());
 		} else {
 			// setup hood presets
 		}

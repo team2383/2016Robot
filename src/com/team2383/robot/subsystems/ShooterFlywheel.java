@@ -7,6 +7,7 @@ import com.team2383.robot.Constants;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterFlywheel extends Subsystem {
 
@@ -21,6 +22,7 @@ public class ShooterFlywheel extends Subsystem {
 		shooterMotor.setPID(Constants.shooterFlywheelP, Constants.shooterFlywheelI, Constants.shooterFlywheelD,
 				Constants.shooterFlywheelF, Constants.shooterFlywheelIZone, 0, 0);
 		shooterMotor.enable();
+		SmartDashboard.putData("hoodMotor", shooterMotor);
 	}
 
 	/**

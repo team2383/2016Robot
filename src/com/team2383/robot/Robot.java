@@ -1,11 +1,12 @@
 
 package com.team2383.robot;
 
-import com.team2383.robot.auto.FeederForwardConstant;
-import com.team2383.robot.auto.LowBarConstant;
-import com.team2383.robot.auto.LowBarHighGoalConstant;
-import com.team2383.robot.auto.LowBarHighGoalFarConstant;
-import com.team2383.robot.auto.LowBarHighGoalWallConstant;
+import com.team2383.robot.auto.ChevalDeFrise;
+import com.team2383.robot.auto.CrossDefense;
+import com.team2383.robot.auto.LowBar;
+import com.team2383.robot.auto.LowBarHighGoal;
+import com.team2383.robot.auto.LowBarHighGoalFar;
+import com.team2383.robot.auto.LowBarHighGoalFarReturn;
 import com.team2383.robot.auto.TestDrive;
 import com.team2383.robot.auto.TestTurn;
 import com.team2383.robot.commands.GeneralPeriodic;
@@ -32,13 +33,15 @@ public class Robot extends IterativeRobot {
 
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("No auto", null);
-		autoChooser.addObject("Low Bar", new LowBarConstant());
-		autoChooser.addObject("Low Bar + High Goal", new LowBarHighGoalConstant());
-		autoChooser.addObject("Low Bar + High Goal Far", new LowBarHighGoalFarConstant());
-		autoChooser.addObject("Low Bar + High Goal Wall", new LowBarHighGoalWallConstant());
-		autoChooser.addObject("TestDrive", new TestDrive());
-		autoChooser.addObject("TestTurn", new TestTurn());
-		autoChooser.addObject("All other defenses", new FeederForwardConstant());
+		autoChooser.addObject("Low Bar", new LowBar());
+		autoChooser.addObject("Moat / Rock Wall / Rough Terrain/ Ramparts", new CrossDefense());
+		autoChooser.addObject("Cheval De Frise", new ChevalDeFrise());
+		autoChooser.addObject("Low Bar + High Goal", new LowBarHighGoal());
+		autoChooser.addObject("Low Bar + High Goal Far", new LowBarHighGoalFar());
+		autoChooser.addObject("Low Bar + High Goal Far + Return", new LowBarHighGoalFarReturn());
+		autoChooser.addObject("Low Bar + High Goal Wall (BBQ Auto)", new LowBarHighGoalFar());
+		autoChooser.addObject("TestDrive (156.5in)", new TestDrive());
+		autoChooser.addObject("TestTurn (90degrees)", new TestTurn());
 
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}

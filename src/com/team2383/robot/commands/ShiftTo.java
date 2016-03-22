@@ -1,29 +1,29 @@
 package com.team2383.robot.commands;
 
-import static com.team2383.robot.HAL.shooterHood;
+import static com.team2383.robot.HAL.drivetrain;
+
+import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class HoldHood extends Command {
-	boolean set = false;
+public class ShiftTo extends Command {
+	private final Gear gear;
 
-	public HoldHood() {
-		requires(shooterHood);
+	public ShiftTo(Gear gear) {
+		super("ShiftTo");
+		this.gear = gear;
 	}
 
 	@Override
 	protected void initialize() {
-		set = false;
-
+		// TODO Auto-generated method stub
+		drivetrain.shiftTo(gear);
 	}
 
 	@Override
 	protected void execute() {
 		// TODO Auto-generated method stub
-		if (!set) {
-			shooterHood.holdPosition();
-			set = true;
-		}
+		drivetrain.shiftTo(gear);
 	}
 
 	@Override

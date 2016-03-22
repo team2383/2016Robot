@@ -57,6 +57,7 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	public void shiftTo(Gear gear) {
 		switch (gear) {
+		default:
 		case HIGH:
 			enableBrake();
 			shifter.set(Value.kForward);
@@ -101,7 +102,7 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	@Override
 	protected void initDefaultCommand() {
-		this.setDefaultCommand(new TeleopDrive(OI.leftSpeed, OI.rightSpeed));
+		this.setDefaultCommand(new TeleopDrive(OI.leftStick, OI.rightStick));
 	}
 
 	@Override

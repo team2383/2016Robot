@@ -7,14 +7,14 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopDrive extends Command {
-	private final DoubleSupplier leftSpeed;
-	private final DoubleSupplier rightSpeed;
+	private final DoubleSupplier rightStick;
+	private final DoubleSupplier leftStick;
 
-	public TeleopDrive(DoubleSupplier leftSpeed, DoubleSupplier rightSpeed) {
+	public TeleopDrive(DoubleSupplier leftStick, DoubleSupplier rightStick) {
 		super("Teleop Drive");
 		requires(drivetrain);
-		this.leftSpeed = leftSpeed;
-		this.rightSpeed = rightSpeed;
+		this.rightStick = leftStick;
+		this.leftStick = rightStick;
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class TeleopDrive extends Command {
 
 	@Override
 	protected void execute() {
-		drivetrain.tank(leftSpeed.getAsDouble(), rightSpeed.getAsDouble());
+		drivetrain.arcade(rightStick.getAsDouble(), leftStick.getAsDouble());
 	}
 
 	@Override

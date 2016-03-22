@@ -14,12 +14,31 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 
 public class MoveArms extends Command {
-	private final State state;
+	private final double speed;
 
 	public MoveArms(State state) {
 		super("Move Arms");
 		requires(arms);
-		this.state = state;
+		this.speed = state.getSpeed();
+	}
+
+	public MoveArms(double speed) {
+		super("Move Arms");
+		requires(arms);
+		this.speed = speed;
+	}
+
+	public MoveArms(State state, double timeout) {
+		super("Move Arms", timeout);
+		requires(arms);
+		this.speed = state.getSpeed();
+		;
+	}
+
+	public MoveArms(double speed, double timeout) {
+		super("Move Arms", timeout);
+		requires(arms);
+		this.speed = speed;
 	}
 
 	@Override
@@ -28,7 +47,7 @@ public class MoveArms extends Command {
 
 	@Override
 	protected void execute() {
-		arms.setState(state);
+		arms.set(speed);
 	}
 
 	@Override

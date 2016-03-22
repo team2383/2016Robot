@@ -43,8 +43,8 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putBoolean("Shooter At Setpoint", HAL.shooterFlywheel.isAtSetpoint());
 
 		// Shooter Hood
-		SmartDashboard.putNumber("Hood Current Angle", HAL.shooterHood.getAngle());
-		SmartDashboard.putNumber("Hood Target Angle", HAL.shooterHood.getSetpointAngle());
+		SmartDashboard.putNumber("Hood Current Rotations", HAL.shooterHood.getRotations());
+		SmartDashboard.putNumber("Hood Setpoint Rotations", HAL.shooterHood.getSetpoint());
 		SmartDashboard.putBoolean("Hood At Setpoint", HAL.shooterHood.isAtSetpoint());
 
 		// Pneumatics

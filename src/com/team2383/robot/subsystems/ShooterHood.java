@@ -5,7 +5,6 @@ import static com.team2383.robot.HAL.hoodMotor;
 
 import java.util.function.DoubleUnaryOperator;
 
-import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants;
 import com.team2383.robot.commands.HoldHood;
 
@@ -17,10 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterHood extends Subsystem {
 
-	public DoubleUnaryOperator mapToAngle = Values.mapRange(Constants.hoodReverseLimit, Constants.hoodForwardLimit, 0,
-			90);
-	public DoubleUnaryOperator mapToNative = Values.mapRange(0, 90, Constants.hoodReverseLimit,
-			Constants.hoodForwardLimit);
+	public DoubleUnaryOperator mapToZero = (x) -> x - Constants.hoodReverseLimit;
+	public DoubleUnaryOperator mapToRaw = (x) -> x + Constants.hoodReverseLimit;
 
 	public ShooterHood() {
 		hoodMotor.enableBrakeMode(true);
@@ -30,9 +27,11 @@ public class ShooterHood extends Subsystem {
 				Constants.hoodPositionF, Constants.hoodPositionIZone, 0, 0);
 		hoodMotor.setReverseSoftLimit(Constants.hoodReverseLimit);
 		hoodMotor.setForwardSoftLimit(Constants.hoodForwardLimit);
+		hoodMotor.enableForwardSoftLimit(true);
+		hoodMotor.enableReverseSoftLimit(true);
 		hoodMotor.configPeakOutputVoltage(6.0, -6.0);
 		hoodMotor.reverseOutput(false);
-		hoodMotor.reverseSensor(true);
+		hoodMotor.reverseSensor(false);
 		SmartDashboard.putData("hoodMotor", hoodMotor);
 	}
 
@@ -41,36 +40,24 @@ public class ShooterHood extends Subsystem {
 		hoodMotor.set(speed);
 	}
 
-	public void setSetpointAngle(double angle) {
-		setSetpointNative(mapToNative.applyAsDouble(angle));
+	public void holdPosition() {
+		this.setSetpoint(this.getRotations());
 	}
 
-	public void setSetpointNative(double rotations) {
+	public boolean isAtSetpoint() {
+		return Math.abs(getRotations() - getSetpoint()) <= Constants.hoodRotationTolerance;
+	}
+
+	public void setSetpoint(double rotations) {
 		hoodMotor.changeControlMode(TalonControlMode.Position);
 		hoodMotor.setSetpoint(rotations);
 	}
 
-	public void holdPosition() {
-		this.setSetpointNative(this.getRotationsNative());
-	}
-
-	public boolean isAtSetpoint() {
-		return hoodMotor.getError() <= Constants.hoodDegreeTolerance;
-	}
-
-	public double getSetpointAngle() {
-		return mapToAngle.applyAsDouble(getSetpointNative());
-	}
-
-	public double getAngle() {
-		return mapToAngle.applyAsDouble(getRotationsNative());
-	}
-
-	public double getSetpointNative() {
+	public double getSetpoint() {
 		return hoodMotor.getSetpoint();
 	}
 
-	public double getRotationsNative() {
+	public double getRotations() {
 		return hoodMotor.getPosition();
 	}
 

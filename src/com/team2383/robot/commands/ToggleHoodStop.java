@@ -1,47 +1,40 @@
 package com.team2383.robot.commands;
 
-import static com.team2383.robot.HAL.shooterHood;
+import com.team2383.robot.HAL;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class HoldHood extends Command {
-	boolean set = false;
-
-	public HoldHood() {
-		requires(shooterHood);
+public class ToggleHoodStop extends Command {
+	public ToggleHoodStop() {
+		super("Toggle Hood Stop");
 	}
 
 	@Override
 	protected void initialize() {
-		set = false;
-
+		HAL.hoodHardStop.set(Value.kForward);
 	}
 
 	@Override
 	protected void execute() {
-		// TODO Auto-generated method stub
-		if (!set) {
-			shooterHood.holdPosition();
-			set = true;
-		}
+		HAL.hoodHardStop.set(Value.kForward);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		// TODO Auto-generated method stub
+		// hold forward until command is canceled
 		return false;
 	}
 
 	@Override
 	protected void end() {
 		// TODO Auto-generated method stub
-
+		HAL.hoodHardStop.set(Value.kReverse);
 	}
 
 	@Override
 	protected void interrupted() {
 		// TODO Auto-generated method stub
-
+		this.end();
 	}
-
 }

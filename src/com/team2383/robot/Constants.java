@@ -48,18 +48,18 @@ public class Constants {
 	public static double shooterFlywheelP = 0.35;
 	public static double shooterFlywheelI = 0.0035;
 	public static double shooterFlywheelD = 0.0;
-	public static double shooterFlywheelF = 0.030;
+	public static double shooterFlywheelF = 0.035;
 	public static int shooterFlywheelIZone = 40;
 
-	public static int hoodDegreeTolerance = 1;
+	public static double hoodRotationTolerance = 0.5 / 360.0;
 	public static double hoodStallCurrent = 8; // amps
-	public static double hoodReverseLimit = -0.564;
-	public static double hoodForwardLimit = -0.982;
+	public static double hoodReverseLimit = 0.596;
+	public static double hoodForwardLimit = 0.977;
 
 	public static double hoodPositionP = 2.3;
 	public static double hoodPositionI = 0.0023;
 	public static double hoodPositionD = 0.5;
-	public static double hoodPositionF = 0.002;
+	public static double hoodPositionF = 0;
 	public static int hoodPositionIZone = 40;
 
 	public static double feedCurrentMultiplier = 2.0;
@@ -90,8 +90,8 @@ public class Constants {
 	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 0.85;
-	public static double drivePositionP = 0.06;
-	public static double drivePositionI = 0.0020;
+	public static double drivePositionP = 0.045;
+	public static double drivePositionI = 0.0032;
 	public static double drivePositionD = 0.0;
 	public static double drivePositionF = 0;
 
@@ -102,4 +102,5 @@ public class Constants {
 
 	public static double navXResetDelay = 0.07; // seconds
 	public static double visionTargetAzimuthThreshold = 0.7;
+	public static double pidSetpointWait = 0.15;
 }

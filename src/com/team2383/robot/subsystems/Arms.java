@@ -7,23 +7,21 @@ import com.team2383.robot.commands.SetState.StatefulSubsystem;
 public class Arms extends StatefulSubsystem<Arms.State> {
 
 	public enum State {
-		EXTENDING, RETRACTING, STOPPED
+		EXTENDING(1.0), RETRACTING(-1.0), STOPPED(0);
+
+		private final double speed;
+
+		State(double speed) {
+			this.speed = speed;
+		}
+
+		public double getSpeed() {
+			return speed;
+		}
 	}
 
-	protected void set(double speed) {
+	public void set(double speed) {
 		armMotor.set(speed);
-	}
-
-	private void up() {
-		armMotor.set(1.0);
-	}
-
-	private void down() {
-		armMotor.set(-1.0);
-	}
-
-	private void stop() {
-		armMotor.set(0);
 	}
 
 	@Override
@@ -34,17 +32,6 @@ public class Arms extends StatefulSubsystem<Arms.State> {
 
 	@Override
 	public void setState(State state) {
-		switch (state) {
-		case EXTENDING:
-			up();
-			break;
-		case RETRACTING:
-			down();
-			break;
-		default:
-		case STOPPED:
-			stop();
-			break;
-		}
+		set(state.getSpeed());
 	}
 }

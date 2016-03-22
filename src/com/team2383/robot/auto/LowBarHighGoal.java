@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.WaitForChildren;
 
-public class LowBarHighGoalConstant extends CommandGroup {
-	public LowBarHighGoalConstant() {
+public class LowBarHighGoal extends CommandGroup {
+	public LowBarHighGoal() {
 		addParallel(new ActuateHoodStop(true));
 		addSequential(new DriveDistance(0.74, 182, Gear.HIGH, true));
 		addParallel(new MoveHood(() -> 0.9, 0.3));
