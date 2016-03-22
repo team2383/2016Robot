@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class LowBar extends CommandGroup {
 	public LowBar() {
+		addParallel(new ExtendBullBar());
 		addSequential(new DriveDistance(0.8, 150, Gear.LOW, false));
 	}
 }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.command.WaitForChildren;
 
 public class LowBarHighGoal extends CommandGroup {
 	public LowBarHighGoal() {
+		addParallel(new ExtendBullBar());
 		addParallel(new ActuateHoodStop(true));
 		addSequential(new DriveDistance(0.74, 182, Gear.HIGH, true));
 		addParallel(new MoveHood(() -> 0.9, 0.3));
