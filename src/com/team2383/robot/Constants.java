@@ -93,6 +93,12 @@ public class Constants {
 	public static double drivePositionI = 0.0032;
 	public static double drivePositionD = 0.0;
 	public static double drivePositionF = 0;
+	
+	public static double driveHoldPositionP = 2.3;
+	public static double driveHoldPositionI = 0.0023;
+	public static double driveHoldPositionD = 0.0;
+	public static double driveHoldPositionF = 0;
+	public static int driveHoldPositionIZone = 50;
 
 	public static double inputExpo = 0.5;
 	public static double inputDeadband = 0.1;

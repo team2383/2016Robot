@@ -19,6 +19,7 @@ import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.ShiftTo;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.SpoolToRPM;
+import com.team2383.robot.commands.TeleopDrive;
 import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.commands.UsePreset;
 import com.team2383.robot.subsystems.Arms;
@@ -52,6 +53,10 @@ public class OI {
 	public static Button shiftUp = gamepad.getRightShoulder();
 	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
 	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
+
+	public static Button drive = new LambdaButton(() -> {
+		return leftStick.getAsDouble() != 0 || rightStick.getAsDouble() != 0;
+	});
 
 	public static Joystick operator = new Joystick(2);
 
@@ -118,6 +123,7 @@ public class OI {
 		shoot.whileHeld(new Shoot());
 
 		moveHood.whileHeld(new MoveHood(OI.hood));
+		drive.whileHeld(new TeleopDrive(OI.leftStick, OI.rightStick));
 
 		presetTowerWall.whenPressed(new UsePreset(Preset.tower));
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));

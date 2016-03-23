@@ -8,8 +8,7 @@ import static com.team2383.robot.HAL.rightRear;
 import static com.team2383.robot.HAL.shifter;
 
 import com.team2383.robot.Constants;
-import com.team2383.robot.OI;
-import com.team2383.robot.commands.TeleopDrive;
+import com.team2383.robot.commands.HoldDrivetrainPosition;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -35,11 +34,15 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		super("Drivetrain");
 
 		leftFront.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		leftFront.setPID(Constants.driveHoldPositionP, Constants.driveHoldPositionI, Constants.driveHoldPositionD,
+				Constants.driveHoldPositionF, Constants.driveHoldPositionIZone, 0, 1);
 		leftRear.changeControlMode(TalonControlMode.Follower);
 		leftRear.set(leftFront.getDeviceID());
 
 		rightRear.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		rightRear.reverseSensor(true);
+		rightRear.setPID(Constants.driveHoldPositionP, Constants.driveHoldPositionI, Constants.driveHoldPositionD,
+				Constants.driveHoldPositionF, Constants.driveHoldPositionIZone, 0, 1);
 		rightFront.changeControlMode(TalonControlMode.Follower);
 		rightFront.set(rightRear.getDeviceID());
 
@@ -48,10 +51,14 @@ public class Drivetrain extends Subsystem implements PIDSource {
 	}
 
 	public void tank(double leftValue, double rightValue) {
+		leftFront.changeControlMode(TalonControlMode.PercentVbus);
+		rightRear.changeControlMode(TalonControlMode.PercentVbus);
 		robotDrive.tankDrive(leftValue, rightValue);
 	}
 
 	public void arcade(double driveSpeed, double turnSpeed) {
+		leftFront.changeControlMode(TalonControlMode.PercentVbus);
+		rightRear.changeControlMode(TalonControlMode.PercentVbus);
 		robotDrive.arcadeDrive(driveSpeed, turnSpeed);
 	}
 
@@ -102,7 +109,7 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	@Override
 	protected void initDefaultCommand() {
-		this.setDefaultCommand(new TeleopDrive(OI.leftStick, OI.rightStick));
+		this.setDefaultCommand(new HoldDrivetrainPosition());
 	}
 
 	@Override
@@ -132,5 +139,15 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	public void disableBrake() {
 		setBrake(false);
+	}
+
+	public void holdPosition() {
+		leftFront.setProfile(1);
+		leftFront.changeControlMode(TalonControlMode.Position);
+		leftFront.setSetpoint(leftFront.getPosition());
+
+		rightRear.setProfile(1);
+		rightRear.changeControlMode(TalonControlMode.Position);
+		rightRear.setSetpoint(rightRear.getPosition());
 	}
 }
