@@ -2,6 +2,8 @@ package com.team2383.robot.subsystems;
 
 import static com.team2383.robot.HAL.shooterMotor;
 
+import java.util.function.DoubleSupplier;
+
 import com.team2383.robot.Constants;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
@@ -11,7 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterFlywheel extends Subsystem {
 
-	private final double setpoint = Constants.shooterMinRPM;
+	private DoubleSupplier rpmSupplier = () -> 0;
+	private double lastSetRPM = 0;
 
 	public ShooterFlywheel() {
 		shooterMotor.enableBrakeMode(false);
@@ -31,17 +34,29 @@ public class ShooterFlywheel extends Subsystem {
 	 *
 	 * @param rpm
 	 */
-	public void spoolToSetpoint(double setpoint) {
+	public void spoolToSetpoint() {
+		double setRPM = rpmSupplier.getAsDouble();
 		shooterMotor.changeControlMode(TalonControlMode.Speed);
 		shooterMotor.enable();
-		shooterMotor.changeControlMode(TalonControlMode.Speed);
+		// dont create unnecessary canbus traffic
+		if (setRPM != lastSetRPM) {
+			shooterMotor.setSetpoint(setRPM);
+			this.lastSetRPM = setRPM;
+		}
 		shooterMotor.enableBrakeMode(false);
-		shooterMotor.setSetpoint(setpoint);
 	}
 
 	public void stop() {
 		shooterMotor.enableBrakeMode(true);
 		shooterMotor.disable();
+	}
+
+	public void setRPM(double rpm) {
+		setRPM(() -> rpm);
+	}
+
+	public void setRPM(DoubleSupplier rpmSupplier) {
+		this.rpmSupplier = rpmSupplier;
 	}
 
 	@Override

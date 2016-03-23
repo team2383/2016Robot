@@ -41,14 +41,14 @@ public class ShooterHood extends Subsystem {
 	}
 
 	public void holdPosition() {
-		this.setSetpoint(this.getRotations());
+		this.setRotations(this.getRotations());
 	}
 
 	public boolean isAtSetpoint() {
 		return Math.abs(getRotations() - getSetpoint()) <= Constants.hoodRotationTolerance;
 	}
 
-	public void setSetpoint(double rotations) {
+	public void setRotations(double rotations) {
 		hoodMotor.changeControlMode(TalonControlMode.Position);
 		hoodMotor.setSetpoint(rotations);
 	}

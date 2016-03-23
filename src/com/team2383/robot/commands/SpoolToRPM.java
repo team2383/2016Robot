@@ -7,24 +7,17 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.command.Command;
 
 /*
- * Spool shooter flywheel to maximum power
+ * Spool shooter flywheel
  */
 public class SpoolToRPM extends Command {
-
 	private final DoubleSupplier rpmSupplier;
-
-	public SpoolToRPM(double rpm) {
-		this(() -> rpm);
-	}
 
 	public SpoolToRPM(double rpm, double timeout) {
 		this(() -> rpm, timeout);
 	}
 
-	public SpoolToRPM(DoubleSupplier rpmSupplier) {
-		super("Spool To RPM");
-		requires(shooterFlywheel);
-		this.rpmSupplier = rpmSupplier;
+	public SpoolToRPM(double rpm) {
+		this(() -> rpm);
 	}
 
 	public SpoolToRPM(DoubleSupplier rpmSupplier, double timeout) {
@@ -33,13 +26,28 @@ public class SpoolToRPM extends Command {
 		this.rpmSupplier = rpmSupplier;
 	}
 
+	public SpoolToRPM(DoubleSupplier rpmSupplier) {
+		super("Spool To RPM");
+		requires(shooterFlywheel);
+		this.rpmSupplier = rpmSupplier;
+	}
+
+	public SpoolToRPM() {
+		super("Spool To RPM");
+		requires(shooterFlywheel);
+		this.rpmSupplier = null;
+	}
+
 	@Override
 	protected void initialize() {
-		shooterFlywheel.spoolToSetpoint(rpmSupplier.getAsDouble());
+		if (rpmSupplier != null) {
+			shooterFlywheel.setRPM(rpmSupplier.getAsDouble());
+		}
 	}
 
 	@Override
 	protected void execute() {
+		shooterFlywheel.spoolToSetpoint();
 	}
 
 	@Override

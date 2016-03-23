@@ -6,27 +6,27 @@ public class Constants {
 	public static class ShooterPreset {
 		public static LinkedList<ShooterPreset> presets = new LinkedList<ShooterPreset>();
 		public int currentPresetIndex;
-		public final double hoodAngle;
+		public final double hoodRotations;
 		public final double shooterRPM;
 
 		/**
 		 * Preset for shooting at position
 		 *
-		 * @param hoodAngle
+		 * @param hoodRotation
 		 *            angle of hood
 		 * @param shooterRPM
 		 *            shooter RPM to maintain
 		 */
-		public ShooterPreset(double hoodAngle, double shooterRPM) {
-			this.hoodAngle = hoodAngle;
+		public ShooterPreset(double hoodRotation, double shooterRPM) {
+			this.hoodRotations = hoodRotation;
 			this.shooterRPM = shooterRPM;
 		}
 	}
 
 	public static enum Preset {
-		closeHoodAndStopShooter(new ShooterPreset(0.0, 0)), feed(new ShooterPreset(5.0, 0)), batter(
-				new ShooterPreset(29.92, 3000)), courtyardClose(new ShooterPreset(54.73, 4850)), courtyardFar(
-						new ShooterPreset(50, 4850));
+		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.1, 2800)), onBatter(
+				new ShooterPreset(0.2, 3000)), courtyardMid(new ShooterPreset(0.3, 3800)), courtyardFar(
+						new ShooterPreset(0.4, 4000));
 
 		private final ShooterPreset preset;
 
@@ -52,7 +52,6 @@ public class Constants {
 	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 0.5 / 360.0;
-	public static double hoodStallCurrent = 8; // amps
 	public static double hoodReverseLimit = 0.596;
 	public static double hoodForwardLimit = 0.977;
 
@@ -97,8 +96,6 @@ public class Constants {
 
 	public static double inputExpo = 0.5;
 	public static double inputDeadband = 0.1;
-
-	public static boolean useMechanicalHoodPresets = true;
 
 	public static double navXResetDelay = 0.07; // seconds
 	public static double visionTargetAzimuthThreshold = 0.7;
