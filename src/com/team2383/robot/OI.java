@@ -11,11 +11,13 @@ import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.Gamepad;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.Values;
+import com.team2383.robot.commands.DriveDistance;
 import com.team2383.robot.commands.MoveHood;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.ShiftTo;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.SpoolToRPM;
+import com.team2383.robot.commands.TeleopDrive;
 import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
@@ -48,6 +50,10 @@ public class OI {
 	public static Button shiftUp = gamepad.getRightShoulder();
 	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
 	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
+	
+	public static Button drive = new LambdaButton(() -> {
+		return (leftStick.getAsDouble() != 0 || rightStick.getAsDouble() != 0);
+	});
 
 	public static Joystick operator = new Joystick(2);
 
@@ -89,7 +95,7 @@ public class OI {
 	public OI() {
 		shiftDown.whileHeld(new ShiftTo(Gear.LOW));
 		shiftUp.whileHeld(new ShiftTo(Gear.HIGH));
-
+		
 		feedIn.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
 		feedOut.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDING, Feeder.State.STOPPED));
 		feedOutSlow.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDINGSLOW, Feeder.State.STOPPED));
@@ -109,6 +115,7 @@ public class OI {
 		alignBall.whileHeld(new SpoolToRPM(-2000));
 
 		moveHood.whileHeld(new MoveHood(OI.hood));
+		drive.whileHeld(new TeleopDrive(OI.leftStick, OI.rightStick));
 
 		if (Constants.useMechanicalHoodPresets) {
 			hoodPancake.toggleWhenActive(new ToggleHoodStop());

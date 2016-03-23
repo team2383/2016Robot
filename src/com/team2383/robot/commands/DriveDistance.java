@@ -3,6 +3,7 @@ package com.team2383.robot.commands;
 import static com.team2383.robot.HAL.drivetrain;
 import static com.team2383.robot.HAL.navX;
 
+import com.team2383.ninjaLib.NullPIDOutput;
 import com.team2383.robot.Constants;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
@@ -26,15 +27,6 @@ public class DriveDistance extends Command {
 	private double lastCheck;
 	private double timeAtSetpoint;
 
-	private class NullPIDOutput implements PIDOutput {
-
-		@Override
-		public void pidWrite(double output) {
-
-		}
-
-	}
-
 	public DriveDistance(double velocity, double distance, Gear gear, boolean brake) {
 		super("Drive Distance");
 		this.gear = gear;
@@ -52,7 +44,7 @@ public class DriveDistance extends Command {
 		headingController = new PIDController(Constants.driveHeadingMaintainP, Constants.driveHeadingMaintainI,
 				Constants.driveHeadingMaintainD, Constants.driveHeadingMaintainF, navX, new NullPIDOutput());
 		headingController.setInputRange(-180.0, 180.0);
-		headingController.setOutputRange(-0.5, 0.5);
+		headingController.setOutputRange(-1.0, 1.0); //changed from .5 if auto is fucked
 		headingController.setContinuous();
 		headingController.setAbsoluteTolerance(Constants.driveHeadingMaintainTolerance);
 		headingController.setSetpoint(0);
