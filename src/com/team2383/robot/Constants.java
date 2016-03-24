@@ -24,9 +24,9 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.1, 2800)), onBatter(
-				new ShooterPreset(0.2, 3000)), courtyardMid(new ShooterPreset(0.3, 3800)), courtyardFar(
-						new ShooterPreset(0.4, 4000));
+		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.052, 2900)), onBatter(
+				new ShooterPreset(0.137, 3050)), courtyardMid(new ShooterPreset(0.232, 3850)), courtyardFar(
+						new ShooterPreset(0.240, 4050));
 
 		private final ShooterPreset preset;
 
@@ -52,8 +52,8 @@ public class Constants {
 	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 0.5 / 360.0;
-	public static double hoodReverseLimit = 0.596;
-	public static double hoodForwardLimit = 0.977;
+	public static double hoodReverseLimit = 0.560;
+	public static double hoodForwardLimit = 0.990;
 
 	public static double hoodPositionP = 2.3;
 	public static double hoodPositionI = 0.0023;
@@ -93,7 +93,7 @@ public class Constants {
 	public static double drivePositionI = 0.0032;
 	public static double drivePositionD = 0.0;
 	public static double drivePositionF = 0;
-	
+
 	public static double driveHoldPositionP = 2.3;
 	public static double driveHoldPositionI = 0.0023;
 	public static double driveHoldPositionD = 0.0;

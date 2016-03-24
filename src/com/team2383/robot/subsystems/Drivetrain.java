@@ -8,7 +8,6 @@ import static com.team2383.robot.HAL.rightRear;
 import static com.team2383.robot.HAL.shifter;
 
 import com.team2383.robot.Constants;
-import com.team2383.robot.commands.HoldDrivetrainPosition;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -109,7 +108,7 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	@Override
 	protected void initDefaultCommand() {
-		this.setDefaultCommand(new HoldDrivetrainPosition());
+		// this.setDefaultCommand(new HoldDrivetrainPosition());
 	}
 
 	@Override
