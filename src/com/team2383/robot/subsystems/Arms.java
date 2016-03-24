@@ -6,6 +6,10 @@ import com.team2383.robot.commands.SetState.StatefulSubsystem;
 
 public class Arms extends StatefulSubsystem<Arms.State> {
 
+	public Arms() {
+		armMotor.setInverted(true);
+	}
+
 	public enum State {
 		EXTENDING(1.0), RETRACTING(-1.0), STOPPED(0);
 
