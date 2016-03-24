@@ -5,6 +5,7 @@ import static com.team2383.robot.HAL.shooterFlywheel;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
  * Spool shooter flywheel
@@ -23,18 +24,21 @@ public class SpoolToRPM extends Command {
 	public SpoolToRPM(DoubleSupplier rpmSupplier, double timeout) {
 		super("Spool To RPM", timeout);
 		requires(shooterFlywheel);
+		SmartDashboard.putBoolean("spooling?", false);
 		this.rpmSupplier = rpmSupplier;
 	}
 
 	public SpoolToRPM(DoubleSupplier rpmSupplier) {
 		super("Spool To RPM");
 		requires(shooterFlywheel);
+		SmartDashboard.putBoolean("spooling?", false);
 		this.rpmSupplier = rpmSupplier;
 	}
 
 	public SpoolToRPM() {
 		super("Spool To RPM");
 		requires(shooterFlywheel);
+		SmartDashboard.putBoolean("spooling?", false);
 		this.rpmSupplier = null;
 	}
 
@@ -47,6 +51,7 @@ public class SpoolToRPM extends Command {
 
 	@Override
 	protected void execute() {
+		SmartDashboard.putBoolean("spooling?", true);
 		shooterFlywheel.spoolToSetpoint();
 	}
 
@@ -57,12 +62,13 @@ public class SpoolToRPM extends Command {
 
 	@Override
 	protected void end() {
+		SmartDashboard.putBoolean("spooling?", false);
 		shooterFlywheel.stop();
 	}
 
 	@Override
 	protected void interrupted() {
-		shooterFlywheel.stop();
+		end();
 	}
 
 }

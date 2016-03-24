@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Runs general periodic tasks, like updating dashboard, fetching vision data,
- * and updating setpoints not handled by dedicated commands (shooter RPM);
+ * Runs general periodic tasks, like updating dashboard, and updating setpoints
+ * not handled by dedicated commands (shooter RPM);
  *
  * @author Matthew Alonso
  *
@@ -43,6 +43,8 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putBoolean("Shooter At Setpoint", HAL.shooterFlywheel.isAtSetpoint());
 
 		// Shooter Hood
+		SmartDashboard.putNumber("Hood Current Raw Rotations", HAL.shooterHood.getRawRotations());
+		SmartDashboard.putNumber("Hood Setpoint Raw Rotations", HAL.shooterHood.getRawSetpoint());
 		SmartDashboard.putNumber("Hood Current Rotations", HAL.shooterHood.getRotations());
 		SmartDashboard.putNumber("Hood Setpoint Rotations", HAL.shooterHood.getSetpoint());
 		SmartDashboard.putBoolean("Hood At Setpoint", HAL.shooterHood.isAtSetpoint());

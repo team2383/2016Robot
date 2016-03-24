@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ShooterFlywheel extends Subsystem {
 
 	private DoubleSupplier rpmSupplier = () -> 0;
-	private double lastSetRPM = 0;
 
 	public ShooterFlywheel() {
 		shooterMotor.enableBrakeMode(false);
@@ -38,12 +37,9 @@ public class ShooterFlywheel extends Subsystem {
 		double setRPM = rpmSupplier.getAsDouble();
 		shooterMotor.changeControlMode(TalonControlMode.Speed);
 		shooterMotor.enable();
-		// dont create unnecessary canbus traffic
-		if (setRPM != lastSetRPM) {
-			shooterMotor.setSetpoint(setRPM);
-			this.lastSetRPM = setRPM;
-		}
+		shooterMotor.setSetpoint(setRPM);
 		shooterMotor.enableBrakeMode(false);
+		SmartDashboard.putData("shooterMotor", shooterMotor);
 	}
 
 	public void stop() {

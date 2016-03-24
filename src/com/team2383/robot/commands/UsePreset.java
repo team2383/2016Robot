@@ -14,6 +14,7 @@ public class UsePreset extends Command {
 
 	public UsePreset(Preset preset) {
 		super("UsePreset");
+		requires(shooterHood);
 		this.preset = preset.get();
 	}
 

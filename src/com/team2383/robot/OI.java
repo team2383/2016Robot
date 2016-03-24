@@ -10,7 +10,6 @@ import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.Gamepad;
 import com.team2383.ninjaLib.LambdaButton;
-import com.team2383.ninjaLib.OnChangeButton;
 import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants.Preset;
 import com.team2383.robot.commands.MoveHood;
@@ -44,9 +43,9 @@ public class OI {
 	/* Sticks */
 
 	private static DoubleUnaryOperator inputExpo = (x) -> {
-		return (Constants.inputExpo * (Math.pow(x, 3)) + ((1 - Constants.inputExpo) * x));
+		return Constants.inputExpo * Math.pow(x, 3) + (1 - Constants.inputExpo) * x;
 	};
-	
+
 	private static DoubleUnaryOperator deadband = (x) -> {
 		return Math.abs(x) > Constants.inputDeadband ? x : 0;
 	};
@@ -88,11 +87,10 @@ public class OI {
 	public static Button vision = new JoystickButton(operator, 5);
 	public static Button feedOutSlow = new JoystickButton(operator, 6);
 
-	public static Button setShooterSpeed = new OnChangeButton(OI.shooterSpeed);
+	// public static Button setShooterSpeed = new
+	// OnChangeButton(OI.shooterSpeed, 0.08);
 
-	public static Button moveHood = new LambdaButton(() -> {
-		return hood.getAsDouble() != 0;
-	});
+	public static Button moveHood = new JoystickButton(operator, 4);
 
 	// use buttons
 	public OI() {
@@ -113,7 +111,7 @@ public class OI {
 
 		// when the shooterRPM throttle (operator throttle)
 		// stops moving, we set the shooter rpm setpoint
-		setShooterSpeed.whenReleased(new SetSpoolRPM(OI.shooterSpeed));
+		// setShooterSpeed.whenReleased(new SetSpoolRPM(OI.shooterSpeed));
 
 		// spools to the last set RPM
 		spoolToLastSet.whileHeld(new SpoolToRPM());

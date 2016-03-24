@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Low Bar + High Goal Far", new LowBarHighGoalFar());
 		autoChooser.addObject("Low Bar + High Goal Far + Return", new LowBarHighGoalFarReturn());
 		autoChooser.addObject("Low Bar + High Goal Wall (BBQ Auto)", new LowBarHighGoalFar());
-		autoChooser.addObject("TestDrive (156.5in)", new TestDrive());
+		autoChooser.addObject("TestDrive (100in)", new TestDrive());
 		autoChooser.addObject("TestTurn (90degrees)", new TestTurn());
 
 		SmartDashboard.putData("Auto Chooser", autoChooser);
