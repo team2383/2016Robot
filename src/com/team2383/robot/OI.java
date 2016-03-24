@@ -54,8 +54,8 @@ public class OI {
 
 	public static Button shiftDown = gamepad.getLeftShoulder();
 	public static Button shiftUp = gamepad.getRightShoulder();
-	public static DoubleSupplier leftStick = () -> deadband.andThen(inputExpo).applyAsDouble(gamepad.getLeftY());
-	public static DoubleSupplier rightStick = () -> deadband.andThen(inputExpo).applyAsDouble(gamepad.getRightX());
+	public static DoubleSupplier leftStick = () -> inputExpo.andThen(deadband).applyAsDouble(gamepad.getLeftY());
+	public static DoubleSupplier rightStick = () -> inputExpo.andThen(deadband).applyAsDouble(gamepad.getRightX());
 
 	public static Button drive = new LambdaButton(() -> {
 		return leftStick.getAsDouble() != 0 || rightStick.getAsDouble() != 0;

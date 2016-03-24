@@ -24,9 +24,9 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.052, 2900)), onBatter(
-				new ShooterPreset(0.137, 3050)), courtyardMid(new ShooterPreset(0.232, 3850)), courtyardFar(
-						new ShooterPreset(0.240, 4050));
+		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.049, 2900)), onBatter(
+				new ShooterPreset(0.137, 3050)), courtyardMid(new ShooterPreset(0.219, 3850)), courtyardFar(
+						new ShooterPreset(0.221, 4050));
 
 		private final ShooterPreset preset;
 
@@ -77,7 +77,7 @@ public class Constants {
 	public static double driveDownshiftFPSThreshold = 3.0;
 
 	public static double driveHeadingMoveToTolerance = 0.85;
-	public static double driveHeadingMoveToP = 0.023;
+	public static double driveHeadingMoveToP = 0.024;
 	public static double driveHeadingMoveToI = 0.003;
 	public static double driveHeadingMoveToD = 0.0;
 	public static double driveHeadingMoveToVelocity = 0.8;
@@ -89,8 +89,8 @@ public class Constants {
 	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 0.85;
-	public static double drivePositionP = 0.024;
-	public static double drivePositionI = 0.002;
+	public static double drivePositionP = 0.028;
+	public static double drivePositionI = 0.004;
 	public static double drivePositionD = 0.0;
 	public static double drivePositionF = 0;
 
@@ -100,8 +100,8 @@ public class Constants {
 	public static double driveHoldPositionF = 0;
 	public static int driveHoldPositionIZone = 50;
 
-	public static double inputExpo = 0.5;
-	public static double inputDeadband = 0.1;
+	public static double inputExpo = 0.64;
+	public static double inputDeadband = 0.05;
 
 	public static double navXResetDelay = 0.07; // seconds
 	public static double visionTargetAzimuthThreshold = 0.7;
