@@ -43,6 +43,10 @@ public class OI {
 
 	/* Sticks */
 
+	private static DoubleUnaryOperator inputExpo = (x) -> {
+		return (Constants.inputExpo * (Math.pow(x, 3)) + ((1 - Constants.inputExpo) * x));
+	};
+	
 	private static DoubleUnaryOperator deadband = (x) -> {
 		return Math.abs(x) > Constants.inputDeadband ? x : 0;
 	};
@@ -51,8 +55,8 @@ public class OI {
 
 	public static Button shiftDown = gamepad.getLeftShoulder();
 	public static Button shiftUp = gamepad.getRightShoulder();
-	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
-	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
+	public static DoubleSupplier leftStick = () -> deadband.andThen(inputExpo).applyAsDouble(gamepad.getLeftY());
+	public static DoubleSupplier rightStick = () -> deadband.andThen(inputExpo).applyAsDouble(gamepad.getRightX());
 
 	public static Button drive = new LambdaButton(() -> {
 		return leftStick.getAsDouble() != 0 || rightStick.getAsDouble() != 0;
