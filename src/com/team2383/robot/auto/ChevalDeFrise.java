@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class ChevalDeFrise extends CommandGroup {
-	private class RetractArms extends CommandGroup {
-		RetractArms() {
-			addSequential(new WaitCommand(0.5));
+	private class Arms extends CommandGroup {
+		Arms() {
+			addSequential(new MoveArms(State.EXTENDING, 0.8));
+			addSequential(new WaitCommand(1.0));
 			addSequential(new MoveArms(-0.4, 5));
 		}
 	}
@@ -30,9 +31,8 @@ public class ChevalDeFrise extends CommandGroup {
 	public ChevalDeFrise() {
 		addParallel(new Hood());
 		addSequential(new DriveDistance(0.62, 50, Gear.LOW, false));
-		addSequential(new MoveArms(State.EXTENDING, 0.8));
-		addSequential(new WaitCommand(0.3));
-		addParallel(new RetractArms());
+		addParallel(new Arms());
+		addSequential(new WaitCommand(0.5));
 		addSequential(new DriveDistance(1.0, 70, Gear.LOW, false));
 	}
 }

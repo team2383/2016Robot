@@ -24,7 +24,7 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.049, 2900)), onBatter(
+		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.043, 2950)), onBatter(
 				new ShooterPreset(0.137, 3050)), courtyardMid(new ShooterPreset(0.219, 3850)), courtyardFar(
 						new ShooterPreset(0.221, 4050));
 
