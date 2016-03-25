@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.command.WaitForChildren;
 
 public class LowBarHighGoalWall extends CommandGroup {
 	public LowBarHighGoalWall() {
-		addParallel(new ExtendBullBar());
+		// addParallel(new ExtendBullBar());
 		addSequential(new DriveDistance(0.74, 259, Gear.HIGH, true));
 		addSequential(new ActuateHoodStop(false));
 		addSequential(new GyroTurn(75));

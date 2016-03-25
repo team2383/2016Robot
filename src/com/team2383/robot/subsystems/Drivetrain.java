@@ -8,6 +8,8 @@ import static com.team2383.robot.HAL.rightRear;
 import static com.team2383.robot.HAL.shifter;
 
 import com.team2383.robot.Constants;
+import com.team2383.robot.OI;
+import com.team2383.robot.commands.TeleopDrive;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -108,7 +110,7 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	@Override
 	protected void initDefaultCommand() {
-		// this.setDefaultCommand(new HoldDrivetrainPosition());
+		this.setDefaultCommand(new TeleopDrive(OI.leftStick, OI.rightStick));
 	}
 
 	@Override

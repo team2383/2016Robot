@@ -96,7 +96,7 @@ public class Vision extends Subsystem {
 		}
 
 		public boolean isAligned() {
-			return Math.abs(azimuth) < Constants.visionTargetAzimuthThreshold;
+			return Math.abs(azimuth + Constants.visionAlignOffset) < Constants.visionTargetAzimuthThreshold;
 		}
 	}
 

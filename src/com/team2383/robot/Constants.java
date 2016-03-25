@@ -24,9 +24,9 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.043, 2950)), onBatter(
-				new ShooterPreset(0.137, 3050)), courtyardMid(new ShooterPreset(0.219, 3850)), courtyardFar(
-						new ShooterPreset(0.221, 4050));
+		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.010, 3000)), onBatter(
+				new ShooterPreset(0.052, 3050)), courtyardMid(new ShooterPreset(0.178, 3850)), courtyardFar(
+						new ShooterPreset(0.182, 4050));
 
 		private final ShooterPreset preset;
 
@@ -52,7 +52,7 @@ public class Constants {
 	public static int shooterFlywheelIZone = 80;
 
 	public static double hoodRotationTolerance = 1.5 / 360.0;
-	public static double hoodReverseLimit = 0.560;
+	public static double hoodReverseLimit = 0.550;
 	public static double hoodForwardLimit = 0.990;
 
 	public static double hoodPositionP = 2;
@@ -82,6 +82,12 @@ public class Constants {
 	public static double driveHeadingMoveToD = 0.0;
 	public static double driveHeadingMoveToVelocity = 0.8;
 
+	public static double driveTeleopHeadingMaintainTolerance = 0.25;
+	public static double driveTeleopHeadingMaintainP = 0.10;
+	public static double driveTeleopHeadingMaintainI = 0.0001;
+	public static double driveTeleopHeadingMaintainD = 0.0;
+	public static double driveTeleopHeadingMaintainF = 0;
+
 	public static double driveHeadingMaintainTolerance = 0.25;
 	public static double driveHeadingMaintainP = 0.17;
 	public static double driveHeadingMaintainI = 0.0001;
@@ -100,10 +106,12 @@ public class Constants {
 	public static double driveHoldPositionF = 0;
 	public static int driveHoldPositionIZone = 50;
 
-	public static double inputExpo = 0.64;
+	public static double inputExpo = 0.32;
 	public static double inputDeadband = 0.05;
 
 	public static double navXResetDelay = 0.07; // seconds
-	public static double visionTargetAzimuthThreshold = 0.7;
+	public static double visionTargetAzimuthThreshold = 1.0;
+	public static double visionAlignOffset = -1.0;
 	public static double pidSetpointWait = 0.15;
+	public static double driveYawRateStraightThreshold = 1.0;
 }

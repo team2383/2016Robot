@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.command.WaitForChildren;
 
 public class LowBarHighGoalFar extends CommandGroup {
 	public LowBarHighGoalFar() {
-		addParallel(new ExtendBullBar());
+		// addParallel(new ExtendBullBar());
 		addSequential(new DriveDistance(1.0, 209, Gear.LOW, true));
 		addSequential(new ActuateHoodStop(false));
 		addSequential(new GyroTurn(60));
 		addSequential(new MoveHood(() -> 0.9, 0.25));
 		addSequential(new ActuateHoodStop(true));
-		addSequential(new MoveHood(() -> -0.55, 0.23));
+		addSequential(new MoveHood(() -> -0.55, 0.29));
 		// Raise hood at 0.4 for 0.2 seconds
 		addParallel(new SpoolToRPM(4000, 3.3));
 		addParallel(new PrintCommand("Shooting!"));
