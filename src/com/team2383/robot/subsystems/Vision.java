@@ -91,8 +91,12 @@ public class Vision extends Subsystem {
 			return distance;
 		}
 
-		public double getAzimuth() {
+		public double getRawAzimuth() {
 			return azimuth;
+		}
+
+		public double getAzimuth() {
+			return azimuth + Constants.visionAlignOffset;
 		}
 
 		public boolean isAligned() {
@@ -119,6 +123,10 @@ public class Vision extends Subsystem {
 
 	public ArrayList<Target> getTargets() {
 		return targets;
+	}
+
+	public boolean hasTarget() {
+		return getNearestTarget().getDistance() != 0;
 	}
 
 	public LookupTable.Entry getNearestEntryForTarget(Target t) {

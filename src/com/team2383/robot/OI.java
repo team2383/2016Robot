@@ -20,6 +20,7 @@ import com.team2383.robot.commands.SpoolToRPM;
 import com.team2383.robot.commands.TeleopDriveStraight;
 import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.commands.UsePreset;
+import com.team2383.robot.commands.VisionTurn;
 import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 import com.team2383.robot.subsystems.Feeder;
@@ -54,12 +55,13 @@ public class OI {
 	public static Button shiftDown = gamepad.getLeftShoulder();
 	public static Button shiftUp = gamepad.getRightShoulder();
 	public static Button driveStraight = new JoystickButton(gamepad, 3);
+	public static Button vision = new JoystickButton(gamepad, 1);
 	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
 	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
 
 	public static Joystick operator = new Joystick(2);
 
-	public static DoubleSupplier hood = () -> deadband.applyAsDouble(operator.getY());;
+	public static DoubleSupplier hood = () -> deadband.applyAsDouble(operator.getY());
 	public static DoubleSupplier shooterSpeed = () -> {
 		return Values.mapRange(-1.0, 1.0, Constants.shooterMinRPM, Constants.shooterMaxRPM)
 				.applyAsDouble(operator.getThrottle());
@@ -68,7 +70,6 @@ public class OI {
 	public static Button alignBall = new JoystickButton(operator, 7);
 	public static Button feedIn = new JoystickButton(operator, 8);
 	public static Button presetOnBatter = new JoystickButton(operator, 9);
-	public static Button presetTowerWall = new JoystickButton(operator, 10);
 	public static Button presetCourtyardFar = new JoystickButton(operator, 11);
 	public static Button presetCourtyardMid = new JoystickButton(operator, 12);
 
@@ -125,7 +126,7 @@ public class OI {
 
 		driveStraight.whileHeld(new TeleopDriveStraight(OI.leftStick));
 
-		presetTowerWall.whenPressed(new UsePreset(Preset.tower));
+		vision.whileHeld(new VisionTurn());
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));
 		presetCourtyardFar.whenPressed(new UsePreset(Preset.courtyardFar));

@@ -25,7 +25,7 @@ public class Constants {
 
 	public static enum Preset {
 		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.010, 3000)), onBatter(
-				new ShooterPreset(0.052, 3050)), courtyardMid(new ShooterPreset(0.178, 3850)), courtyardFar(
+				new ShooterPreset(0.049, 3100)), courtyardMid(new ShooterPreset(0.176, 3850)), courtyardFar(
 						new ShooterPreset(0.182, 4050));
 
 		private final ShooterPreset preset;
@@ -76,9 +76,9 @@ public class Constants {
 	public static double driveUpshiftFPSThreshold = 4.0;
 	public static double driveDownshiftFPSThreshold = 3.0;
 
-	public static double driveHeadingMoveToTolerance = 0.85;
-	public static double driveHeadingMoveToP = 0.024;
-	public static double driveHeadingMoveToI = 0.003;
+	public static double driveHeadingMoveToTolerance = 1.0;
+	public static double driveHeadingMoveToP = 0.022;
+	public static double driveHeadingMoveToI = 0.0036;
 	public static double driveHeadingMoveToD = 0.0;
 	public static double driveHeadingMoveToVelocity = 0.8;
 
@@ -94,9 +94,9 @@ public class Constants {
 	public static double driveHeadingMaintainD = 0.0;
 	public static double driveHeadingMaintainF = 0;
 
-	public static double drivePositionTolerance = 0.85;
-	public static double drivePositionP = 0.028;
-	public static double drivePositionI = 0.004;
+	public static double drivePositionTolerance = 1.2;
+	public static double drivePositionP = 0.025;
+	public static double drivePositionI = 0.0040;
 	public static double drivePositionD = 0.0;
 	public static double drivePositionF = 0;
 
@@ -110,8 +110,14 @@ public class Constants {
 	public static double inputDeadband = 0.05;
 
 	public static double navXResetDelay = 0.07; // seconds
-	public static double visionTargetAzimuthThreshold = 1.0;
-	public static double visionAlignOffset = -1.0;
+
+	public static double visionTargetAzimuthThreshold = 0.3;
+	public static double visionAlignOffset = -3.0;
+
+	public static double visionTurnP = 0.05; // 0.05
+	public static double visionTurnI = 0.0026; // .0019
+	public static double visionTurnD = 0.0; // 0
+
 	public static double pidSetpointWait = 0.15;
 	public static double driveYawRateStraightThreshold = 1.0;
 }
