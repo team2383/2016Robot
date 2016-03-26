@@ -18,7 +18,7 @@ public class LowBarHighGoalFar extends CommandGroup {
 		// addParallel(new ExtendBullBar());
 		addSequential(new DriveDistance(1.0, 209, Gear.LOW, true));
 		addSequential(new ActuateHoodStop(false));
-		addSequential(new GyroTurn(60));
+		addSequential(new GyroTurn(53.5));
 		addSequential(new MoveHood(() -> 0.9, 0.25));
 		addSequential(new ActuateHoodStop(true));
 		addSequential(new MoveHood(() -> -0.55, 0.29));

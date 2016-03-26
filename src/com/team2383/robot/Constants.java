@@ -77,8 +77,8 @@ public class Constants {
 	public static double driveDownshiftFPSThreshold = 3.0;
 
 	public static double driveHeadingMoveToTolerance = 1.0;
-	public static double driveHeadingMoveToP = 0.022;
-	public static double driveHeadingMoveToI = 0.0036;
+	public static double driveHeadingMoveToP = 0.075;
+	public static double driveHeadingMoveToI = 0.003;
 	public static double driveHeadingMoveToD = 0.0;
 	public static double driveHeadingMoveToVelocity = 0.8;
 
@@ -95,9 +95,9 @@ public class Constants {
 	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 1.2;
-	public static double drivePositionP = 0.021;
-	public static double drivePositionI = 0.0047;
-	public static double drivePositionD = 0.0;
+	public static double drivePositionP = 0.3;
+	public static double drivePositionI = 0.0;
+	public static double drivePositionD = 0.25;
 	public static double drivePositionF = 0;
 
 	public static double driveHoldPositionP = 2.3;
@@ -111,11 +111,12 @@ public class Constants {
 
 	public static double navXResetDelay = 0.07; // seconds
 
-	public static double visionTargetAzimuthThreshold = 0.4;
-	public static double visionAlignOffset = -3.0;
+	public static double visionTargetAzimuthThreshold = 0.2;
+	public static double visionAlignOffset = -1.7; // -3 at end of Qs
 
-	public static double visionTurnP = 0.045; // 0.05
-	public static double visionTurnI = 0.0035; // .0019
+	public static double visionTurnP = 0.033; // 0.045 at end of Qs
+	public static double visionTurnI = 0.0037; // .0032 at end of Qs (somethin
+												// like that)
 	public static double visionTurnD = 0.0; // 0
 
 	public static double pidSetpointWait = 0.15;

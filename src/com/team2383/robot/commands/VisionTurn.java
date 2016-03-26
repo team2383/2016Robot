@@ -15,11 +15,10 @@ public class VisionTurn extends PIDCommand {
 	private double lastCheck;
 
 	public VisionTurn() {
-		super("VisionTurn", Constants.visionTurnP, Constants.visionTurnI, Constants.visionTurnD);
+		super("VisionTurn", Constants.visionTurnP, Constants.visionTurnI, Constants.visionTurnD, .01);
 		requires(drivetrain);
 		this.getPIDController().setInputRange(-60.0, 60.0);
-		this.getPIDController().setOutputRange(-0.67, 0.67);
-		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingMoveToTolerance);
+		this.getPIDController().setOutputRange(-1.0, 1.0);
 		this.getPIDController().setSetpoint(0);
 		SmartDashboard.putData("VisionTurn Controller", this.getPIDController());
 	}

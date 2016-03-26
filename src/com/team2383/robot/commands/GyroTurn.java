@@ -35,7 +35,6 @@ public class GyroTurn extends PIDCommand {
 		this.getPIDController().setInputRange(-180.0, 180.0);
 		this.getPIDController().setOutputRange(-velocity, velocity);
 		this.getPIDController().setContinuous();
-		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingMoveToTolerance);
 		this.getPIDController().setSetpoint(angle);
 		this.tolerance = tolerance;
 		this.wait = wait;

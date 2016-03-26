@@ -33,6 +33,9 @@ public class UpdateVision extends Command {
 		distances = visionTable.getNumberArray("distances", distances);
 		azimuths = visionTable.getNumberArray("azimuths", azimuths);
 
+		if (distances.length != azimuths.length)
+			return;
+
 		for (int i = 0; i < distances.length; i++) {
 			targets.add(new Target(distances[i], azimuths[i]));
 		}
