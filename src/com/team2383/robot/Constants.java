@@ -45,11 +45,11 @@ public class Constants {
 	public static double shooterFollowThruTime = 0.6;
 	public static double shooterFeederKickPower = 1.0;
 
-	public static double shooterFlywheelP = 0.37;
-	public static double shooterFlywheelI = 0.0035;
+	public static double shooterFlywheelP = 0.41;
+	public static double shooterFlywheelI = 0.008;
 	public static double shooterFlywheelD = 0.0;
 	public static double shooterFlywheelF = 0.029;
-	public static int shooterFlywheelIZone = 80;
+	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 1.5 / 360.0;
 	public static double hoodReverseLimit = 0.550;
@@ -95,8 +95,8 @@ public class Constants {
 	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 1.2;
-	public static double drivePositionP = 0.025;
-	public static double drivePositionI = 0.0040;
+	public static double drivePositionP = 0.021;
+	public static double drivePositionI = 0.0047;
 	public static double drivePositionD = 0.0;
 	public static double drivePositionF = 0;
 
@@ -111,11 +111,11 @@ public class Constants {
 
 	public static double navXResetDelay = 0.07; // seconds
 
-	public static double visionTargetAzimuthThreshold = 0.3;
+	public static double visionTargetAzimuthThreshold = 0.4;
 	public static double visionAlignOffset = -3.0;
 
-	public static double visionTurnP = 0.05; // 0.05
-	public static double visionTurnI = 0.0026; // .0019
+	public static double visionTurnP = 0.045; // 0.05
+	public static double visionTurnI = 0.0035; // .0019
 	public static double visionTurnD = 0.0; // 0
 
 	public static double pidSetpointWait = 0.15;

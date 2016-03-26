@@ -9,6 +9,6 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class CrossDefense extends CommandGroup {
 	public CrossDefense() {
 		addSequential(new WaitCommand(5));
-		addSequential(new DriveDistance(1.0, -160, Gear.LOW, false));
+		addSequential(new DriveDistance(1.0, -167, 4, 0.05, Gear.LOW, false));
 	}
 }

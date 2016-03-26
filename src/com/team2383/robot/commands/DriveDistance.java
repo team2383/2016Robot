@@ -8,7 +8,6 @@ import com.team2383.robot.Constants;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,8 +25,18 @@ public class DriveDistance extends Command {
 	private final Gear gear;
 	private double lastCheck;
 	private double timeAtSetpoint;
+	private final double tolerance;
+	private final double wait;
 
 	public DriveDistance(double velocity, double distance, Gear gear, boolean brake) {
+		this(velocity, distance, Constants.driveHeadingMaintainTolerance, gear, brake);
+	}
+
+	public DriveDistance(double velocity, double distance, double tolerance, Gear gear, boolean brake) {
+		this(velocity, distance, Constants.driveHeadingMaintainTolerance, Constants.pidSetpointWait, gear, brake);
+	}
+
+	public DriveDistance(double velocity, double distance, double tolerance, double wait, Gear gear, boolean brake) {
 		super("Drive Distance");
 		this.gear = gear;
 		this.brake = brake;
@@ -44,10 +53,14 @@ public class DriveDistance extends Command {
 		headingController = new PIDController(Constants.driveHeadingMaintainP, Constants.driveHeadingMaintainI,
 				Constants.driveHeadingMaintainD, Constants.driveHeadingMaintainF, navX, new NullPIDOutput());
 		headingController.setInputRange(-180.0, 180.0);
-		headingController.setOutputRange(-1.0, 1.0); //changed from .5 if auto is fucked
+		headingController.setOutputRange(-1.0, 1.0); // changed from .5 if auto
+														// is fucked
 		headingController.setContinuous();
 		headingController.setAbsoluteTolerance(Constants.driveHeadingMaintainTolerance);
 		headingController.setSetpoint(0);
+
+		this.tolerance = tolerance;
+		this.wait = wait;
 
 		SmartDashboard.putData("MaintainHeading Controller", headingController);
 
@@ -75,13 +88,13 @@ public class DriveDistance extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		if (Math.abs(distanceController.getError()) <= Constants.drivePositionTolerance) {
+		if (Math.abs(distanceController.getError()) <= tolerance) {
 			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
 		} else {
 			timeAtSetpoint = 0;
 		}
 		lastCheck = this.timeSinceInitialized();
-		return timeAtSetpoint >= Constants.pidSetpointWait;
+		return timeAtSetpoint >= wait;
 	}
 
 	@Override

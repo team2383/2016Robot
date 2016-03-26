@@ -1,7 +1,9 @@
 package com.team2383.robot.auto;
 
+import com.team2383.robot.Constants.Preset;
 import com.team2383.robot.commands.ActuateHoodStop;
 import com.team2383.robot.commands.MoveHood;
+import com.team2383.robot.commands.UsePreset;
 import com.team2383.robot.commands.VisionShoot;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -19,6 +21,7 @@ public class PortcullisHighGoal extends Portcullis {
 	public PortcullisHighGoal() {
 		super();
 		addParallel(new Hood());
+		addSequential(new UsePreset(Preset.courtyardMid));
 		addSequential(new VisionShoot());
 	}
 }

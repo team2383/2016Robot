@@ -11,6 +11,7 @@ import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.Gamepad;
 import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants.Preset;
+import com.team2383.robot.commands.AutoShoot;
 import com.team2383.robot.commands.MoveHood;
 import com.team2383.robot.commands.SetSpoolRPM;
 import com.team2383.robot.commands.SetState;
@@ -55,6 +56,7 @@ public class OI {
 
 	public static Button shiftDown = gamepad.getLeftShoulder();
 	public static Button shiftUp = gamepad.getRightShoulder();
+
 	public static Button autoShoot = new JoystickButton(gamepad, 4);
 	public static Button driveStraight = new JoystickButton(gamepad, 3);
 	public static Button visionShoot = new JoystickButton(gamepad, 2);
@@ -131,6 +133,7 @@ public class OI {
 
 		vision.whileHeld(new VisionTurn());
 		visionShoot.whileHeld(new VisionShoot());
+		autoShoot.whileHeld(new AutoShoot());
 
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));

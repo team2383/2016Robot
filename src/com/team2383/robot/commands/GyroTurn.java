@@ -13,12 +13,22 @@ public class GyroTurn extends PIDCommand {
 
 	private double timeAtSetpoint;
 	private double lastCheck;
+	private final double tolerance;
+	private final double wait;
 
 	public GyroTurn(double angle) {
 		this(Constants.driveHeadingMoveToVelocity, angle);
 	}
 
 	public GyroTurn(double velocity, double angle) {
+		this(velocity, angle, Constants.driveHeadingMoveToTolerance);
+	}
+
+	public GyroTurn(double velocity, double angle, double tolerance) {
+		this(velocity, angle, Constants.driveHeadingMoveToTolerance, Constants.pidSetpointWait);
+	}
+
+	public GyroTurn(double velocity, double angle, double tolerance, double wait) {
 		super("Set Heading", Constants.driveHeadingMoveToP, Constants.driveHeadingMoveToI,
 				Constants.driveHeadingMoveToD);
 		requires(drivetrain);
@@ -27,6 +37,8 @@ public class GyroTurn extends PIDCommand {
 		this.getPIDController().setContinuous();
 		this.getPIDController().setAbsoluteTolerance(Constants.driveHeadingMoveToTolerance);
 		this.getPIDController().setSetpoint(angle);
+		this.tolerance = tolerance;
+		this.wait = wait;
 		SmartDashboard.putData("SetHeading Controller", this.getPIDController());
 	}
 
@@ -43,13 +55,13 @@ public class GyroTurn extends PIDCommand {
 
 	@Override
 	protected boolean isFinished() {
-		if (Math.abs(this.getPIDController().getError()) <= Constants.driveHeadingMoveToTolerance) {
+		if (Math.abs(this.getPIDController().getError()) <= tolerance) {
 			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
 		} else {
 			timeAtSetpoint = 0;
 		}
 		lastCheck = this.timeSinceInitialized();
-		return timeAtSetpoint >= Constants.pidSetpointWait;
+		return timeAtSetpoint >= wait;
 	}
 
 	@Override

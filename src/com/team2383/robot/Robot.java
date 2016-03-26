@@ -4,7 +4,7 @@ package com.team2383.robot;
 import com.team2383.robot.auto.ChevalDeFrise;
 import com.team2383.robot.auto.ChevalDeFriseHighGoal;
 import com.team2383.robot.auto.CrossDefense;
-import com.team2383.robot.auto.CrossShoot;
+import com.team2383.robot.auto.CrossHighGoal;
 import com.team2383.robot.auto.LowBar;
 import com.team2383.robot.auto.LowBarHighGoal;
 import com.team2383.robot.auto.LowBarHighGoalFar;
@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addDefault("No auto", null);
 		autoChooser.addObject("Low Bar", new LowBar());
 		autoChooser.addObject("Moat / Rock Wall / Rough Terrain/ Ramparts", new CrossDefense());
-		autoChooser.addObject("Moat / Rock Wall / Rough Terrain/ Ramparts + High Goal (Vision)", new CrossShoot());
+		autoChooser.addObject("Moat / Rock Wall / Rough Terrain/ Ramparts + High Goal (Vision)", new CrossHighGoal());
 		autoChooser.addObject("Cheval De Frise", new ChevalDeFrise());
 		autoChooser.addObject("Portcullis", new Portcullis());
 		autoChooser.addObject("Cheval De Frise + High Goal", new ChevalDeFriseHighGoal());
