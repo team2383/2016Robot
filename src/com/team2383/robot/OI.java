@@ -20,6 +20,7 @@ import com.team2383.robot.commands.SpoolToRPM;
 import com.team2383.robot.commands.TeleopDriveStraight;
 import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.commands.UsePreset;
+import com.team2383.robot.commands.VisionShoot;
 import com.team2383.robot.commands.VisionTurn;
 import com.team2383.robot.subsystems.Arms;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
@@ -54,7 +55,9 @@ public class OI {
 
 	public static Button shiftDown = gamepad.getLeftShoulder();
 	public static Button shiftUp = gamepad.getRightShoulder();
+	public static Button autoShoot = new JoystickButton(gamepad, 4);
 	public static Button driveStraight = new JoystickButton(gamepad, 3);
+	public static Button visionShoot = new JoystickButton(gamepad, 2);
 	public static Button vision = new JoystickButton(gamepad, 1);
 	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
 	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
@@ -127,6 +130,8 @@ public class OI {
 		driveStraight.whileHeld(new TeleopDriveStraight(OI.leftStick));
 
 		vision.whileHeld(new VisionTurn());
+		visionShoot.whileHeld(new VisionShoot());
+
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));
 		presetCourtyardFar.whenPressed(new UsePreset(Preset.courtyardFar));

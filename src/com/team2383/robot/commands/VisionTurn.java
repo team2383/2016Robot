@@ -26,22 +26,19 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected void initialize() {
-		if (vision.getNearestTarget().getDistance() == 0.0) {
-			this.cancel();
-		}
+		cancelIfNoTarget();
 		drivetrain.enableBrake();
 		drivetrain.shiftTo(Gear.LOW);
 	}
 
 	@Override
 	protected void execute() {
-		if (vision.getNearestTarget().getDistance() == 0.0) {
-			this.cancel();
-		}
+		cancelIfNoTarget();
 	}
 
 	@Override
 	protected boolean isFinished() {
+		cancelIfNoTarget();
 		if (Math.abs(this.getPIDController().getError()) <= Constants.visionAlignOffset) {
 			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
 		} else {
@@ -72,6 +69,16 @@ public class VisionTurn extends PIDCommand {
 			drivetrain.tank(output, -output);
 		} else {
 			System.out.println("Waiting for reset");
+		}
+	}
+
+	private void cancelIfNoTarget() {
+		if (vision.getNearestTarget().getDistance() == 0.0) {
+			if (getGroup() != null) {
+				getGroup().cancel();
+			} else {
+				cancel();
+			}
 		}
 	}
 

@@ -42,7 +42,7 @@ public class Constants {
 	public static double shooterMaxRPM = 4500;
 	public static double shooterMinRPM = 2500;
 	public static int shooterRPMTolerance = 100;
-	public static double shooterFollowThruTime = 3.0;
+	public static double shooterFollowThruTime = 0.6;
 	public static double shooterFeederKickPower = 1.0;
 
 	public static double shooterFlywheelP = 0.37;
@@ -119,5 +119,5 @@ public class Constants {
 	public static double visionTurnD = 0.0; // 0
 
 	public static double pidSetpointWait = 0.15;
-	public static double driveYawRateStraightThreshold = 1.0;
+	public static double shooterRPMWaitTime = 0.10;
 }

@@ -1,14 +1,10 @@
 package com.team2383.robot.auto;
 
 import com.team2383.robot.commands.ActuateHoodStop;
-import com.team2383.robot.commands.GyroTurn;
 import com.team2383.robot.commands.MoveHood;
-import com.team2383.robot.commands.Shoot;
-import com.team2383.robot.commands.SpoolToRPM;
-import com.team2383.robot.commands.WaitForRPM;
+import com.team2383.robot.commands.VisionShoot;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.PrintCommand;
 
 public class PortcullisHighGoal extends Portcullis {
 	private class Hood extends CommandGroup {
@@ -23,10 +19,6 @@ public class PortcullisHighGoal extends Portcullis {
 	public PortcullisHighGoal() {
 		super();
 		addParallel(new Hood());
-		addParallel(new SpoolToRPM(4100, 6));
-		addSequential(new GyroTurn(-6));
-		addParallel(new PrintCommand("Shooting!"));
-		addSequential(new WaitForRPM(0.1));
-		addSequential(new Shoot(0.6));
+		addSequential(new VisionShoot());
 	}
 }
