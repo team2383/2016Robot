@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class VisionShoot extends CommandGroup {
 	public VisionShoot() {
 		addSequential(new VisionTurn());
+		addSequential(new UseVisionPreset());
 		addSequential(new AutoShoot());
 	}
 }

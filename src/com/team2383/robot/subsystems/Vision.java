@@ -6,9 +6,12 @@ import com.team2383.robot.Constants;
 import com.team2383.robot.commands.UpdateVision;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class Vision extends Subsystem {
-	private class LookupTable extends ArrayList<LookupTable.Entry> {
+	private final NetworkTable visionTable;
+
+	public class LookupTable extends ArrayList<LookupTable.Entry> {
 		/**
 		 *
 		 */
@@ -107,7 +110,16 @@ public class Vision extends Subsystem {
 	private final LookupTable lookupTable = new LookupTable();
 
 	public Vision() {
-		lookupTable.add(100, 0.3, 4000);
+		visionTable = NetworkTable.getTable("vision");
+
+		lookupTable.add(87, 0.131, 3850);
+		lookupTable.add(91.7, 0.138, 3850);
+		lookupTable.add(100.0, 0.146, 3850);
+		lookupTable.add(115.3, 0.157, 3850);
+		lookupTable.add(123.5, 0.165, 3850);
+		lookupTable.add(134.0, 0.171, 3850);
+		lookupTable.add(145.8, 0.171, 3850);
+		lookupTable.add(151.3, 0.166, 3850);
 	}
 
 	private ArrayList<Target> targets = new ArrayList<>();
@@ -118,7 +130,7 @@ public class Vision extends Subsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		this.setDefaultCommand(new UpdateVision(this::hasNewData));
+		this.setDefaultCommand(new UpdateVision());
 	}
 
 	public ArrayList<Target> getTargets() {
@@ -127,6 +139,28 @@ public class Vision extends Subsystem {
 
 	public boolean hasTarget() {
 		return getNearestTarget().getDistance() != 0;
+	}
+
+	public Vision update() {
+		ArrayList<Vision.Target> targets = new ArrayList<>();
+		double[] distances = {};
+		double[] azimuths = {};
+		distances = visionTable.getNumberArray("distances", distances);
+		azimuths = visionTable.getNumberArray("azimuths", azimuths);
+
+		if (distances.length != azimuths.length)
+			return this;
+
+		for (int i = 0; i < distances.length; i++) {
+			targets.add(new Target(distances[i], azimuths[i]));
+		}
+
+		targets.sort((a, b) -> {
+			return (int) Math.abs(a.getAzimuth()) - (int) Math.abs(b.getAzimuth());
+		});
+
+		hasNewData(targets);
+		return this;
 	}
 
 	public LookupTable.Entry getNearestEntryForTarget(Target t) {

@@ -16,6 +16,7 @@ public class AutoShoot extends Command {
 	double timeAtSetpoint;
 	double lastCheck;
 	double shootStartTime;
+	boolean setShootStart;
 	boolean done;
 
 	public AutoShoot() {
@@ -30,6 +31,7 @@ public class AutoShoot extends Command {
 		lastCheck = 0.0;
 		shootStartTime = 0.0;
 		done = false;
+		setShootStart = false;
 	}
 
 	@Override
@@ -37,14 +39,15 @@ public class AutoShoot extends Command {
 		SmartDashboard.putBoolean("spooling?", true);
 		shooterFlywheel.spoolToSetpoint();
 
-		if (readyToShoot()) {
+		if (readyToShoot() && !setShootStart) {
 			// shooter has reached rpm
 			// so record when we started so we know when
 			// to stop running the feeder
 			this.shootStartTime = this.timeSinceInitialized();
+			this.setShootStart = true;
 		}
 
-		if (this.shootStartTime != 0.0) {
+		if (setShootStart && this.shootStartTime != 0.0) {
 			// we set a shootStartTime
 			// so we know we are readyToShoot
 			// so we should run the feeder to shoot
@@ -56,6 +59,10 @@ public class AutoShoot extends Command {
 				feeder.stop();
 				done = true;
 			}
+		} else {
+			// we havent set a start or it was invalid so reset
+			this.shootStartTime = 0.0;
+			this.setShootStart = false;
 		}
 	}
 

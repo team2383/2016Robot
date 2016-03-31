@@ -19,6 +19,7 @@ import com.team2383.robot.commands.ShiftTo;
 import com.team2383.robot.commands.Shoot;
 import com.team2383.robot.commands.SpoolToRPM;
 import com.team2383.robot.commands.TeleopDriveStraight;
+import com.team2383.robot.commands.TestShotParams;
 import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.commands.UsePreset;
 import com.team2383.robot.commands.VisionShoot;
@@ -61,6 +62,9 @@ public class OI {
 	public static Button driveStraight = new JoystickButton(gamepad, 3);
 	public static Button visionShoot = new JoystickButton(gamepad, 2);
 	public static Button vision = new JoystickButton(gamepad, 1);
+
+	public static Button testShotParams = new JoystickButton(gamepad, 8);
+
 	public static DoubleSupplier leftStick = () -> deadband.applyAsDouble(gamepad.getLeftY());
 	public static DoubleSupplier rightStick = () -> deadband.applyAsDouble(gamepad.getRightX());
 
@@ -118,6 +122,8 @@ public class OI {
 
 		// spools to the last set RPM
 		spoolToLastSet.whileHeld(new SpoolToRPM());
+
+		testShotParams.whenPressed(new TestShotParams());
 
 		alignBall.whileHeld(new SpoolToRPM(() -> -2000));
 		// when alignBall is released, set shooter RPM to the shooterRPM

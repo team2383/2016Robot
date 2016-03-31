@@ -13,10 +13,14 @@ public class VisionTurn extends PIDCommand {
 
 	private double timeAtSetpoint;
 	private double lastCheck;
+	private double timeWithoutTarget;
 
 	public VisionTurn() {
 		super("VisionTurn", Constants.visionTurnP, Constants.visionTurnI, Constants.visionTurnD, .01);
 		requires(drivetrain);
+		requires(vision); // since PID loop runs faster, we require vision to
+							// get
+							// faster updates in the PID loop
 		this.getPIDController().setInputRange(-60.0, 60.0);
 		this.getPIDController().setOutputRange(-1.0, 1.0);
 		this.getPIDController().setSetpoint(0);
@@ -25,7 +29,6 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected void initialize() {
-		cancelIfNoTarget();
 		drivetrain.enableBrake();
 		drivetrain.shiftTo(Gear.LOW);
 	}
@@ -37,7 +40,6 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected boolean isFinished() {
-		cancelIfNoTarget();
 		if (Math.abs(this.getPIDController().getError()) <= Constants.visionAlignOffset) {
 			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
 		} else {
@@ -59,7 +61,7 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected double returnPIDInput() {
-		return vision.getNearestTarget().getAzimuth();
+		return vision.update().getNearestTarget().getAzimuth();
 	}
 
 	@Override
@@ -73,10 +75,13 @@ public class VisionTurn extends PIDCommand {
 
 	private void cancelIfNoTarget() {
 		if (vision.getNearestTarget().getDistance() == 0.0) {
-			if (getGroup() != null) {
-				getGroup().cancel();
-			} else {
-				cancel();
+			timeWithoutTarget += this.timeSinceInitialized() - timeWithoutTarget;
+			if (timeWithoutTarget >= Constants.visionAlignOffset) {
+				if (getGroup() != null) {
+					getGroup().cancel();
+				} else {
+					cancel();
+				}
 			}
 		}
 	}

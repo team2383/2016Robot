@@ -40,6 +40,7 @@ public class TeleopDriveStraight extends Command {
 		if (this.timeSinceInitialized() > 0.1) {
 			drivetrain.arcade(leftStick.getAsDouble(), headingController.get());
 		} else {
+			drivetrain.arcade(leftStick.getAsDouble(), 0);
 			System.out.println("Waiting for reset " + this.timeSinceInitialized());
 		}
 	}

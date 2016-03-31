@@ -24,7 +24,7 @@ public class ShooterFlywheel extends Subsystem {
 		shooterMotor.setPID(Constants.shooterFlywheelP, Constants.shooterFlywheelI, Constants.shooterFlywheelD,
 				Constants.shooterFlywheelF, Constants.shooterFlywheelIZone, 0, 0);
 		shooterMotor.enable();
-		SmartDashboard.putData("hoodMotor", shooterMotor);
+		SmartDashboard.putData("shooterMotor", shooterMotor);
 	}
 
 	/**
@@ -39,7 +39,6 @@ public class ShooterFlywheel extends Subsystem {
 		shooterMotor.enable();
 		shooterMotor.setSetpoint(setRPM);
 		shooterMotor.enableBrakeMode(false);
-		SmartDashboard.putData("shooterMotor", shooterMotor);
 	}
 
 	public void stop() {
