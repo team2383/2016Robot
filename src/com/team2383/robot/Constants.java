@@ -78,8 +78,8 @@ public class Constants {
 
 	public static double driveHeadingMoveToTolerance = 1.0;
 	public static double driveHeadingMoveToP = 0.075;
-	public static double driveHeadingMoveToI = 0.003;
-	public static double driveHeadingMoveToD = 0.0;
+	public static double driveHeadingMoveToI = 0.0034; // .003 at ROC
+	public static double driveHeadingMoveToD = 0.025; // 0 at ROC
 	public static double driveHeadingMoveToVelocity = 0.8;
 
 	public static double driveTeleopHeadingMaintainTolerance = 0.25;
@@ -111,11 +111,11 @@ public class Constants {
 
 	public static double navXResetDelay = 0.07; // seconds
 
-	public static double visionTargetAzimuthThreshold = 0.5;
-	public static double visionAlignOffset = -1.7; // -3 at end of Qs
+	public static double visionTargetAzimuthThreshold = 0.4;
+	public static double visionAlignOffset = -2.9; // -2.7 at last Practice
 
-	public static double visionTurnP = 0.055; // 0.033 at end of ROC
-	public static double visionTurnI = 0.001; // .0017 at end of ROC
+	public static double visionTurnP = 0.053; // 0.033 at ROC
+	public static double visionTurnI = 0.0013; // .0017 at ROC
 	public static double visionTurnD = 0.54; // 0
 
 	public static double pidSetpointWait = 0.15;

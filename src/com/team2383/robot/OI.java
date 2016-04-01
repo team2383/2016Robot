@@ -9,6 +9,7 @@ import java.util.function.DoubleUnaryOperator;
 import com.team2383.ninjaLib.DPadButton;
 import com.team2383.ninjaLib.DPadButton.Direction;
 import com.team2383.ninjaLib.Gamepad;
+import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants.Preset;
 import com.team2383.robot.commands.AutoShoot;
@@ -22,6 +23,7 @@ import com.team2383.robot.commands.TeleopDriveStraight;
 import com.team2383.robot.commands.TestShotParams;
 import com.team2383.robot.commands.ToggleHoodStop;
 import com.team2383.robot.commands.UsePreset;
+import com.team2383.robot.commands.UseVisionPreset;
 import com.team2383.robot.commands.VisionShoot;
 import com.team2383.robot.commands.VisionTurn;
 import com.team2383.robot.subsystems.Arms;
@@ -59,9 +61,14 @@ public class OI {
 	public static Button shiftUp = gamepad.getRightShoulder();
 
 	public static Button autoShoot = new JoystickButton(gamepad, 4);
-	public static Button driveStraight = new JoystickButton(gamepad, 3);
-	public static Button visionShoot = new JoystickButton(gamepad, 2);
-	public static Button vision = new JoystickButton(gamepad, 1);
+	public static Button driveStraight = new JoystickButton(gamepad, 10);
+	public static Button visionPreset = new JoystickButton(gamepad, 2);
+	public static Button visionTurn = new JoystickButton(gamepad, 3);
+
+	public static Button visionShoot = new JoystickButton(gamepad, 1);
+	public static Button cancelVisionShoot = new LambdaButton(() -> {
+		return !gamepad.getRawButton(1);
+	});
 
 	public static Button testShotParams = new JoystickButton(gamepad, 8);
 
@@ -137,9 +144,11 @@ public class OI {
 
 		driveStraight.whileHeld(new TeleopDriveStraight(OI.leftStick));
 
-		vision.whileHeld(new VisionTurn());
-		visionShoot.whileHeld(new VisionShoot());
+		visionTurn.whileHeld(new VisionTurn());
+		visionPreset.whileHeld(new UseVisionPreset());
 		autoShoot.whileHeld(new AutoShoot());
+
+		visionShoot.whileHeld(new VisionShoot());
 
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));

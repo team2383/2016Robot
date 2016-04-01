@@ -21,14 +21,14 @@ public class UseVisionPreset extends Command {
 
 	@Override
 	protected void initialize() {
+		timeWithoutTarget = 0;
 		foundValid = false;
-		timeWithoutTarget = 0.0;
 	}
 
 	@Override
 	protected void execute() {
 		Target target = vision.getNearestTarget();
-		if (target.getDistance() != 0) {
+		if (target.getDistance() != 0.0) {
 			Entry entry = vision.getNearestEntryForTarget(target);
 			shooterFlywheel.setRPM(entry.getFlywheelRPM());
 			shooterHood.setRotations(entry.getHoodRotations());
@@ -55,13 +55,15 @@ public class UseVisionPreset extends Command {
 	@Override
 	protected void end() {
 		// TODO Auto-generated method stub
-
+		timeWithoutTarget = 0;
+		foundValid = false;
 	}
 
 	@Override
 	protected void interrupted() {
 		// TODO Auto-generated method stub
-
+		timeWithoutTarget = 0;
+		foundValid = false;
 	}
 
 }

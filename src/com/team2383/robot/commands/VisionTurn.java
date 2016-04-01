@@ -22,7 +22,7 @@ public class VisionTurn extends PIDCommand {
 							// get
 							// faster updates in the PID loop
 		this.getPIDController().setInputRange(-60.0, 60.0);
-		this.getPIDController().setOutputRange(-1.0, 1.0);
+		this.getPIDController().setOutputRange(-0.7, 0.7);
 		this.getPIDController().setSetpoint(0);
 		SmartDashboard.putData("VisionTurn Controller", this.getPIDController());
 	}
@@ -40,7 +40,7 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected boolean isFinished() {
-		if (Math.abs(this.getPIDController().getError()) <= Constants.visionAlignOffset) {
+		if (Math.abs(this.getPIDController().getError()) <= Constants.visionTargetAzimuthThreshold) {
 			timeAtSetpoint += this.timeSinceInitialized() - lastCheck;
 		} else {
 			timeAtSetpoint = 0;
@@ -51,6 +51,7 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected void end() {
+		System.out.println("Vision Aligned Successfully");
 		drivetrain.tank(0, 0);
 	}
 
@@ -66,11 +67,7 @@ public class VisionTurn extends PIDCommand {
 
 	@Override
 	protected void usePIDOutput(double output) {
-		if (this.timeSinceInitialized() > 0.1) {
-			drivetrain.tank(output, -output);
-		} else {
-			System.out.println("Waiting for reset");
-		}
+		drivetrain.tank(output, -output);
 	}
 
 	private void cancelIfNoTarget() {
