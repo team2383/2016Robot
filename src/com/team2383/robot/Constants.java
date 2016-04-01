@@ -24,9 +24,9 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), tower(new ShooterPreset(0.049, 3700)), onBatter(
-				new ShooterPreset(0.131, 3850)), courtyardMid(new ShooterPreset(0.166, 3850)), courtyardFar(
-						new ShooterPreset(0.182, 4050));
+		closed(new ShooterPreset(0.0, 0)), lowGoal(new ShooterPreset(0.338, 3600)), tower(
+				new ShooterPreset(0.049, 3700)), onBatter(new ShooterPreset(0.131, 3850)), courtyardMid(
+						new ShooterPreset(0.166, 3850)), courtyardFar(new ShooterPreset(0.182, 4050));
 
 		private final ShooterPreset preset;
 
@@ -112,13 +112,13 @@ public class Constants {
 	public static double navXResetDelay = 0.07; // seconds
 
 	public static double visionTargetAzimuthThreshold = 0.4;
-	public static double visionAlignOffset = -2.9; // -2.7 at last Practice
+	public static double visionAlignOffset = -3.0; // -2.7 at last Practice
 
 	public static double visionTurnP = 0.053; // 0.033 at ROC
-	public static double visionTurnI = 0.0013; // .0017 at ROC
+	public static double visionTurnI = 0.0015; // .0017 at ROC
 	public static double visionTurnD = 0.54; // 0
 
 	public static double pidSetpointWait = 0.15;
-	public static double shooterRPMWaitTime = 0.10;
+	public static double shooterRPMWaitTime = 0.15;
 	public static double visionTimeout = 1.0;
 }

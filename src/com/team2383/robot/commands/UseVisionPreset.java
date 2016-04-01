@@ -4,7 +4,6 @@ import static com.team2383.robot.HAL.shooterFlywheel;
 import static com.team2383.robot.HAL.shooterHood;
 import static com.team2383.robot.HAL.vision;
 
-import com.team2383.robot.Constants;
 import com.team2383.robot.subsystems.Vision.LookupTable.Entry;
 import com.team2383.robot.subsystems.Vision.Target;
 
@@ -12,16 +11,22 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class UseVisionPreset extends Command {
 	private boolean foundValid = false;
-	private double timeWithoutTarget = 0.0;
+	private final boolean finish;
+
+	public UseVisionPreset(boolean finish) {
+		super("UseVisionPreset");
+		requires(shooterHood);
+		this.finish = false;
+	}
 
 	public UseVisionPreset() {
 		super("UseVisionPreset");
 		requires(shooterHood);
+		this.finish = true;
 	}
 
 	@Override
 	protected void initialize() {
-		timeWithoutTarget = 0;
 		foundValid = false;
 	}
 
@@ -33,36 +38,22 @@ public class UseVisionPreset extends Command {
 			shooterFlywheel.setRPM(entry.getFlywheelRPM());
 			shooterHood.setRotations(entry.getHoodRotations());
 			foundValid = true;
-		} else {
-			timeWithoutTarget += this.timeSinceInitialized() - timeWithoutTarget;
-			if (timeWithoutTarget >= Constants.visionAlignOffset) {
-				if (getGroup() != null) {
-					getGroup().cancel();
-				} else {
-					cancel();
-				}
-			}
 		}
-
 	}
 
 	@Override
 	protected boolean isFinished() {
 		// TODO Auto-generated method stub
-		return foundValid;
+		return finish && foundValid;
 	}
 
 	@Override
 	protected void end() {
-		// TODO Auto-generated method stub
-		timeWithoutTarget = 0;
 		foundValid = false;
 	}
 
 	@Override
 	protected void interrupted() {
-		// TODO Auto-generated method stub
-		timeWithoutTarget = 0;
 		foundValid = false;
 	}
 

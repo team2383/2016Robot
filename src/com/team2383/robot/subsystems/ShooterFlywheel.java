@@ -67,6 +67,10 @@ public class ShooterFlywheel extends Subsystem {
 		return shooterMotor.getSpeed();
 	}
 
+	public double getSuppliedSetpoint() {
+		return rpmSupplier.getAsDouble();
+	}
+
 	public double getSetpoint() {
 		return shooterMotor.getSetpoint();
 	}

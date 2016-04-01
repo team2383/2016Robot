@@ -12,9 +12,9 @@ import com.team2383.ninjaLib.Gamepad;
 import com.team2383.ninjaLib.LambdaButton;
 import com.team2383.ninjaLib.Values;
 import com.team2383.robot.Constants.Preset;
+import com.team2383.robot.commands.AlignBall;
 import com.team2383.robot.commands.AutoShoot;
 import com.team2383.robot.commands.MoveHood;
-import com.team2383.robot.commands.SetSpoolRPM;
 import com.team2383.robot.commands.SetState;
 import com.team2383.robot.commands.ShiftTo;
 import com.team2383.robot.commands.Shoot;
@@ -86,6 +86,7 @@ public class OI {
 	public static Button alignBall = new JoystickButton(operator, 7);
 	public static Button feedIn = new JoystickButton(operator, 8);
 	public static Button presetOnBatter = new JoystickButton(operator, 9);
+	public static Button presetLowGoal = new JoystickButton(operator, 10);
 	public static Button presetCourtyardFar = new JoystickButton(operator, 11);
 	public static Button presetCourtyardMid = new JoystickButton(operator, 12);
 
@@ -132,10 +133,7 @@ public class OI {
 
 		testShotParams.whenPressed(new TestShotParams());
 
-		alignBall.whileHeld(new SpoolToRPM(() -> -2000));
-		// when alignBall is released, set shooter RPM to the shooterRPM
-		// throttle (operator throttle)
-		alignBall.whenReleased(new SetSpoolRPM(OI.shooterSpeed));
+		alignBall.whileHeld(new AlignBall());
 
 		// shoots ball (same as feedIn)
 		shoot.whileHeld(new Shoot());
@@ -151,6 +149,7 @@ public class OI {
 		visionShoot.whileHeld(new VisionShoot());
 
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));
+		presetLowGoal.whenPressed(new UsePreset(Preset.lowGoal));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));
 		presetCourtyardFar.whenPressed(new UsePreset(Preset.courtyardFar));
 

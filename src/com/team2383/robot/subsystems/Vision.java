@@ -123,6 +123,8 @@ public class Vision extends Subsystem {
 		lookupTable.add(134.0, 0.171, 3850);
 		lookupTable.add(145.8, 0.172, 3850);
 		lookupTable.add(151.3, 0.175, 3850);
+		lookupTable.add(155, 0.177, 3950);
+		lookupTable.add(166, 0.182, 4000);
 	}
 
 	private ArrayList<Target> targets = new ArrayList<>();
