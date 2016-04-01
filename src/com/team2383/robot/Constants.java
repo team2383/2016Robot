@@ -48,7 +48,7 @@ public class Constants {
 	public static double shooterFlywheelP = 0.41;
 	public static double shooterFlywheelI = 0.008;
 	public static double shooterFlywheelD = 0.0;
-	public static double shooterFlywheelF = 0.031;
+	public static double shooterFlywheelF = 0.0325;
 	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 1.5 / 360.0;

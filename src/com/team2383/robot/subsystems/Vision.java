@@ -113,8 +113,11 @@ public class Vision extends Subsystem {
 		visionTable = NetworkTable.getTable("vision");
 		lookupTable.add(96.0, 0.129, 3850);
 		lookupTable.add(98.0, 0.135, 3850);
-		lookupTable.add(100.0, 0.146, 3850);
-		lookupTable.add(115.3, 0.157, 3850);
+		lookupTable.add(99.0, 0.135, 3850);
+		lookupTable.add(100.0, 0.136, 3850);
+		lookupTable.add(107.0, 0.141, 3850);
+		lookupTable.add(112.0, 0.145, 3850);
+		lookupTable.add(115.0, 0.150, 3850);
 		lookupTable.add(117.4, 0.162, 3850);
 		lookupTable.add(123.5, 0.165, 3850);
 		lookupTable.add(134.0, 0.171, 3850);
