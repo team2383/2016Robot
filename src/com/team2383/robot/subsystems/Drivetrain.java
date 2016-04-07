@@ -12,6 +12,7 @@ import com.team2383.robot.OI;
 import com.team2383.robot.commands.TeleopDrive;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDeviceStatus;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -101,7 +102,20 @@ public class Drivetrain extends Subsystem implements PIDSource {
 	}
 
 	public double getRotations() {
-		return (leftFront.getPosition() + rightRear.getPosition()) / 2.0;
+		double rotations;
+		if (leftFront.isSensorPresent(
+				FeedbackDevice.CtreMagEncoder_Relative) == FeedbackDeviceStatus.FeedbackStatusNotPresent)
+			return 0;
+		if (rightRear.isSensorPresent(
+				FeedbackDevice.CtreMagEncoder_Relative) == FeedbackDeviceStatus.FeedbackStatusNotPresent)
+			return 0;
+		try {
+			rotations = (leftFront.getPosition() + rightRear.getPosition()) / 2.0;
+		} catch (Throwable e) {
+			System.out.println("Failed to get encoder rotations of drivetrain");
+			rotations = 0;
+		}
+		return rotations;
 	}
 
 	public double getInches() {

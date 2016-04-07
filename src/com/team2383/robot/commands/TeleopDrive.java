@@ -4,17 +4,22 @@ import static com.team2383.robot.HAL.drivetrain;
 
 import java.util.function.DoubleSupplier;
 
+import com.team2383.ninjaLib.CheesyDriveHelper;
+import com.team2383.robot.subsystems.Drivetrain.Gear;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopDrive extends Command {
 	private final DoubleSupplier rightStick;
 	private final DoubleSupplier leftStick;
+	private final CheesyDriveHelper cdh;
 
 	public TeleopDrive(DoubleSupplier leftStick, DoubleSupplier rightStick) {
 		super("Teleop Drive");
 		requires(drivetrain);
 		this.leftStick = leftStick;
 		this.rightStick = rightStick;
+		this.cdh = new CheesyDriveHelper();
 	}
 
 	@Override
@@ -23,7 +28,7 @@ public class TeleopDrive extends Command {
 
 	@Override
 	protected void execute() {
-		drivetrain.arcade(leftStick.getAsDouble(), rightStick.getAsDouble());
+		cdh.cheesyDrive(leftStick.getAsDouble(), rightStick.getAsDouble(), drivetrain.getGear() == Gear.HIGH);
 	}
 
 	@Override

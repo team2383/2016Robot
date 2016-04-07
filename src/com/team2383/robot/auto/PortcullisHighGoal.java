@@ -1,24 +1,16 @@
 package com.team2383.robot.auto;
 
-import com.team2383.robot.commands.ActuateHoodStop;
-import com.team2383.robot.commands.MoveHood;
+import com.team2383.robot.commands.MoveArms;
 import com.team2383.robot.commands.VisionShoot;
+import com.team2383.robot.subsystems.Arms.State;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class PortcullisHighGoal extends Portcullis {
-	private class Hood extends CommandGroup {
-		Hood() {
-			addSequential(new ActuateHoodStop(false));
-			addSequential(new MoveHood(() -> 0.9, 0.25));
-			addSequential(new ActuateHoodStop(true));
-			addSequential(new MoveHood(() -> -0.55, 0.23));
-		}
-	}
-
 	public PortcullisHighGoal() {
 		super();
-		addParallel(new Hood());
+		addSequential(new MoveArms(State.EXTENDING, 1.5));
+		addSequential(new WaitCommand(0.3));
 		addSequential(new VisionShoot());
 	}
 }

@@ -86,7 +86,7 @@ public class OI {
 	public static Button alignBall = new JoystickButton(operator, 7);
 	public static Button feedIn = new JoystickButton(operator, 8);
 	public static Button presetOnBatter = new JoystickButton(operator, 9);
-	public static Button presetLowGoal = new JoystickButton(operator, 10);
+	public static Button presetTowerWall = new JoystickButton(operator, 10);
 	public static Button presetCourtyardFar = new JoystickButton(operator, 11);
 	public static Button presetCourtyardMid = new JoystickButton(operator, 12);
 
@@ -142,14 +142,14 @@ public class OI {
 
 		driveStraight.whileHeld(new TeleopDriveStraight(OI.leftStick));
 
-		visionTurn.whileHeld(new VisionTurn());
+		visionTurn.whileHeld(new VisionTurn(false));
 		visionPreset.whileHeld(new UseVisionPreset());
 		autoShoot.whileHeld(new AutoShoot());
 
 		visionShoot.whileHeld(new VisionShoot());
 
 		presetOnBatter.whenPressed(new UsePreset(Preset.onBatter));
-		presetLowGoal.whenPressed(new UsePreset(Preset.lowGoal));
+		presetTowerWall.whenPressed(new UsePreset(Preset.towerWall));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));
 		presetCourtyardFar.whenPressed(new UsePreset(Preset.courtyardFar));
 

@@ -111,20 +111,40 @@ public class Vision extends Subsystem {
 
 	public Vision() {
 		visionTable = NetworkTable.getTable("vision");
-		lookupTable.add(96.0, 0.129, 3900);
-		lookupTable.add(98.0, 0.135, 3900);
-		lookupTable.add(99.0, 0.135, 3900);
-		lookupTable.add(100.0, 0.136, 3900);
-		lookupTable.add(107.0, 0.141, 3900);
-		lookupTable.add(112.0, 0.145, 3900);
-		lookupTable.add(115.0, 0.150, 3900);
-		lookupTable.add(117.4, 0.162, 3900);
-		lookupTable.add(123.5, 0.165, 3900);
-		lookupTable.add(134.0, 0.171, 3900);
-		lookupTable.add(145.8, 0.172, 3900);
-		lookupTable.add(151.3, 0.175, 3900);
-		lookupTable.add(155, 0.177, 3950);
-		lookupTable.add(166, 0.182, 4000);
+
+		lookupTable.add(86.460, 0.109, 3700);
+		lookupTable.add(89.662, 0.119, 3700);
+		lookupTable.add(93.832, 0.119, 3700);
+		lookupTable.add(100.036, 0.130, 3700);
+		lookupTable.add(109.048, 0.148, 3700);
+		lookupTable.add(115.280, 0.156, 3700);
+		lookupTable.add(122.266, 0.163, 3700);
+		lookupTable.add(131.569, 0.171, 3700);
+		lookupTable.add(137.55, 0.179, 3700);
+		lookupTable.add(144.100, 0.179, 3700);
+		lookupTable.add(147.417, 0.179, 3700);
+		lookupTable.add(155.184, 0.186, 3700);
+
+		/*
+		 * Soflo table lookupTable.add(96.0, 0.129, 3900); lookupTable.add(98.0,
+		 * 0.135, 3900); lookupTable.add(99.0, 0.135, 3900);
+		 * lookupTable.add(111.04, 0.143, 3900); lookupTable.add(117.5, 0.154,
+		 * 3900); lookupTable.add(124.7, 0.155, 3900); lookupTable.add(130.15,
+		 * 0.166, 3900); lookupTable.add(140.7, 0.166, 3900);
+		 * lookupTable.add(147.6, 0.166, 3900); lookupTable.add(151.3, 0.163,
+		 * 3900); lookupTable.add(153.2, 0.163, 3900);
+		 */
+
+		/*
+		 * Vish's table
+		 *
+		 * lookupTable.add(96.0, 0.112, 3900); lookupTable.add(98.0, 0.116,
+		 * 3900); lookupTable.add(99.0, 0.118, 3900); lookupTable.add(117.5,
+		 * 0.143, 3900); lookupTable.add(124.7, 0.15, 3900);
+		 * lookupTable.add(130.15, 0.55, 3900); lookupTable.add(140.7, 0.163,
+		 * 3900); lookupTable.add(147.6, 0.1676, 3900); lookupTable.add(151.3,
+		 * 0.17, 3900); lookupTable.add(153.2, 0.17, 3900);
+		 */
 	}
 
 	private ArrayList<Target> targets = new ArrayList<>();

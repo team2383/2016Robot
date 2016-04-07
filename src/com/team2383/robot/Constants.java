@@ -24,9 +24,9 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), lowGoal(new ShooterPreset(0.338, 3600)), tower(
-				new ShooterPreset(0.049, 3700)), onBatter(new ShooterPreset(0.131, 3850)), courtyardMid(
-						new ShooterPreset(0.166, 3850)), courtyardFar(new ShooterPreset(0.182, 4000));
+		closed(new ShooterPreset(0.0, 0)), towerWall(new ShooterPreset(0.064, 3250)), onBatter(
+				new ShooterPreset(0.131, 3770)), courtyardMid(new ShooterPreset(0.166, 3700)), courtyardFar(
+						new ShooterPreset(0.172, 3850));
 
 		private final ShooterPreset preset;
 
@@ -45,19 +45,19 @@ public class Constants {
 	public static double shooterFollowThruTime = 0.6;
 	public static double shooterFeederKickPower = 1.0;
 
-	public static double shooterFlywheelP = 0.41;
-	public static double shooterFlywheelI = 0.008;
-	public static double shooterFlywheelD = 0.0;
-	public static double shooterFlywheelF = 0.033;
+	public static double shooterFlywheelP = 0.34;
+	public static double shooterFlywheelI = 0.0;
+	public static double shooterFlywheelD = 0.25;
+	public static double shooterFlywheelF = 0.0350; // .0303 with 775pro
 	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 1.5 / 360.0;
 	public static double hoodReverseLimit = 0.550;
 	public static double hoodForwardLimit = 0.990;
 
-	public static double hoodPositionP = 2;
-	public static double hoodPositionI = 0.01;
-	public static double hoodPositionD = 0.0;
+	public static double hoodPositionP = 2.5;
+	public static double hoodPositionI = 0.02;
+	public static double hoodPositionD = 0.5;
 	public static double hoodPositionF = 0;
 	public static int hoodPositionIZone = 40;
 
@@ -112,7 +112,7 @@ public class Constants {
 	public static double navXResetDelay = 0.07; // seconds
 
 	public static double visionTargetAzimuthThreshold = 0.6;
-	public static double visionAlignOffset = -3.0; // -2.7 at last Practice
+	public static double visionAlignOffset = 0; // -2.7 at last Practice
 
 	public static double visionTurnP = 0.053; // 0.033 at ROC
 	public static double visionTurnI = 0.00155; // .0017 at ROC
@@ -121,4 +121,6 @@ public class Constants {
 	public static double pidSetpointWait = 0.15;
 	public static double shooterRPMWaitTime = 0.15;
 	public static double visionTimeout = 1.0;
+	public static double driveTurnSensitivityHigh = 0.75;
+	public static double driveTurnSensitivityLow = 0.85;
 }

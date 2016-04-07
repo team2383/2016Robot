@@ -5,9 +5,11 @@ import com.team2383.robot.commands.ActuateHoodStop;
 import com.team2383.robot.commands.AutoShoot;
 import com.team2383.robot.commands.DriveDistance;
 import com.team2383.robot.commands.GyroTurn;
+import com.team2383.robot.commands.MoveArms;
 import com.team2383.robot.commands.SpoolToRPM;
 import com.team2383.robot.commands.UsePreset;
 import com.team2383.robot.commands.WaitForHood;
+import com.team2383.robot.subsystems.Arms.State;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -19,7 +21,8 @@ public class LowBarHighGoalFar extends CommandGroup {
 		addSequential(new ActuateHoodStop(false));
 		addParallel(new UsePreset(Preset.courtyardFar));
 		addParallel(new SpoolToRPM());
-		addSequential(new GyroTurn(56));
+		addSequential(new GyroTurn(57));
+		addSequential(new MoveArms(State.EXTENDING, 1.5));
 		addSequential(new WaitForHood());
 		addSequential(new AutoShoot());
 	}
