@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class ChevalDeFrise extends CommandGroup {
 	private class Arms extends CommandGroup {
 		Arms() {
-			addSequential(new MoveArms(State.EXTENDING, 1.5));
+			addSequential(new MoveArms(State.EXTENDING, 1.0));
 			addSequential(new WaitCommand(1.0));
 			addSequential(new MoveArms(-0.6, 5));
 		}
