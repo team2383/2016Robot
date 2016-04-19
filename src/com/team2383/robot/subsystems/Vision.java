@@ -1,15 +1,22 @@
 package com.team2383.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.team2383.robot.Constants;
 import com.team2383.robot.commands.UpdateVision;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class Vision extends Subsystem {
 	private final NetworkTable visionTable;
+	private final Random rng = new Random();
+	private double timeWithoutVision = 0.0;
+	private double lastTime = 0;
+	private boolean hasVision = false;
+	private int lastWatchdog = 0;
 
 	public class LookupTable extends ArrayList<LookupTable.Entry> {
 		/**
@@ -170,20 +177,34 @@ public class Vision extends Subsystem {
 		ArrayList<Vision.Target> targets = new ArrayList<>();
 		double[] distances = {};
 		double[] azimuths = {};
-		distances = visionTable.getNumberArray("distances", distances);
-		azimuths = visionTable.getNumberArray("azimuths", azimuths);
-
-		if (distances.length != azimuths.length)
-			return this;
-
-		for (int i = 0; i < distances.length; i++) {
-			targets.add(new Target(distances[i], azimuths[i]));
+		double time = Timer.getFPGATimestamp();
+		int watchdog = (int) visionTable.getNumber("watchdog", 0);
+		if (watchdog == lastWatchdog) {
+			timeWithoutVision += time - lastTime;
+		} else {
+			timeWithoutVision = 0.0;
 		}
+		// we have vision if the timeWithoutVision hasn't passed 3 seconds;
+		this.hasVision = timeWithoutVision < 3.0;
 
-		targets.sort((a, b) -> {
-			return (int) Math.abs(a.getAzimuth()) - (int) Math.abs(b.getAzimuth());
-		});
+		if (hasVision) {
+			distances = visionTable.getNumberArray("distances", distances);
+			azimuths = visionTable.getNumberArray("azimuths", azimuths);
 
+			if (distances.length != azimuths.length)
+				return this;
+
+			for (int i = 0; i < distances.length; i++) {
+				targets.add(new Target(distances[i], azimuths[i]));
+			}
+
+			targets.sort((a, b) -> {
+				return (int) Math.abs(a.getAzimuth()) - (int) Math.abs(b.getAzimuth());
+			});
+
+		}
+		lastWatchdog = watchdog;
+		lastTime = time;
 		hasNewData(targets);
 		return this;
 	}
@@ -194,6 +215,14 @@ public class Vision extends Subsystem {
 
 	public LookupTable.Entry getAvgEntryForTarget(Target t) {
 		return lookupTable.getEntryAvg(t.distance);
+	}
+
+	public boolean hasVisionBoard() {
+		return this.hasVision;
+	}
+
+	public double getTimeWithoutVision() {
+		return timeWithoutVision;
 	}
 
 	public Target getNearestTarget() {

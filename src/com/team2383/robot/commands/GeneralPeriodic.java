@@ -30,6 +30,8 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putNumber("Closest target distance", HAL.vision.getNearestTarget().getDistance());
 		SmartDashboard.putNumber("Closest target azimuth", HAL.vision.getNearestTarget().getAzimuth());
 		SmartDashboard.putNumber("Closest target raw azimuth", HAL.vision.getNearestTarget().getRawAzimuth());
+		SmartDashboard.putNumber("Time without Vision", HAL.vision.getTimeWithoutVision());
+		SmartDashboard.putBoolean("Has vision", HAL.vision.hasVisionBoard());
 		SmartDashboard.putBoolean("Has target", HAL.vision.hasTarget());
 		SmartDashboard.putBoolean("Aligned With closest target", HAL.vision.getNearestTarget().isAligned());
 

@@ -24,9 +24,9 @@ public class Constants {
 	}
 
 	public static enum Preset {
-		closed(new ShooterPreset(0.0, 0)), towerWall(new ShooterPreset(0.064, 3250)), onBatter(
-				new ShooterPreset(0.131, 3770)), courtyardMid(new ShooterPreset(0.166, 3700)), courtyardFar(
-						new ShooterPreset(0.172, 3850));
+		closed(new ShooterPreset(0.0, 0)), towerWall(new ShooterPreset(0.071, 3500)), onBatter(
+				new ShooterPreset(0.123, 3770)), courtyardMid(new ShooterPreset(0.195, 3700)), courtyardFar(
+						new ShooterPreset(0.211, 3850));
 
 		private final ShooterPreset preset;
 
@@ -48,12 +48,12 @@ public class Constants {
 	public static double shooterFlywheelP = 0.34;
 	public static double shooterFlywheelI = 0.0;
 	public static double shooterFlywheelD = 0.25;
-	public static double shooterFlywheelF = 0.0355; // .0303 with 775pro
+	public static double shooterFlywheelF = 0.0350; // .0303 with 775pro
 	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 1.5 / 360.0;
-	public static double hoodReverseLimit = 0.716; // 550 comp
-	public static double hoodForwardLimit = 1.167; // 990 comp
+	public static double hoodReverseLimit = 0.671; // 550 comp
+	public static double hoodForwardLimit = 1.122; // 990 comp
 
 	public static double hoodPositionP = 2.3; // 2.5
 	public static double hoodPositionI = 0.005; // .02
@@ -111,7 +111,7 @@ public class Constants {
 
 	public static double navXResetDelay = 0.07; // seconds
 
-	public static double visionTargetAzimuthThreshold = 0.6;
+	public static double visionTargetAzimuthThreshold = 0.2;
 	public static double visionAlignOffset = -0.5; // -2.7 at last Practice
 
 	public static double visionTurnP = 0.053; // 0.033 at ROC
