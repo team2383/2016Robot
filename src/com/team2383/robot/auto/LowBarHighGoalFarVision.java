@@ -15,8 +15,8 @@ public class LowBarHighGoalFarVision extends CommandGroup {
 	public LowBarHighGoalFarVision() {
 		addSequential(new DriveDistance(1.0, 209, Gear.LOW, true));
 		addSequential(new ActuateHoodStop(false));
-		addSequential(new GyroTurn(Constants.driveHeadingMoveToVelocity, 56, 2));
 		addSequential(new MoveArms(0.5, 1.0));
+		addSequential(new GyroTurn(Constants.driveHeadingMoveToVelocity, 56, 2));
 		addSequential(new WaitCommand(0.3));
 		addSequential(new VisionShoot());
 	}

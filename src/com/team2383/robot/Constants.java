@@ -45,7 +45,7 @@ public class Constants {
 	public static double shooterFollowThruTime = 0.6;
 	public static double shooterFeederKickPower = 1.0;
 
-	public static double shooterFlywheelP = 0.34;
+	public static double shooterFlywheelP = 0.45; //0.34  -- 0.4
 	public static double shooterFlywheelI = 0.0;
 	public static double shooterFlywheelD = 0.25;
 	public static double shooterFlywheelF = 0.0350; // .0303 with 775pro
