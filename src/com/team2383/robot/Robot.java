@@ -9,6 +9,7 @@ import com.team2383.robot.auto.LowBar;
 import com.team2383.robot.auto.LowBarHighGoalFar;
 import com.team2383.robot.auto.LowBarHighGoalFarReturn;
 import com.team2383.robot.auto.LowBarHighGoalFarVision;
+import com.team2383.robot.auto.LowBarTwoBall;
 import com.team2383.robot.auto.Portcullis;
 import com.team2383.robot.auto.PortcullisHighGoal;
 import com.team2383.robot.auto.TestDrive;
@@ -45,6 +46,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Cheval De Frise + High Goal", new ChevalDeFriseHighGoal());
 		autoChooser.addObject("Portcullis +  High Goal", new PortcullisHighGoal());
 		autoChooser.addObject("Low Bar + High Goal Far", new LowBarHighGoalFar());
+		autoChooser.addObject("Low Bar + Two Ball", new LowBarTwoBall());
 		autoChooser.addObject("Low Bar + High Goal Far (Vision)", new LowBarHighGoalFarVision());
 		autoChooser.addObject("Low Bar + High Goal Far + Return", new LowBarHighGoalFarReturn());
 		autoChooser.addObject("Low Bar + High Goal Wall (BBQ Auto)", new LowBarHighGoalFar());

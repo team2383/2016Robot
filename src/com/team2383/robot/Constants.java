@@ -26,7 +26,7 @@ public class Constants {
 	public static enum Preset {
 		closed(new ShooterPreset(0.0, 0)), towerWall(new ShooterPreset(0.071, 3500)), onBatter(
 				new ShooterPreset(0.123, 3770)), courtyardMid(new ShooterPreset(0.195, 3700)), courtyardFar(
-						new ShooterPreset(0.211, 3850));
+						new ShooterPreset(0.211, 3850)), courtyardTwoBall( new ShooterPreset(0.215, 3850));
 
 		private final ShooterPreset preset;
 
@@ -77,9 +77,9 @@ public class Constants {
 	public static double driveDownshiftFPSThreshold = 3.0;
 
 	public static double driveHeadingMoveToTolerance = 1.0;
-	public static double driveHeadingMoveToP = 0.075;
-	public static double driveHeadingMoveToI = 0.0034; // .003 at ROC
-	public static double driveHeadingMoveToD = 0.025; // 0 at ROC
+	public static double driveHeadingMoveToP = 0.075; //0.075
+	public static double driveHeadingMoveToI = 0.0034; // .003 at ROC  0.0034
+	public static double driveHeadingMoveToD = 0.025; // 0 at ROC  0.025
 	public static double driveHeadingMoveToVelocity = 0.8;
 
 	public static double driveTeleopHeadingMaintainTolerance = 0.25;
