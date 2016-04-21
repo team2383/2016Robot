@@ -12,12 +12,10 @@ import com.team2383.robot.commands.WaitForHood;
 import com.team2383.robot.subsystems.Drivetrain.Gear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class LowBarTwoBall extends CommandGroup {
 	public LowBarTwoBall() {
-		// addParallel(new ExtendBullBar());
-		addSequential(new DriveDistance(1.0, 140, Gear.LOW, true));
+		addSequential(new DriveDistance(0.85, 140, Gear.HIGH, true));
 		addSequential(new ActuateHoodStop(false));
 		addParallel(new MoveArms(0.5, 1.0));
 		addParallel(new UsePreset(Preset.courtyardTwoBall));
@@ -25,11 +23,9 @@ public class LowBarTwoBall extends CommandGroup {
 		addSequential(new GyroTurn(38.5));
 		addSequential(new WaitForHood());
 		addSequential(new AutoShoot());
-		//addSequential(new ActuateHoodStop(false));
-		//addSequential(new WaitCommand(0.1));
 		addSequential(new UsePreset(Preset.closed));
 		addSequential(new MoveArms(-0.5, 1.0));
 		addSequential(new GyroTurn(115));
-		addSequential(new DriveDistance(1.0, 140, Gear.LOW, true));
+		addSequential(new DriveDistance(0.85, 140, Gear.HIGH, true));
 	}
 }

@@ -15,22 +15,27 @@ public class GyroTurn extends PIDCommand {
 	private double lastCheck;
 	private final double tolerance;
 	private final double wait;
+	private boolean finish = true;
 
 	public GyroTurn(double angle) {
-		this(Constants.driveHeadingMoveToVelocity, angle);
+		this(Constants.driveTurnVelocity, angle);
+	}
+
+	public GyroTurn(double angle, boolean finish) {
+		this(Constants.driveTurnVelocity, angle);
+		this.finish = false;
 	}
 
 	public GyroTurn(double velocity, double angle) {
-		this(velocity, angle, Constants.driveHeadingMoveToTolerance);
+		this(velocity, angle, Constants.driveTurnVelocity);
 	}
 
 	public GyroTurn(double velocity, double angle, double tolerance) {
-		this(velocity, angle, Constants.driveHeadingMoveToTolerance, Constants.pidSetpointWait);
+		this(velocity, angle, Constants.driveTurnVelocity, Constants.pidSetpointWait);
 	}
 
 	public GyroTurn(double velocity, double angle, double tolerance, double wait) {
-		super("Set Heading", Constants.driveHeadingMoveToP, Constants.driveHeadingMoveToI,
-				Constants.driveHeadingMoveToD);
+		super("Set Heading", Constants.driveTurnP, Constants.driveTurnI, Constants.driveTurnD);
 		requires(drivetrain);
 		this.getPIDController().setInputRange(-180.0, 180.0);
 		this.getPIDController().setOutputRange(-velocity, velocity);
@@ -38,14 +43,14 @@ public class GyroTurn extends PIDCommand {
 		this.getPIDController().setSetpoint(angle);
 		this.tolerance = tolerance;
 		this.wait = wait;
-		SmartDashboard.putData("SetHeading Controller", this.getPIDController());
+		SmartDashboard.putData("Turn Controller", this.getPIDController());
 	}
 
 	@Override
 	protected void initialize() {
 		navX.reset();
 		drivetrain.enableBrake();
-		drivetrain.shiftTo(Gear.LOW);
+		drivetrain.shiftTo(Gear.LOW); // High gear now for max speed
 	}
 
 	@Override
@@ -60,7 +65,7 @@ public class GyroTurn extends PIDCommand {
 			timeAtSetpoint = 0;
 		}
 		lastCheck = this.timeSinceInitialized();
-		return timeAtSetpoint >= wait;
+		return finish && timeAtSetpoint >= wait;
 	}
 
 	@Override

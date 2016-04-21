@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class CrossHighGoal extends CommandGroup {
 	public CrossHighGoal() {
 		addSequential(new DriveDistance(1.0, -167, 4, 0.05, Gear.LOW, false));
-		addSequential(new GyroTurn(Constants.driveHeadingMoveToVelocity, 179.9, 3));
+		addSequential(new GyroTurn(Constants.driveTurnVelocity, 179.9, 3));
 		addSequential(new MoveArms(0.5, 1.0));
 		addSequential(new WaitCommand(0.3));
 		addSequential(new VisionShoot());

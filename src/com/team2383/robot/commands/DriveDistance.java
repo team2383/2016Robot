@@ -27,13 +27,19 @@ public class DriveDistance extends Command {
 	private double timeAtSetpoint;
 	private final double tolerance;
 	private final double wait;
+	private boolean finish = true;
 
 	public DriveDistance(double velocity, double distance, Gear gear, boolean brake) {
-		this(velocity, distance, Constants.driveHeadingMaintainTolerance, gear, brake);
+		this(velocity, distance, Constants.driveTurnTolerance, gear, brake);
+	}
+
+	public DriveDistance(double velocity, double distance, Gear gear, boolean brake, boolean finish) {
+		this(velocity, distance, Constants.driveTurnTolerance, gear, brake);
+		this.finish = false;
 	}
 
 	public DriveDistance(double velocity, double distance, double tolerance, Gear gear, boolean brake) {
-		this(velocity, distance, Constants.driveHeadingMaintainTolerance, Constants.pidSetpointWait, gear, brake);
+		this(velocity, distance, Constants.driveTurnTolerance, Constants.pidSetpointWait, gear, brake);
 	}
 
 	public DriveDistance(double velocity, double distance, double tolerance, double wait, Gear gear, boolean brake) {
@@ -50,13 +56,13 @@ public class DriveDistance extends Command {
 		SmartDashboard.putData("Distance Controller", distanceController);
 
 		navX.reset();
-		headingController = new PIDController(Constants.driveHeadingMaintainP, Constants.driveHeadingMaintainI,
-				Constants.driveHeadingMaintainD, Constants.driveHeadingMaintainF, navX, new NullPIDOutput());
+		headingController = new PIDController(Constants.driveTurnP, Constants.driveTurnI, Constants.driveTurnD, 0.0,
+				navX, new NullPIDOutput());
 		headingController.setInputRange(-180.0, 180.0);
 		headingController.setOutputRange(-1.0, 1.0); // changed from .5 if auto
 														// is fucked
 		headingController.setContinuous();
-		headingController.setAbsoluteTolerance(Constants.driveHeadingMaintainTolerance);
+		headingController.setAbsoluteTolerance(Constants.driveTurnTolerance);
 		headingController.setSetpoint(0);
 
 		this.tolerance = tolerance;
@@ -94,7 +100,7 @@ public class DriveDistance extends Command {
 			timeAtSetpoint = 0;
 		}
 		lastCheck = this.timeSinceInitialized();
-		return timeAtSetpoint >= wait;
+		return finish && timeAtSetpoint >= wait;
 	}
 
 	@Override

@@ -19,13 +19,12 @@ public class TeleopDriveStraight extends Command {
 		super("Teleop Drive");
 		requires(drivetrain);
 		this.leftStick = leftStick;
-		headingController = new PIDController(Constants.driveTeleopHeadingMaintainP,
-				Constants.driveTeleopHeadingMaintainI, Constants.driveTeleopHeadingMaintainD,
-				Constants.driveTeleopHeadingMaintainF, navX, new NullPIDOutput());
+		headingController = new PIDController(Constants.driveTurnP, Constants.driveTurnI, Constants.driveTurnD, 0.0,
+				navX, new NullPIDOutput());
 		headingController.setInputRange(-180.0, 180.0);
 		headingController.setOutputRange(-1.0, 1.0);
 		headingController.setContinuous();
-		headingController.setAbsoluteTolerance(Constants.driveHeadingMaintainTolerance);
+		headingController.setAbsoluteTolerance(Constants.driveTurnTolerance);
 		headingController.setSetpoint(0);
 	}
 
