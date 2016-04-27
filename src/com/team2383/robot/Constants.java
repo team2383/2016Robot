@@ -77,15 +77,22 @@ public class Constants {
 	public static double driveDownshiftFPSThreshold = 3.0;
 
 	public static double driveTurnTolerance = 0.5;
-	public static double driveTurnP = 0.075; // 0.075
-	public static double driveTurnI = 0.0034; // .003 at ROC 0.0034
-	public static double driveTurnD = 0.025; // 0 at ROC 0.025
+	public static double driveTurnP = 0.125;
+	public static double driveTurnI = 0.006;
+	public static double driveTurnD = 0.035;
+	public static double driveTurnIZone = 5;
 	public static double driveTurnVelocity = 0.8;
 
+	public static double driveHeadingMaintainTolerance = 0.25;
+	public static double driveHeadingMaintainP = 0.17;
+	public static double driveHeadingMaintainI = 0.0001;
+	public static double driveHeadingMaintainD = 0.0;
+	public static double driveHeadingMaintainF = 0;
+
 	public static double drivePositionTolerance = 1.2;
-	public static double drivePositionP = 0.3;
-	public static double drivePositionI = 0.0;
-	public static double drivePositionD = 0.25;
+	public static double drivePositionP = 0.250;
+	public static double drivePositionI = 0.001;
+	public static double drivePositionD = 0.300;
 	public static double drivePositionF = 0;
 
 	public static double driveHoldPositionP = 2.3;
