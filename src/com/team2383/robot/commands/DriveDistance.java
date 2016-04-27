@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class DriveDistance extends Command {
-	private final PIDController headingController;
+	private final PIDController turnController;
 	private final PIDController distanceController;
 	private final boolean brake;
 	private final Gear gear;
@@ -28,54 +28,54 @@ public class DriveDistance extends Command {
 	private final double tolerance;
 	private final double wait;
 	private boolean finish = true;
+	private final double distance;
 
 	public DriveDistance(double velocity, double distance, Gear gear, boolean brake) {
-		this(velocity, distance, Constants.driveTurnTolerance, gear, brake);
+		this(velocity, distance, Constants.drivePositionTolerance, gear, brake);
 	}
 
 	public DriveDistance(double velocity, double distance, Gear gear, boolean brake, boolean finish) {
-		this(velocity, distance, Constants.driveTurnTolerance, gear, brake);
+		this(velocity, distance, Constants.drivePositionTolerance, gear, brake);
 		this.finish = false;
 	}
 
 	public DriveDistance(double velocity, double distance, double tolerance, Gear gear, boolean brake) {
-		this(velocity, distance, Constants.driveTurnTolerance, Constants.pidSetpointWait, gear, brake);
+		this(velocity, distance, Constants.drivePositionTolerance, Constants.pidSetpointWait, gear, brake);
 	}
 
 	public DriveDistance(double velocity, double distance, double tolerance, double wait, Gear gear, boolean brake) {
 		super("Drive Distance");
 		this.gear = gear;
 		this.brake = brake;
+		this.distance = distance;
 
 		distanceController = new PIDController(Constants.drivePositionP, Constants.drivePositionI,
 				Constants.drivePositionD, Constants.drivePositionF, drivetrain, new NullPIDOutput());
-		distanceController.setAbsoluteTolerance(Constants.drivePositionTolerance);
 		distanceController.setSetpoint(distance);
 		distanceController.setOutputRange(-velocity, velocity);
 
 		SmartDashboard.putData("Distance Controller", distanceController);
 
 		navX.reset();
-		headingController = new PIDController(Constants.driveTurnP, Constants.driveTurnI, Constants.driveTurnD, 0.0,
-				navX, new NullPIDOutput());
-		headingController.setInputRange(-180.0, 180.0);
-		headingController.setOutputRange(-1.0, 1.0); // changed from .5 if auto
-														// is fucked
-		headingController.setContinuous();
-		headingController.setAbsoluteTolerance(Constants.driveTurnTolerance);
-		headingController.setSetpoint(0);
+		turnController = new PIDController(Constants.driveHeadingMaintainP, Constants.driveHeadingMaintainI,
+				Constants.driveHeadingMaintainD, Constants.driveHeadingMaintainF, navX, new NullPIDOutput());
+		turnController.setInputRange(-180.0, 180.0);
+		turnController.setOutputRange(-1.0, 1.0); // changed from .5 if auto
+													// is fucked
+		turnController.setContinuous();
+		turnController.setSetpoint(0);
 
 		this.tolerance = tolerance;
 		this.wait = wait;
 
-		SmartDashboard.putData("MaintainHeading Controller", headingController);
+		SmartDashboard.putData("MaintainHeading Controller", turnController);
 
 		requires(drivetrain);
 	}
 
 	@Override
 	protected void initialize() {
-		this.headingController.enable();
+		this.turnController.enable();
 		this.distanceController.enable();
 		drivetrain.resetEncoders();
 		navX.reset();
@@ -86,7 +86,7 @@ public class DriveDistance extends Command {
 	@Override
 	protected void execute() {
 		if (this.timeSinceInitialized() > 0.1) {
-			drivetrain.arcade(distanceController.get(), headingController.get());
+			drivetrain.arcade(distanceController.get(), turnController.get());
 		} else {
 			System.out.println("Waiting for reset " + this.timeSinceInitialized());
 		}
@@ -99,6 +99,9 @@ public class DriveDistance extends Command {
 		} else {
 			timeAtSetpoint = 0;
 		}
+		SmartDashboard.putNumber("error", distanceController.getError());
+		SmartDashboard.putNumber("Tolerance", tolerance);
+		SmartDashboard.putNumber("timeAtSetpoint", timeAtSetpoint);
 		lastCheck = this.timeSinceInitialized();
 		return finish && timeAtSetpoint >= wait;
 	}
@@ -107,7 +110,7 @@ public class DriveDistance extends Command {
 	protected void end() {
 		drivetrain.tank(0, 0);
 		drivetrain.resetEncoders();
-		this.headingController.disable();
+		this.turnController.disable();
 		this.distanceController.disable();
 	}
 

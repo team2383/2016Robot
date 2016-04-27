@@ -24,8 +24,20 @@ public class SetState<StateT extends Enum<StateT>> extends Command {
 		this(subsystem, state, null);
 	}
 
+	public SetState(StatefulSubsystem<StateT> subsystem, StateT state, double timeout) {
+		this(subsystem, state, null, timeout);
+	}
+
 	public SetState(StatefulSubsystem<StateT> subsystem, StateT state, StateT endState) {
 		super("State Setter");
+		requires(subsystem);
+		this.subsystem = subsystem;
+		this.state = state;
+		this.endState = endState;
+	}
+
+	public SetState(StatefulSubsystem<StateT> subsystem, StateT state, StateT endState, double timeout) {
+		super("State Setter", timeout);
 		requires(subsystem);
 		this.subsystem = subsystem;
 		this.state = state;

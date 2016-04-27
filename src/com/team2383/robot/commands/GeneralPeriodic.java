@@ -36,6 +36,7 @@ public class GeneralPeriodic extends Command {
 		SmartDashboard.putBoolean("Aligned With closest target", HAL.vision.getNearestTarget().isAligned());
 
 		// Drivetrain
+		SmartDashboard.putNumber("Drive Speedometer", HAL.drivetrain.getSpeed());
 		SmartDashboard.putNumber("Drive Encoder Rotations", HAL.drivetrain.getRotations());
 		SmartDashboard.putNumber("Drive Encoder Inches", HAL.drivetrain.getInches());
 		SmartDashboard.putString("Drivetrain Gear", HAL.drivetrain.getGear().toString());

@@ -27,15 +27,15 @@ public class GyroTurn extends PIDCommand {
 	}
 
 	public GyroTurn(double velocity, double angle) {
-		this(velocity, angle, Constants.driveTurnVelocity);
+		this(velocity, angle, Constants.driveTurnTolerance);
 	}
 
 	public GyroTurn(double velocity, double angle, double tolerance) {
-		this(velocity, angle, Constants.driveTurnVelocity, Constants.pidSetpointWait);
+		this(velocity, angle, tolerance, Constants.pidSetpointWait);
 	}
 
 	public GyroTurn(double velocity, double angle, double tolerance, double wait) {
-		super("Set Heading", Constants.driveTurnP, Constants.driveTurnI, Constants.driveTurnD);
+		super("Set Heading", Constants.driveTurnP, 0.0, Constants.driveTurnD);
 		requires(drivetrain);
 		this.getPIDController().setInputRange(-180.0, 180.0);
 		this.getPIDController().setOutputRange(-velocity, velocity);
@@ -50,11 +50,19 @@ public class GyroTurn extends PIDCommand {
 	protected void initialize() {
 		navX.reset();
 		drivetrain.enableBrake();
-		drivetrain.shiftTo(Gear.LOW); // High gear now for max speed
+		drivetrain.shiftTo(Gear.HIGH); // High gear now for max speed
 	}
 
 	@Override
 	protected void execute() {
+		/*
+		 * IZone check
+		 */
+		if (Math.abs(this.getPIDController().getError()) <= Constants.driveTurnIZone) {
+			this.getPIDController().setPID(Constants.driveTurnP, Constants.driveTurnI, Constants.driveTurnD);
+		} else {
+			this.getPIDController().setPID(Constants.driveTurnP, 0.0, Constants.driveTurnD);
+		}
 	}
 
 	@Override
@@ -64,6 +72,9 @@ public class GyroTurn extends PIDCommand {
 		} else {
 			timeAtSetpoint = 0;
 		}
+		SmartDashboard.putNumber("error", this.getPIDController().getError());
+		SmartDashboard.putNumber("Tolerance", tolerance);
+		SmartDashboard.putNumber("timeAtSetpoint", timeAtSetpoint);
 		lastCheck = this.timeSinceInitialized();
 		return finish && timeAtSetpoint >= wait;
 	}

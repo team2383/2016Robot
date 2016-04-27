@@ -35,7 +35,9 @@ public class VisionTurn extends GyroTurn {
 		if (vision.getNearestTarget().getDistance() == 0.0) {
 			timeWithoutTarget += this.timeSinceInitialized() - timeWithoutTarget;
 			if (timeWithoutTarget >= Constants.visionAlignOffset) {
-				if (getGroup() != null) {
+				if (getGroup().getGroup() != null) {
+					getGroup().getGroup().cancel();
+				} else if (getGroup() != null) {
 					getGroup().cancel();
 				} else {
 					cancel();

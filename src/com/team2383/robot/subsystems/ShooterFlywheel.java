@@ -60,7 +60,7 @@ public class ShooterFlywheel extends Subsystem {
 	}
 
 	public boolean isAtSetpoint() {
-		return Math.abs(shooterMotor.getError()) < Constants.shooterRPMTolerance;
+		return Math.abs(getRPM() - shooterMotor.getSetpoint()) <= Constants.shooterRPMTolerance;
 	}
 
 	public double getRPM() {

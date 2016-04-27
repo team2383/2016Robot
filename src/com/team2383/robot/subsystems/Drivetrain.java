@@ -118,8 +118,30 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		return rotations;
 	}
 
+	public double getVelocity() {
+		double rotations;
+		if (leftFront.isSensorPresent(
+				FeedbackDevice.CtreMagEncoder_Relative) == FeedbackDeviceStatus.FeedbackStatusNotPresent)
+			return 0;
+		if (rightRear.isSensorPresent(
+				FeedbackDevice.CtreMagEncoder_Relative) == FeedbackDeviceStatus.FeedbackStatusNotPresent)
+			return 0;
+		try {
+			rotations = (leftFront.getSpeed() + rightRear.getSpeed()) / 2.0;
+		} catch (Throwable e) {
+			System.out.println("Failed to get encoder rotations of drivetrain");
+			rotations = 0;
+		}
+		return rotations;
+	}
+
 	public double getInches() {
 		return getRotations() * Constants.driveWheelCircumference;
+	}
+
+	// Feet per Seconds
+	public double getSpeed() {
+		return getVelocity() * Constants.driveWheelCircumference / 12.0 / 60.0;
 	}
 
 	@Override
