@@ -76,12 +76,12 @@ public class Constants {
 	public static double driveUpshiftFPSThreshold = 4.0;
 	public static double driveDownshiftFPSThreshold = 3.0;
 
-	public static double driveTurnTolerance = 0.5;
-	public static double driveTurnP = 0.125;
-	public static double driveTurnI = 0.006;
-	public static double driveTurnD = 0.035;
+	public static double driveTurnTolerance = 0.54;
+	public static double driveTurnP = 0.050;
+	public static double driveTurnI = 0.010;
+	public static double driveTurnD = 0.100;
 	public static double driveTurnIZone = 5;
-	public static double driveTurnVelocity = 0.8;
+	public static double driveTurnVelocity = 1.0;
 
 	public static double driveHeadingMaintainTolerance = 0.25;
 	public static double driveHeadingMaintainP = 0.17;

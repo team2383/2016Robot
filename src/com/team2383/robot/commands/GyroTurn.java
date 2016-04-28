@@ -50,7 +50,7 @@ public class GyroTurn extends PIDCommand {
 	protected void initialize() {
 		navX.reset();
 		drivetrain.enableBrake();
-		drivetrain.shiftTo(Gear.HIGH); // High gear now for max speed
+		drivetrain.shiftTo(Gear.LOW); // High gear now for max speed
 	}
 
 	@Override
