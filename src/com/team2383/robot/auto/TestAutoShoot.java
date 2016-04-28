@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class TestAutoShoot extends CommandGroup {
 	public TestAutoShoot() {
-		addSequential(new UsePreset(Constants.Preset.courtyardMid));
+		addSequential(new UsePreset(Constants.Preset.courtyardMid, true));
 		addSequential(new AutoShoot());
 	}
 }

@@ -18,12 +18,12 @@ public class LowBarTwoBall extends CommandGroup {
 		addSequential(new DriveDistance(0.85, 140, Gear.LOW, true));
 		addSequential(new ActuateHoodStop(false));
 		addParallel(new MoveArms(0.5, 1.0));
-		addParallel(new UsePreset(Preset.lowBarAuto));
+		addParallel(new UsePreset(Preset.lowBarAuto, true));
 		addParallel(new SpoolToRPM());
 		addSequential(new GyroTurn(40));
 		addSequential(new WaitForHood());
 		addSequential(new AutoShoot());
-		addSequential(new UsePreset(Preset.closed));
+		addSequential(new UsePreset(Preset.closed, true));
 		addSequential(new MoveArms(-0.5, 1.0));
 		addSequential(new GyroTurn(115));
 		addSequential(new DriveDistance(0.85, 140, Gear.HIGH, true));

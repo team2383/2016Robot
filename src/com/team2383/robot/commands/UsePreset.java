@@ -11,11 +11,20 @@ import edu.wpi.first.wpilibj.command.Command;
 public class UsePreset extends Command {
 
 	private final ShooterPreset preset;
+	private final boolean finish;
 
 	public UsePreset(Preset preset) {
 		super("UsePreset");
 		requires(shooterHood);
 		this.preset = preset.get();
+		this.finish = false;
+	}
+
+	public UsePreset(Preset preset, boolean finish) {
+		super("UsePreset");
+		requires(shooterHood);
+		this.preset = preset.get();
+		this.finish = finish;
 	}
 
 	@Override
@@ -34,7 +43,7 @@ public class UsePreset extends Command {
 	@Override
 	protected boolean isFinished() {
 		// TODO Auto-generated method stub
-		return true;
+		return finish;
 	}
 
 	@Override

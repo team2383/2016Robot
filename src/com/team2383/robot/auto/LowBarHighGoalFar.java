@@ -19,7 +19,7 @@ public class LowBarHighGoalFar extends CommandGroup {
 		addSequential(new DriveDistance(1.0, 209, Gear.LOW, true));
 		addSequential(new ActuateHoodStop(false));
 		addSequential(new MoveArms(0.5, 1.0));
-		addParallel(new UsePreset(Preset.courtyardFar));
+		addParallel(new UsePreset(Preset.courtyardFar, true));
 		addParallel(new SpoolToRPM());
 		addSequential(new GyroTurn(57));
 		addSequential(new WaitForHood());

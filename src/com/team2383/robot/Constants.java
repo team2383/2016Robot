@@ -90,9 +90,9 @@ public class Constants {
 	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 1.2;
-	public static double drivePositionP = 0.250;
+	public static double drivePositionP = 0.300;
 	public static double drivePositionI = 0.001;
-	public static double drivePositionD = 0.300;
+	public static double drivePositionD = 0.250;
 	public static double drivePositionF = 0;
 
 	public static double driveHoldPositionP = 2.3;

@@ -14,7 +14,7 @@ public class LowBarHighGoalFarReturn extends LowBarHighGoalFar {
 		super();
 		addSequential(new ActuateHoodStop(false));
 		addSequential(new WaitCommand(0.1));
-		addSequential(new UsePreset(Preset.closed));
+		addSequential(new UsePreset(Preset.closed, true));
 		addSequential(new GyroTurn(115));
 		addSequential(new DriveDistance(1.0, 200, Gear.LOW, true));
 	}
