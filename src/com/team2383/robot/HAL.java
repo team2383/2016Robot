@@ -17,9 +17,11 @@ import edu.wpi.first.wpilibj.VictorSP;
 public class HAL {
 	/** CAN IDs **/
 	public static CANTalon leftFront = new CANTalon(1);
-	public static CANTalon leftRear = new CANTalon(2);
-	public static CANTalon rightFront = new CANTalon(4);
+	public static CANTalon leftRear = new CANTalon(4);
+	public static CANTalon leftThird = new CANTalon(3);
+	public static CANTalon rightFront = new CANTalon(2);
 	public static CANTalon rightRear = new CANTalon(5);
+	public static CANTalon rightThird = new CANTalon(6);
 
 	public static CANTalon shooterMotor = new CANTalon(8);
 	public static CANTalon hoodMotor = new CANTalon(9);
@@ -27,7 +29,7 @@ public class HAL {
 	public static VictorSP feederMotor = new VictorSP(0);
 
 	/** Solenoids **/
-	public static DoubleSolenoid shifter = new DoubleSolenoid(1, 0);
+	public static DoubleSolenoid shifter = new DoubleSolenoid(0, 1);
 	public static DoubleSolenoid hoodHardStop = new DoubleSolenoid(2, 3);
 
 	/** Sensors **/

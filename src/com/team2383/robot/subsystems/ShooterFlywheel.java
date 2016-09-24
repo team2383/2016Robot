@@ -19,8 +19,9 @@ public class ShooterFlywheel extends Subsystem {
 		shooterMotor.enableBrakeMode(false);
 		shooterMotor.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		shooterMotor.changeControlMode(TalonControlMode.Speed);
-		shooterMotor.reverseSensor(true);
-		shooterMotor.configPeakOutputVoltage(12.0, -3.0);
+		shooterMotor.reverseOutput(true);
+		shooterMotor.reverseSensor(false);
+		shooterMotor.configPeakOutputVoltage(3.0, -12.0);
 		shooterMotor.setPID(Constants.shooterFlywheelP, Constants.shooterFlywheelI, Constants.shooterFlywheelD,
 				Constants.shooterFlywheelF, Constants.shooterFlywheelIZone, 0, 0);
 		shooterMotor.enable();

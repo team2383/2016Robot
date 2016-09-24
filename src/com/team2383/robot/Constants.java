@@ -25,8 +25,8 @@ public class Constants {
 
 	public static enum Preset {
 		closed(new ShooterPreset(0.0, 0)), towerWall(new ShooterPreset(0.032, 3500)), onBatter(
-				new ShooterPreset(0.083, 3770)), courtyardMid(new ShooterPreset(0.150, 3700)), courtyardFar(
-						new ShooterPreset(0.165, 3850)), lowBarAuto(new ShooterPreset(0.165, 3850));
+				new ShooterPreset(0.083, 3770)), courtyardMid(new ShooterPreset(0.225, 3700)), courtyardFar(
+						new ShooterPreset(0.200, 3850)), lowBarAuto(new ShooterPreset(0.165, 3850));
 
 		private final ShooterPreset preset;
 
@@ -45,15 +45,15 @@ public class Constants {
 	public static double shooterFollowThruTime = 0.6;
 	public static double shooterFeederKickPower = 1.0;
 
-	public static double shooterFlywheelP = 0.4;
+	public static double shooterFlywheelP = 0.68;
 	public static double shooterFlywheelI = 0.0;
 	public static double shooterFlywheelD = 0.25;
-	public static double shooterFlywheelF = 0.0350; // .0303 with 775pro
+	public static double shooterFlywheelF = 0.033; // .0303 with 775pro
 	public static int shooterFlywheelIZone = 40;
 
 	public static double hoodRotationTolerance = 1.5 / 360.0;
-	public static double hoodReverseLimit = 0.550; // 550 comp
-	public static double hoodForwardLimit = 0.990; // 990 comp
+	public static double hoodReverseLimit = 0.920; // 550 comp
+	public static double hoodForwardLimit = 1.342; // 990 comp
 
 	public static double hoodPositionP = 2.3; // 2.5
 	public static double hoodPositionI = 0.005; // .02
@@ -77,22 +77,22 @@ public class Constants {
 	public static double driveDownshiftFPSThreshold = 3.0;
 
 	public static double driveTurnTolerance = 0.54;
-	public static double driveTurnP = 0.050;
+	public static double driveTurnP = 0.049;
 	public static double driveTurnI = 0.010;
-	public static double driveTurnD = 0.097;
+	public static double driveTurnD = 0.110;
 	public static double driveTurnIZone = 7;
 	public static double driveTurnVelocity = 0.95;
 
 	public static double driveHeadingMaintainTolerance = 0.25;
-	public static double driveHeadingMaintainP = 0.17;
+	public static double driveHeadingMaintainP = 0.13;
 	public static double driveHeadingMaintainI = 0.0001;
 	public static double driveHeadingMaintainD = 0.0;
 	public static double driveHeadingMaintainF = 0;
 
 	public static double drivePositionTolerance = 1.2;
-	public static double drivePositionP = 0.300;
-	public static double drivePositionI = 0.001;
-	public static double drivePositionD = 0.250;
+	public static double drivePositionP = 0.150;
+	public static double drivePositionI = 0.0005;
+	public static double drivePositionD = 0.600;
 	public static double drivePositionF = 0;
 
 	public static double driveHoldPositionP = 2.3;

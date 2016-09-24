@@ -24,7 +24,7 @@ public class GeneralPeriodic extends Command {
 	protected void execute() {
 		// General
 		SmartDashboard.putNumber("Gyro Yaw", HAL.navX.getYaw());
-		SmartDashboard.putNumber("Total Robot Current Draw", HAL.PDP.getTotalCurrent());
+		//SmartDashboard.putNumber("Total Robot Current Draw", HAL.PDP.getTotalCurrent());
 
 		// Vision
 		SmartDashboard.putNumber("Closest target distance", HAL.vision.getNearestTarget().getDistance());

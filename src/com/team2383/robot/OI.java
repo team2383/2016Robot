@@ -59,11 +59,10 @@ public class OI {
 
 	public static Button shiftDown = gamepad.getLeftShoulder();
 	public static Button shiftUp = gamepad.getRightShoulder();
+	public static Button toggleAutoShift = gamepad.getButtonA();
 
 	public static Button autoShoot = new JoystickButton(gamepad, 4);
 	public static Button driveStraight = new JoystickButton(gamepad, 10);
-	public static Button visionPreset = new JoystickButton(gamepad, 2);
-	public static Button visionTurn = new JoystickButton(gamepad, 3);
 
 	public static Button visionShoot = new JoystickButton(gamepad, 1);
 	public static Button cancelVisionShoot = new LambdaButton(() -> {
@@ -95,21 +94,17 @@ public class OI {
 
 	public static Button shoot = new JoystickButton(operator, 1); // trigger
 	public static Button spoolToLastSet = new JoystickButton(operator, 2); // thumb
-
-	public static Button hoodPancake = new JoystickButton(operator, 3);
-	public static Button manualSpool = new JoystickButton(operator, 4);
+	public static Button moveHood = new JoystickButton(operator, 3);
 	public static Button feedOutFast = new JoystickButton(operator, 5);
 	public static Button feedOutSlow = new JoystickButton(operator, 6);
 
 	// public static Button setShooterSpeed = new
 	// OnChangeButton(OI.shooterSpeed, 0.08);
 
-	public static Button moveHood = new JoystickButton(operator, 4);
-
 	// use buttons
 	public OI() {
-		shiftDown.whileHeld(new ShiftTo(Gear.LOW));
-		shiftUp.whileHeld(new ShiftTo(Gear.HIGH));
+		//shiftDown.whileHeld(new ShiftTo(Gear.LOW));
+		//shiftUp.whileHeld(new ShiftTo(Gear.HIGH));
 
 		feedIn.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.FEEDING, Feeder.State.STOPPED));
 		feedOutSlow.whileHeld(new SetState<Feeder.State>(feeder, Feeder.State.OUTFEEDINGSLOW, Feeder.State.STOPPED));
@@ -142,8 +137,8 @@ public class OI {
 
 		driveStraight.whileHeld(new TeleopDriveStraight(OI.leftStick));
 
-		visionTurn.whileHeld(new VisionTurn(false));
-		visionPreset.whileHeld(new UseVisionPreset());
+		//visionTurn.whileHeld(new VisionTurn(false));
+		//visionPreset.whileHeld(new UseVisionPreset());
 		autoShoot.whileHeld(new AutoShoot());
 
 		visionShoot.whileHeld(new VisionShoot());
@@ -152,7 +147,5 @@ public class OI {
 		presetTowerWall.whenPressed(new UsePreset(Preset.towerWall));
 		presetCourtyardMid.whenPressed(new UsePreset(Preset.courtyardMid));
 		presetCourtyardFar.whenPressed(new UsePreset(Preset.courtyardFar));
-
-		hoodPancake.toggleWhenActive(new ToggleHoodStop());
 	}
 }

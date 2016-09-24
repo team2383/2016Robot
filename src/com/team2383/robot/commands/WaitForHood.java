@@ -12,12 +12,12 @@ public class WaitForHood extends Command {
 	private final double wait;
 
 	public WaitForHood() {
-		super("WaitForRPM");
+		super("WaitForHood");
 		this.wait = Constants.pidSetpointWait;
 	}
 
 	public WaitForHood(double wait) {
-		super("WaitForRPM");
+		super("WaitForHood");
 		this.wait = wait;
 	}
 

@@ -3,8 +3,10 @@ package com.team2383.robot.subsystems;
 //bring in HAL
 import static com.team2383.robot.HAL.leftFront;
 import static com.team2383.robot.HAL.leftRear;
+import static com.team2383.robot.HAL.leftThird;
 import static com.team2383.robot.HAL.rightFront;
 import static com.team2383.robot.HAL.rightRear;
+import static com.team2383.robot.HAL.rightThird;
 import static com.team2383.robot.HAL.shifter;
 
 import com.team2383.robot.Constants;
@@ -36,10 +38,13 @@ public class Drivetrain extends Subsystem implements PIDSource {
 		super("Drivetrain");
 
 		leftFront.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		leftFront.reverseSensor(false);
 		leftFront.setPID(Constants.driveHoldPositionP, Constants.driveHoldPositionI, Constants.driveHoldPositionD,
 				Constants.driveHoldPositionF, Constants.driveHoldPositionIZone, 0, 1);
 		leftRear.changeControlMode(TalonControlMode.Follower);
 		leftRear.set(leftFront.getDeviceID());
+		leftThird.changeControlMode(TalonControlMode.Follower);
+		leftThird.set(leftFront.getDeviceID());
 
 		rightRear.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		rightRear.reverseSensor(true);
@@ -47,6 +52,8 @@ public class Drivetrain extends Subsystem implements PIDSource {
 				Constants.driveHoldPositionF, Constants.driveHoldPositionIZone, 0, 1);
 		rightFront.changeControlMode(TalonControlMode.Follower);
 		rightFront.set(rightRear.getDeviceID());
+		rightThird.changeControlMode(TalonControlMode.Follower);
+		rightThird.set(rightRear.getDeviceID());
 
 		this.robotDrive = new RobotDrive(leftFront, rightRear);
 		robotDrive.setSafetyEnabled(false);
@@ -127,7 +134,7 @@ public class Drivetrain extends Subsystem implements PIDSource {
 				FeedbackDevice.CtreMagEncoder_Relative) == FeedbackDeviceStatus.FeedbackStatusNotPresent)
 			return 0;
 		try {
-			rotations = (leftFront.getSpeed() + rightRear.getSpeed()) / 2.0;
+			rotations = (leftFront.getSpeed() + rightRear.getSpeed())/2.0;
 		} catch (Throwable e) {
 			System.out.println("Failed to get encoder rotations of drivetrain");
 			rotations = 0;
@@ -146,7 +153,8 @@ public class Drivetrain extends Subsystem implements PIDSource {
 
 	@Override
 	protected void initDefaultCommand() {
-		this.setDefaultCommand(new TeleopDrive(OI.leftStick, OI.rightStick));
+		this.setDefaultCommand(new TeleopDrive(OI.leftStick, OI.rightStick, () -> OI.toggleAutoShift.get(),
+				() -> OI.shiftDown.get(), () -> OI.shiftUp.get()));
 	}
 
 	@Override
